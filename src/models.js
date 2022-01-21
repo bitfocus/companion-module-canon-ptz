@@ -46,6 +46,7 @@ module.exports = {
 				rGainValue: true, //current r gain value
 				bGainValue: true, //current b gain value
 				//recall preset
+				presetLastUsed: true, //preset last recalled
 				presetRecallMode: true, //preset recall mode normal, time, speed
 				presetTimeValue: true, //preset time value
 				presetSpeedValue: true //preset speed value
@@ -62,6 +63,7 @@ module.exports = {
 				autoIrisMode: true, //iris mode is auto or manual
 				autoGainMode: true, //gain mode is auto or manual
 				whitebalanceMode: true, //white balance mode
+				presetLastUsed: true, //preset last recalled
 				presetRecallMode: true //preset recall mode is normal, time, or speed
 			},
 			actions: {
@@ -133,6 +135,7 @@ module.exports = {
 				rGainValue: true, //current r gain value
 				bGainValue: true, //current b gain value
 				//recall preset
+				presetLastUsed: true, //preset last recalled
 				presetRecallMode: true, //preset recall mode normal, time, speed
 				presetTimeValue: true, //preset time value
 				presetSpeedValue: true //preset speed value
@@ -149,6 +152,7 @@ module.exports = {
 				autoIrisMode: true, //iris mode is auto or manual
 				autoGainMode: true, //gain mode is auto or manual
 				whitebalanceMode: true, //white balance mode
+				presetLastUsed: true, //preset last recalled
 				presetRecallMode: true //preset recall mode is normal, time, or speed
 			},
 			actions: {
@@ -211,6 +215,7 @@ module.exports = {
 				rGainValue: true, //current r gain value
 				bGainValue: true, //current b gain value
 				//recall preset
+				presetLastUsed: true, //preset last recalled
 				presetRecallMode: true, //preset recall mode normal, time, speed
 				presetTimeValue: true, //preset time value
 				presetSpeedValue: true //preset speed value
@@ -227,6 +232,7 @@ module.exports = {
 				autoIrisMode: true, //iris mode is auto or manual
 				autoGainMode: true, //gain mode is auto or manual
 				whitebalanceMode: true, //white balance mode
+				presetLastUsed: true, //preset last recalled
 				presetRecallMode: true //preset recall mode is normal, time, or speed
 			},
 			actions: {
@@ -241,7 +247,7 @@ module.exports = {
 				zoom: true, // Has Zoom Support
 				zoomSpeed: true, // Internal Speed Options
 				focus: true, // Has Focus Support
-				focusSpeed: true, // Internal Speed Options
+				focusSpeed: true, // Internal Focus Options
 				autoFocus: true, // Has Auto Focus Support
 				oneshotAutoFocus: true, // Has One Shot Auto Focus Support
 				exposureShootingMode: { cmd: 'c.1.shooting=', dropdown: c.CHOICES_EXPOSURESHOOTINGMODES_OTHER() },
