@@ -16,6 +16,7 @@ The actions are separated into the following categories:
 
 - Power Off
 - Power On
+- Power Toggle
 - Set Camera Name
 - Tally Off (PVW/PGM)
 - Tally On (PVW/PGM)
