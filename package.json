@@ -1,0 +1,21 @@
+{
+	"name": "canon-ptz",
+	"version": "1.0.0",
+	"api_version": "1.0",
+	"keywords": [
+		"ptz",
+		"Camera"
+	],
+	"manufacturer": "Canon",
+	"product": [
+		"PTZ Camera"
+	],
+	"shortname": "canon-ptz",
+	"description": "Companion module for Canon PTZ Cameras using the XC Protocol",
+	"main": "src/index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "Joseph Adams <josephdadams@gmail.com>",
+	"license": "MIT"
+}
