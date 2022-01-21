@@ -300,6 +300,9 @@ instance.prototype.storeData = function (str) {
 			case 'c.1.wb.shift.bgain':
 				self.data.bGainValue = str[1];
 				break;
+			case 'p':
+				self.data.presetLastUsed = parseInt(str[1]);
+				break;
 			default:
 				break;
 		}
@@ -417,6 +420,7 @@ instance.prototype.init = function () {
 
 		//Recall Preset
 		presetRecallMode: 'normal',
+		presetLastUsed: '',
 		presetTimeValue: 2000,
 		presetSpeedValue: 1
 	}
@@ -446,6 +450,7 @@ instance.prototype.init = function () {
 	self.bGainIndex = 50
 	self.bGainValue = 0
 	self.presetRecallModeIndex = 0
+	self.presetLastUsedIndex = 0
 	self.presetDriveTimeIndex = 0
 	self.presetDriveSpeedIndex = 0
 

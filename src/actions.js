@@ -152,7 +152,7 @@ module.exports = {
 				label: 'System - Power Off',
 				callback: function (action, bank) {
 					cmd = 'cmd=standby'
-					self.sendPower(cmd)
+					self.sendPower(cmd);
 					self.data.powerState = 'standby';
 					self.getCameraInformation_Delayed();
 				}
@@ -162,8 +162,24 @@ module.exports = {
 				label: 'System - Power On',
 				callback: function (action, bank) {
 					cmd = 'cmd=idle'
-					self.sendPower(cmd)
+					self.sendPower(cmd);
 					self.data.powerState = 'idle';
+					self.getCameraInformation_Delayed();
+				}
+			}
+
+			actions.powerToggle = {
+				label: 'System - Power Toggle',
+				callback: function (action, bank) {
+					if (self.data.powerState = 'idle') {
+						cmd = 'cmd=standby';
+						self.data.powerState = 'standby';
+					}
+					else {
+						cmd = 'cmd=idle';
+						self.data.powerState = 'idle';
+					}
+					self.sendPower(cmd);
 					self.getCameraInformation_Delayed();
 				}
 			}
@@ -229,6 +245,24 @@ module.exports = {
 					cmd = 'tally=on&tally.mode=preview'
 					self.sendPTZ(cmd)
 					self.data.tallyProgram = 'on';
+					self.getCameraInformation_Delayed();
+				}
+			}
+
+			actions.tallyToggle = {
+				label: 'System - Tally Toggle',
+				callback: function (action, bank) {
+					if (self.data.tallyProgram === 'on') {
+						cmd = 'tally=on&tally.mode=preview';
+						self.data.tallyPreview = 'on';
+						self.data.tallyProgram = 'off';
+					}
+					else {
+						cmd = 'tally=on&tally.mode=program';
+						self.data.tallyProgram = 'on';
+						self.data.tallyPreview = 'off';
+					}	
+					self.sendPTZ(cmd)
 					self.getCameraInformation_Delayed();
 				}
 			}
@@ -1308,6 +1342,24 @@ module.exports = {
 					self.getCameraInformation_Delayed();
 				}
 			}
+
+			actions.whitebalanceCalibration = {
+				label: 'White Balance Calibration',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'White Balance Mode',
+						id: 'mode',
+						default: 'a',
+						choices: [ { id: 'a', label: 'WB A Mode'}, { id: 'b', label: 'WB B Mode'}]
+					}
+				],
+				callback: function (action, bank) {
+					cmd = 'c.1.wb.action=one_shot_' + action.options.mode;
+					self.sendPTZ(cmd);
+					self.getCameraInformation_Delayed();
+				}
+			}
 		}
 
 		if (s.kelvin.cmd) {
@@ -1541,6 +1593,8 @@ module.exports = {
 							cmd += '&p.ptzspeed=' + self.data.presetSpeedValue;
 							break;
 					}
+
+					self.data.presetLastUsed = action.options.val;
 
 					self.sendPTZ(cmd);
 				}

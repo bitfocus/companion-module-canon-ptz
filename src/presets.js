@@ -99,6 +99,35 @@ module.exports = {
 					}
 				]
 			})
+
+			presets.push({
+				category: 'System',
+				label: 'Power Toggle',
+				bank: {
+					style: 'text',
+					text: 'Power\\nTOGGLE',
+					size: '18',
+					color: '16777215',
+					bgcolor: self.rgb(0, 0, 0),
+				},
+				actions: [
+					{
+						action: 'powerToggle',
+					}
+				],
+				feedbacks: [
+					{
+						type: 'powerState',
+						options: {
+							option: '1',
+						},
+						style: {
+							color: foregroundColor,
+							bgcolor: backgroundColorRed,
+						}
+					}
+				]
+			})
 		}
 
 		if (s.cameraName == true) {
@@ -183,6 +212,46 @@ module.exports = {
 						style: {
 							color: foregroundColor,
 							bgcolor: backgroundColorGreen,
+						}
+					}
+				]
+			})
+
+			presets.push({
+				category: 'System',
+				label: 'Tally Toggle',
+				bank: {
+					style: 'text',
+					text: 'Tally\\nTOGGLE',
+					size: '14',
+					color: '16777215',
+					bgcolor: self.rgb(0, 0, 0),
+					latch: true
+				},
+				actions: [
+					{
+						action: 'tallyToggle',
+					}
+				],
+				feedbacks: [
+					{
+						type: 'tallyPreview',
+						options: {
+							option: '1',
+						},
+						style: {
+							color: foregroundColor,
+							bgcolor: backgroundColorGreen,
+						}
+					},
+					{
+						type: 'tallyProgram',
+						options: {
+							option: '1',
+						},
+						style: {
+							color: foregroundColor,
+							bgcolor: backgroundColorRed,
 						}
 					}
 				]
@@ -1593,6 +1662,50 @@ module.exports = {
 
 			presets.push({
 				category: 'White Balance',
+				label: 'White Balance Calibration',
+				bank: {
+					style: 'text',
+					text: 'WB CALIB A',
+					size: '14',
+					color: '16777215',
+					bgcolor: self.rgb(0, 0, 0)
+				},
+				actions: [
+					{
+						action: 'whitebalanceCalibration',
+						options: [
+							{
+								mode: 'a'
+							}
+						]
+					}
+				]
+			})
+
+			presets.push({
+				category: 'White Balance',
+				label: 'White Balance Calibration',
+				bank: {
+					style: 'text',
+					text: 'WB CALIB B',
+					size: '14',
+					color: '16777215',
+					bgcolor: self.rgb(0, 0, 0)
+				},
+				actions: [
+					{
+						action: 'whitebalanceCalibration',
+						options: [
+							{
+								mode: 'b'
+							}
+						]
+					}
+				]
+			})
+
+			presets.push({
+				category: 'White Balance',
 				label: 'Current White Balance Mode',
 				bank: {
 					style: 'text',
@@ -2034,9 +2147,33 @@ module.exports = {
 								val: recall
 							}
 						}
+					],
+					feedbacks: [
+						{
+							type: 'lastUsedPset',
+							options: {
+								preset: recall,
+							},
+							style: {
+								color: foregroundColor,
+								bgcolor: backgroundColorRed,
+							}
+						}
 					]
 				})
 			}
+
+			presets.push({
+				category: 'Recall Preset',
+				label: 'Preset Last Used',
+				bank: {
+					style: 'text',
+					text: '$(canon-ptz:presetLastUsed)',
+					size: '14',
+					color: '16777215',
+					bgcolor: self.rgb(0, 0, 0)
+				}
+			})
 		}		
 
 		return presets

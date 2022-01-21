@@ -63,12 +63,12 @@ module.exports = {
 					var opt = feedback.options
 					switch (opt.option) {
 						case '0':
-							if (self.data.power === 'idle') {
+							if (self.data.powerState === 'idle') {
 								return true
 							}
 							break
 						case '1':
-							if (self.data.power === 'standby') {
+							if (self.data.powerState === 'standby') {
 								return true
 							}
 							break
@@ -496,6 +496,35 @@ module.exports = {
 					var opt = feedback.options
 					//opt.option
 					if (self.data.whitebalanceMode === opt.option) {
+						return true
+					}
+					return false
+				}
+			}
+		}
+
+		if (SERIES.feedbacks.presetLastUsed == true) {
+			feedbacks.lastUsedPset = {
+				type: 'boolean',
+				label: 'Preset - Last Used',
+				description: 'Indicate what preset was last recalled on the camera',
+				style: {
+					color: foregroundColor,
+					bgcolor: backgroundColorRed,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Select Preset',
+						id: 'preset',
+						default: 1,
+						choices: c.CHOICES_PRESETS
+					}
+				],
+				callback: function (feedback, bank) {
+					var opt = feedback.options
+
+					if (self.data.presetLastUsed === opt.preset) {
 						return true
 					}
 					return false

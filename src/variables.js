@@ -123,6 +123,9 @@ module.exports = {
 		}
 
 		//Recall Preset
+		if (SERIES.variables.presetLastUsed == true) {
+			variables.push({ name: 'presetLastUsed', label: 'Preset Last Used' })
+		}
 		if (SERIES.variables.presetRecallMode == true) {
 			variables.push({ name: 'presetRecallMode', label: 'Preset Recall Mode' })
 		}
@@ -408,6 +411,12 @@ module.exports = {
 			}
 			
 			//Recall Preset
+			if (SERIES.variables.presetLastUsed == true) {
+				let indexLastUsed = c.CHOICES_PRESETS.findIndex((PRESETLASTUSED) => PRESETLASTUSED.id == self.data.presetLastUsed);
+				self.presetLastUsedIndex = indexLastUsed;
+				self.setVariable('presetLastUsed', c.CHOICES_PRESETS[indexLastUsed].label);
+			}
+
 			if (SERIES.variables.presetRecallMode == true) {
 				let index = c.CHOICES_PRESETRECALLMODES.findIndex((PRESETRECALLMODE) => PRESETRECALLMODE.id == self.data.presetRecallMode);
 				self.presetRecallModeIndex = index;

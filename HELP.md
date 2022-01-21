@@ -19,6 +19,7 @@ The actions are separated into the following categories:
 - Set Camera Name
 - Tally Off (PVW/PGM)
 - Tally On (PVW/PGM)
+- Tally Toggle
 - Digital Zoom On/Off
 - Image Stabilization On/Off
 - Send Custom Command
@@ -69,6 +70,7 @@ The actions are separated into the following categories:
 **White Balance**
 
 - Set White Balance Mode
+- White Balance Calibration
 - Kelvin Up
 - Kelvin Down
 - Set Kelvin Value
@@ -167,4 +169,5 @@ A list of all the available Feedbacks in this module sorted into the following c
 
 **Presets**
 
+- Preset Last Used
 - Preset Recall Mode
