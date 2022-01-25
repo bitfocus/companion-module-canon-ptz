@@ -171,7 +171,7 @@ module.exports = {
 			actions.powerToggle = {
 				label: 'System - Power Toggle',
 				callback: function (action, bank) {
-					if (self.data.powerState = 'idle') {
+					if (self.data.powerState === 'idle') {
 						cmd = 'cmd=standby';
 						self.data.powerState = 'standby';
 					}
