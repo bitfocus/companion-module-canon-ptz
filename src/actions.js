@@ -213,6 +213,10 @@ module.exports = {
 					cmd = 'tally=off&tally.mode=program'
 					self.sendPTZ(cmd)
 					self.data.tallyProgram = 'off';
+					if (self.data.tallyPreview === 'on') {
+						cmd = 'tally=on&tally.mode=preview'
+						self.sendPTZ(cmd);
+					}
 					self.getCameraInformation_Delayed();
 				}
 			}
@@ -234,7 +238,11 @@ module.exports = {
 				callback: function (action, bank) {
 					cmd = 'tally=off&tally.mode=preview'
 					self.sendPTZ(cmd)
-					self.data.tallyProgram = 'off';
+					self.data.tallyPreview = 'off';
+					if (self.data.tallyProgram === 'on') {
+						cmd = 'tally=on&tally.mode=program'
+						self.sendPTZ(cmd);
+					}
 					self.getCameraInformation_Delayed();
 				}
 			}
@@ -244,7 +252,7 @@ module.exports = {
 				callback: function (action, bank) {
 					cmd = 'tally=on&tally.mode=preview'
 					self.sendPTZ(cmd)
-					self.data.tallyProgram = 'on';
+					self.data.tallyPreview = 'on';
 					self.getCameraInformation_Delayed();
 				}
 			}
