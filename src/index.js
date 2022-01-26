@@ -135,7 +135,29 @@ instance.prototype.getCameraInformation = function () {
 			function (err, result) {
 				// If there was an Error
 				if (err) {
-					self.log('error', 'Error from PTZ: ' + String(err))
+					let errString = '';
+					self.status(self.STATUS_ERROR);
+					try {
+						if (result.error.code) {
+							if (result.error.code === 'ETIMEDOUT') {
+								errString = 'Unable to reach device. Timed out.';
+							}
+							else {
+								errString = result.code.toString();
+							}
+						}
+						self.log('error', 'Error from PTZ: ' + errString);					
+					}
+					catch(error) {
+						self.log('error', 'PTZ gave an error: ' + error);
+					}
+
+					if (self.INTERVAL) {
+						self.log('info', 'Stopping Update Interval due to error.');
+						clearInterval(self.INTERVAL);
+						self.INTERVAL = null;
+					}
+					
 					return
 				}
 
@@ -430,38 +452,38 @@ instance.prototype.init = function () {
 		panTiltSpeedValue: 625,
 
 		//Exposure
-		exposureShootingMode: '',
+		exposureShootingMode: 'auto',
 		exposureShootingModeListString: '',
 		exposureShootingModeList: null,
-		exposureMode: '',
+		exposureMode: 'auto',
 		exposureModeListString: '',
 		exposureModeList: null,
-		shutterMode: '',
-		shutterValue: '',
+		shutterMode: 'manual',
+		shutterValue: 2,
 		shutterListString: '',
 		shutterList: null,
-		irisMode: '',
-		irisValue: '',
+		irisMode: 'manual',
+		irisValue: 180,
 		irisListString: '',
 		irisList: null,
-		gainMode: '',
-		gainValue: '',
-		ndValue: '',
+		gainMode: 'manual',
+		gainValue: 10,
+		ndfilterValue: '0',
 		pedestalValue: '',
 
 		//White Balance
-		whitebalanceMode: '',
+		whitebalanceMode: 'auto',
 		whitebalanceModeListString: '',
 		whitebalanceModeList: null,
-		kelvinValue: '',
+		kelvinValue: '2000',
 		kelvinListString: '',
 		kelvinList: null,
 		rGainValue: '0',
 		bGainValue: '0',
 
 		//Recall Preset
+		presetLastUsed: 1,
 		presetRecallMode: 'normal',
-		presetLastUsed: '',
 		presetTimeValue: 2000,
 		presetSpeedValue: 1
 	}
@@ -479,7 +501,7 @@ instance.prototype.init = function () {
 	self.irisIndex = 0
 	self.gainValue = 'auto'
 	self.gainIndex = 0
-	self.ndfilterValue = 0
+	self.ndfilterValue = '0'
 	self.ndfilterIndex = 0
 	self.pedestalValue = 0
 	self.pedestalIndex = 51
