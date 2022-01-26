@@ -50,23 +50,47 @@ instance.prototype.updateVariableAndInstanceLists = function () {
 	this.instanceList = instanceList
 }
 
-instance.prototype.tallyOnListener = function (variables) {
+instance.prototype.tallyOnPGMListener = function (variables) {
 	const self = this
-	const { tallyOnEnabled, tallyOnVariable, tallyOnValue } = self.config
+	const { tallyOnPGMEnabled, tallyOnPGMVariable, tallyOnPGMValue } = self.config
 
 	for (var key in variables) {
 		if (variables.hasOwnProperty(key)) {
 			// debug(key + " -> " + variables[key]);
 
-			if (!tallyOnEnabled || key !== tallyOnVariable) {
+			if (!tallyOnPGMEnabled || key !== tallyOnPGMVariable) {
 				return
 			}
 
-			self.system.emit('variable_parse', tallyOnValue, (parsedValue) => {
+			self.system.emit('variable_parse', tallyOnPGMValue, (parsedValue) => {
 				variables[key] = variables[key].toString()
-				debug('variable changed... updating tally', variables)
+				debug('variable changed... updating PGM tally', variables)
 				self.system.emit('action_run', {
 					action: variables[key] === parsedValue ? 'tallyProgramOn' : 'tallyProgramOff',
+					instance: self.id,
+				})
+			})
+		}
+	}
+}
+
+instance.prototype.tallyOnPVWListener = function (variables) {
+	const self = this
+	const { tallyOnPVWEnabled, tallyOnPVWVariable, tallyOnPVWValue } = self.config
+
+	for (var key in variables) {
+		if (variables.hasOwnProperty(key)) {
+			// debug(key + " -> " + variables[key]);
+
+			if (!tallyOnPVWEnabled || key !== tallyOnPVWVariable) {
+				return
+			}
+
+			self.system.emit('variable_parse', tallyOnPVWValue, (parsedValue) => {
+				variables[key] = variables[key].toString()
+				debug('variable changed... updating PVW tally', variables)
+				self.system.emit('action_run', {
+					action: variables[key] === parsedValue ? 'tallyPreviewOn' : 'tallyPreviewOff',
 					instance: self.id,
 				})
 			})
@@ -77,14 +101,26 @@ instance.prototype.tallyOnListener = function (variables) {
 instance.prototype.setupEventListeners = function () {
 	const self = this
 
-	if (self.config.tallyOnEnabled && self.config.tallyOnVariable) {
-		if (!self.activeTallyOnListener) {
-			self.activeTallyOnListener = self.tallyOnListener.bind(self)
-			self.system.on('variables_changed', self.activeTallyOnListener)
+	if (self.config.tallyOnPGMEnabled && self.config.tallyOnPGMVariable) {
+		if (!self.activeTallyOnPGMListener) {
+			self.activeTallyOnPGMListener = self.tallyOnPGMListener.bind(self)
+			self.system.on('variables_changed', self.activeTallyOnPGMListener)
 		}
-	} else if (self.activeTallyOnListener) {
-		self.system.removeListener('variables_changed', self.activeTallyOnListener)
-		delete self.activeTallyOnListener
+	}
+	else if (self.activeTallyOnPGMListener) {
+		self.system.removeListener('variables_changed', self.activeTallyOnPGMListener)
+		delete self.activeTallyOnPGMListener
+	}
+
+	if (self.config.tallyOnPVWEnabled && self.config.tallyOnPVWVariable) {
+		if (!self.activeTallyOnPVWListener) {
+			self.activeTallyOnPVWListener = self.tallyOnPVWListener.bind(self)
+			self.system.on('variables_changed', self.activeTallyOnPVWListener)
+		}
+	}
+	else if (self.activeTallyOnPVWListener) {
+		self.system.removeListener('variables_changed', self.activeTallyOnPVWListener)
+		delete self.activeTallyOnPVWListener
 	}
 }
 
@@ -344,9 +380,14 @@ instance.GetUpgradeScripts = function () {
 instance.prototype.destroy = function () {
 	var self = this
 
-	if (self.activeTallyOnListener) {
-		self.system.removeListener('variables_changed', self.activeTallyOnListener)
-		delete self.activeTallyOnListener
+	if (self.activePGMListener) {
+		self.system.removeListener('variables_changed', self.activeTallyOnPGMListener)
+		delete self.activeTallyOnPGMListener
+	}
+
+	if (self.activePVWListener) {
+		self.system.removeListener('variables_changed', self.activeTallyOnPVWListener)
+		delete self.activeTallyOnPVWListener
 	}
 
 	if (self.INTERVAL) {
@@ -574,22 +615,22 @@ instance.prototype.config_fields = function () {
 		},
 		{
 			type: 'checkbox',
-			id: 'tallyOnEnabled',
+			id: 'tallyOnPGMEnabled',
 			width: 1,
 			label: 'Enable',
 			default: true,
 		},
 		{
 			type: 'text',
-			id: 'tallyOnInfo',
+			id: 'tallyOnPGMInfo',
 			width: 4,
-			label: 'Tally On',
-			value: 'Set camera tally ON when the instance variable equals the value',
+			label: 'PGM Tally On',
+			value: 'Set camera PGM tally ON when the instance variable equals the value',
 		},
 		{
 			type: 'dropdown',
-			id: 'tallyOnVariable',
-			label: 'Tally On Variable',
+			id: 'tallyOnPGMVariable',
+			label: 'PGM Tally On Variable',
 			width: 4,
 			tooltip: 'The instance label and variable name',
 			choices: self.dynamicVariableChoices,
@@ -597,11 +638,42 @@ instance.prototype.config_fields = function () {
 		},
 		{
 			type: 'textinput',
-			id: 'tallyOnValue',
-			label: 'Tally On Value',
+			id: 'tallyOnPGMValue',
+			label: 'PGM Tally On Value',
 			width: 3,
 			tooltip:
-				'When the variable equals this value, the camera tally light will be turned on. Also supports dynamic variable references. For example, $(atem:short_1)',
+				'When the variable equals this value, the camera Program tally light will be turned on. Also supports dynamic variable references. For example, $(atem:short_1)',
+		},
+		{
+			type: 'checkbox',
+			id: 'tallyOnPVWEnabled',
+			width: 1,
+			label: 'Enable',
+			default: true,
+		},
+		{
+			type: 'text',
+			id: 'tallyOnPVWInfo',
+			width: 4,
+			label: 'PVW Tally On',
+			value: 'Set camera PVW tally ON when the instance variable equals the value',
+		},
+		{
+			type: 'dropdown',
+			id: 'tallyOnPVWVariable',
+			label: 'PVW Tally On Variable',
+			width: 4,
+			tooltip: 'The instance label and variable name',
+			choices: self.dynamicVariableChoices,
+			minChoicesForSearch: 5,
+		},
+		{
+			type: 'textinput',
+			id: 'tallyOnPVWValue',
+			label: 'PVW Tally On Value',
+			width: 3,
+			tooltip:
+				'When the variable equals this value, the camera Preview tally light will be turned on. Also supports dynamic variable references. For example, $(atem:short_1)',
 		},
 		{
 			type: 'checkbox',
