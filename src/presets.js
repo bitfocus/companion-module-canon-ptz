@@ -2122,7 +2122,13 @@ module.exports = {
 							action: 'savePset',
 							options: {
 								val: save,
-								name: 'preset' + save
+								name: 'preset' + save,
+								save_ptz: true,
+								save_focus: true,
+								save_exposure: true,
+								save_whitebalance: true,
+								save_is: true,
+								save_cp: true
 							}
 						}
 					]

@@ -123,6 +123,28 @@ module.exports = {
 		}
 
 		//Recall Preset
+		if (SERIES.variables.presetNames == true) {
+			variables.push({ name: 'presetname_1', label: 'Preset 1 Name' })
+			variables.push({ name: 'presetname_2', label: 'Preset 2 Name' })
+			variables.push({ name: 'presetname_3', label: 'Preset 3 Name' })
+			variables.push({ name: 'presetname_4', label: 'Preset 4 Name' })
+			variables.push({ name: 'presetname_5', label: 'Preset 5 Name' })
+			variables.push({ name: 'presetname_6', label: 'Preset 6 Name' })
+			variables.push({ name: 'presetname_7', label: 'Preset 7 Name' })
+			variables.push({ name: 'presetname_8', label: 'Preset 8 Name' })
+			variables.push({ name: 'presetname_9', label: 'Preset 9 Name' })
+			variables.push({ name: 'presetname_10', label: 'Preset 10 Name' })
+			variables.push({ name: 'presetname_11', label: 'Preset 11 Name' })
+			variables.push({ name: 'presetname_12', label: 'Preset 12 Name' })
+			variables.push({ name: 'presetname_13', label: 'Preset 13 Name' })
+			variables.push({ name: 'presetname_14', label: 'Preset 14 Name' })
+			variables.push({ name: 'presetname_15', label: 'Preset 15 Name' })
+			variables.push({ name: 'presetname_16', label: 'Preset 16 Name' })
+			variables.push({ name: 'presetname_17', label: 'Preset 17 Name' })
+			variables.push({ name: 'presetname_18', label: 'Preset 18 Name' })
+			variables.push({ name: 'presetname_19', label: 'Preset 19 Name' })
+			variables.push({ name: 'presetname_20', label: 'Preset 20 Name' })
+		}
 		if (SERIES.variables.presetLastUsed == true) {
 			variables.push({ name: 'presetLastUsed', label: 'Preset Last Used' })
 		}
@@ -411,6 +433,29 @@ module.exports = {
 			}
 			
 			//Recall Preset
+			if (SERIES.variables.presetNames == true) {
+				self.setVariable('presetname_1', self.data.presetname1);
+				self.setVariable('presetname_2', self.data.presetname2);
+				self.setVariable('presetname_3', self.data.presetname3);
+				self.setVariable('presetname_4', self.data.presetname4);
+				self.setVariable('presetname_5', self.data.presetname5);
+				self.setVariable('presetname_6', self.data.presetname6);
+				self.setVariable('presetname_7', self.data.presetname7);
+				self.setVariable('presetname_8', self.data.presetname8);
+				self.setVariable('presetname_9', self.data.presetname9);
+				self.setVariable('presetname_10', self.data.presetname10);
+				self.setVariable('presetname_11', self.data.presetname11);
+				self.setVariable('presetname_12', self.data.presetname12);
+				self.setVariable('presetname_13', self.data.presetname13);
+				self.setVariable('presetname_14', self.data.presetname14);
+				self.setVariable('presetname_15', self.data.presetname15);
+				self.setVariable('presetname_16', self.data.presetname16);
+				self.setVariable('presetname_17', self.data.presetname17);
+				self.setVariable('presetname_18', self.data.presetname18);
+				self.setVariable('presetname_19', self.data.presetname19);
+				self.setVariable('presetname_20', self.data.presetname20);
+			}
+
 			if (SERIES.variables.presetLastUsed == true) {
 				let indexLastUsed = c.CHOICES_PRESETS.findIndex((PRESETLASTUSED) => PRESETLASTUSED.id == self.data.presetLastUsed);
 				self.presetLastUsedIndex = indexLastUsed;

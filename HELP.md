@@ -84,7 +84,7 @@ The actions are separated into the following categories:
 
 **Save presets**
 
-- Save Preset 1-20
+- Save Preset 1-20, with options to set name and settings to save (ptz, focus, exposure, etc.)
 
 **Recall Presets**
 
@@ -142,6 +142,8 @@ A list of all the available Variables in this module sorted into the following c
 
 **Presets**
 
+- Preset Names
+- Last Preset Recalled
 - Preset Recall Mode
 - Preset Time Value
 - Preset Speed Value

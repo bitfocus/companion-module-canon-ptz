@@ -46,6 +46,7 @@ module.exports = {
 				rGainValue: true, //current r gain value
 				bGainValue: true, //current b gain value
 				//recall preset
+				presetNames: true, // preset stored names as variables
 				presetLastUsed: true, //preset last recalled
 				presetRecallMode: true, //preset recall mode normal, time, speed
 				presetTimeValue: true, //preset time value
@@ -135,6 +136,7 @@ module.exports = {
 				rGainValue: true, //current r gain value
 				bGainValue: true, //current b gain value
 				//recall preset
+				presetNames: true, // preset stored names as variables
 				presetLastUsed: true, //preset last recalled
 				presetRecallMode: true, //preset recall mode normal, time, speed
 				presetTimeValue: true, //preset time value
@@ -215,6 +217,7 @@ module.exports = {
 				rGainValue: true, //current r gain value
 				bGainValue: true, //current b gain value
 				//recall preset
+				presetNames: true, // preset stored names as variables
 				presetLastUsed: true, //preset last recalled
 				presetRecallMode: true, //preset recall mode normal, time, speed
 				presetTimeValue: true, //preset time value

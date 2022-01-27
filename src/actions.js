@@ -1565,10 +1565,87 @@ module.exports = {
 						id: 'name',
 						default: 'preset',
 						tooltip: 'Set the name of the preset.'
+					},
+					{
+						type: 'checkbox',
+						label: 'Save Position (PTZ)',
+						id: 'save_ptz',
+						default: true
+					},
+					{
+						type: 'checkbox',
+						label: 'Save Focus',
+						id: 'save_focus',
+						default: true
+					},
+					{
+						type: 'checkbox',
+						label: 'Save Exposure',
+						id: 'save_exposure',
+						default: true
+					},
+					{
+						type: 'checkbox',
+						label: 'Save White Balance',
+						id: 'save_whitebalance',
+						default: true
+					},
+					{
+						type: 'checkbox',
+						label: 'Save Image Stabilization (IS)',
+						id: 'save_is',
+						default: true
+					},
+					{
+						type: 'checkbox',
+						label: 'Save CP',
+						id: 'save_cp',
+						default: true
 					}
 				],
 				callback: function (action, bank) {
-					cmd = 'p=' + action.options.val + '&name=' + action.options.name + '&all=enabled';
+					cmd = 'p=' + action.options.val + '&name=' + action.options.name;
+					if ((action.options.save_ptz) && (action.options.save_focus) && (action.options.save_exposure) && (action.options.save_whitebalance) && (action.options.save_is) && (action.options.save_cp)) {
+						cmd += '&all=enabled';
+					}
+					else {
+						if (action.options.save_ptz) {
+							cmd += '&ptz=enabled';
+						}
+						else {
+							cmd += '&ptz=disabled';
+						}
+						if (action.options.save_focus) {
+							cmd += '&focus=enabled';
+						}
+						else {
+							cmd += '&focus=disabled';
+						}
+						if (action.options.save_exposure) {
+							cmd += '&exp=enabled';
+						}
+						else {
+							cmd += '&exp=disabled';
+						}
+						if (action.options.save_whitebalance) {
+							cmd += '&wb=enabled';
+						}
+						else {
+							cmd += '&wb=disabled';
+						}
+						if (action.options.save_is) {
+							cmd += '&is=enabled';
+						}
+						else {
+							cmd += '&is=disabled';
+						}
+						if (action.options.save_cp) {
+							cmd += '&cp=enabled';
+						}
+						else {
+							cmd += '&cp=disabled';
+						}
+					}
 					self.sendSavePreset(cmd);
 				}
 			}
