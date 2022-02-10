@@ -452,29 +452,14 @@ module.exports = {
 	// ####       Presets         ####
 	// ###############################
 
-	CHOICES_PRESETS: [
-		{ id: 1,  label: 'Preset 1' },
-		{ id: 2,  label: 'Preset 2' },
-		{ id: 3,  label: 'Preset 3' },
-		{ id: 4,  label: 'Preset 4' },
-		{ id: 5,  label: 'Preset 5' },
-		{ id: 6,  label: 'Preset 6' },
-		{ id: 7,  label: 'Preset 7' },
-		{ id: 8,  label: 'Preset 8' },
-		{ id: 9,  label: 'Preset 9' },
-		{ id: 10, label: 'Preset 10' },
-		{ id: 11, label: 'Preset 11' },
-		{ id: 12, label: 'Preset 12' },
-		{ id: 13, label: 'Preset 13' },
-		{ id: 14, label: 'Preset 14' },
-		{ id: 15, label: 'Preset 15' },
-		{ id: 16, label: 'Preset 16' },
-		{ id: 17, label: 'Preset 17' },
-		{ id: 18, label: 'Preset 18' },
-		{ id: 19, label: 'Preset 19' },
-		{ id: 20, label: 'Preset 20' }
-	],
-
+	CHOICES_PRESETS: function () {
+		var p = [];
+		for (let i = 1; i <= 100; i++) {
+			p.push({ id: i, label: 'Preset ' + i})
+		}
+		return p
+	},
+	
 	// ###############################
 	// #### Preset Speed Look Ups ####
 	// ###############################

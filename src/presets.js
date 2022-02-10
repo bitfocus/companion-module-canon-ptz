@@ -2106,7 +2106,7 @@ module.exports = {
 		}
 
 		if (s.presets == true) {
-			for (var save = 1; save <= 20; save++) {
+			for (var save = 1; save <= 100; save++) {
 				presets.push({
 					category: 'Save Preset',
 					label: 'Save Preset ' + save,
@@ -2135,7 +2135,7 @@ module.exports = {
 				})
 			}
 
-			for (var recall = 1; recall <= 20; recall++) {
+			for (var recall = 1; recall <= 100; recall++) {
 				presets.push({
 					category: 'Recall Preset',
 					label: 'Recall Preset ' + recall,

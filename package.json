@@ -1,7 +1,7 @@
 {
 	"name": "canon-ptz",
-	"version": "1.0.6",
-	"api_version": "1.0.0",
+	"version": "1.0.7",
+	"api_version": "1.0",
 	"keywords": [
 		"ptz",
 		"Camera"
@@ -17,13 +17,5 @@
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"author": "Joseph Adams <josephdadams@gmail.com>",
-	"license": "MIT",
-	"homepage": "https://github.com/bitfocus/companion-module-canon-ptz#readme",
-	"bugs": {
-		"url": "https://github.com/bitfocus/companion-module-canon-ptz/issues"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/bitfocus/companion-module-canon-ptz.git"
-	}
+	"license": "MIT"
 }

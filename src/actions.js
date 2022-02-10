@@ -1556,8 +1556,8 @@ module.exports = {
 						type: 'dropdown',
 						label: 'Preset Number',
 						id: 'val',
-						default: c.CHOICES_PRESETS[0].id,
-						choices: c.CHOICES_PRESETS,
+						default: c.CHOICES_PRESETS()[0].id,
+						choices: c.CHOICES_PRESETS(),
 					},
 					{
 						type: 'textinput',
@@ -1657,8 +1657,8 @@ module.exports = {
 						type: 'dropdown',
 						label: 'Preset Number',
 						id: 'val',
-						default: c.CHOICES_PRESETS[0].id,
-						choices: c.CHOICES_PRESETS,
+						default: c.CHOICES_PRESETS()[0].id,
+						choices: c.CHOICES_PRESETS(),
 					},
 				],
 				callback: function (action, bank) {

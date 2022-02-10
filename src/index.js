@@ -138,15 +138,18 @@ instance.prototype.getCameraInformation = function () {
 					let errString = '';
 					self.status(self.STATUS_ERROR);
 					try {
-						if (result.error.code) {
+						if (result && result.error && result.error.code) {
 							if (result.error.code === 'ETIMEDOUT') {
 								errString = 'Unable to reach device. Timed out.';
 							}
-							else {
-								errString = result.code.toString();
+							else if (result.error.code === 'ECONNREFUSED') {
+								errString = 'Connection refused. Is this the right IP address?';
 							}
+							else {
+								errString = result.error.code.toString();
+							}
+							self.log('error', 'Error from PTZ: ' + errString);	
 						}
-						self.log('error', 'Error from PTZ: ' + errString);					
 					}
 					catch(error) {
 						self.log('error', 'PTZ gave an error: ' + error);
@@ -361,68 +364,14 @@ instance.prototype.storeData = function (str) {
 			case 'p':
 				self.data.presetLastUsed = parseInt(str[1]);
 				break;
-			case 'p.1.name.utf8':
-				self.data.presetname1 = str[1];
-				break;
-			case 'p.2.name.utf8':
-				self.data.presetname2 = str[1];
-				break;
-			case 'p.3.name.utf8':
-				self.data.presetname3 = str[1];
-				break;
-			case 'p.4.name.utf8':
-				self.data.presetname4 = str[1];
-				break;
-			case 'p.5.name.utf8':
-				self.data.presetname5 = str[1];
-				break;
-			case 'p.6.name.utf8':
-				self.data.presetname6 = str[1];
-				break;
-			case 'p.7.name.utf8':
-				self.data.presetname7 = str[1];
-				break;
-			case 'p.8.name.utf8':
-				self.data.presetname8 = str[1];
-				break;
-			case 'p.9.name.utf8':
-				self.data.presetname9 = str[1];
-				break;
-			case 'p.10.name.utf8':
-				self.data.presetname10 = str[1];
-				break;
-			case 'p.11.name.utf8':
-				self.data.presetname11 = str[1];
-				break;
-			case 'p.12.name.utf8':
-				self.data.presetname12 = str[1];
-				break;
-			case 'p.13.name.utf8':
-				self.data.presetname13 = str[1];
-				break;
-			case 'p.14.name.utf8':
-				self.data.presetname14 = str[1];
-				break;
-			case 'p.15.name.utf8':
-				self.data.presetname15 = str[1];
-				break;
-			case 'p.16.name.utf8':
-				self.data.presetname16 = str[1];
-				break;
-			case 'p.17.name.utf8':
-				self.data.presetname17 = str[1];
-				break;
-			case 'p.18.name.utf8':
-				self.data.presetname18 = str[1];
-				break;
-			case 'p.19.name.utf8':
-				self.data.presetname19 = str[1];
-				break;
-			case 'p.20.name.utf8':
-				self.data.presetname20 = str[1];
-				break;
 			default:
 				break;
+		}
+
+		for (let i = 1; i <= 100; i++) {
+			if (str[0] === ('p.' + i + '.name.utf8')) {
+				self.data['presetname' + i] = str[1];
+			}
 		}
 	}
 	catch(error) {
@@ -542,30 +491,15 @@ instance.prototype.init = function () {
 		bGainValue: '0',
 
 		//Recall Preset
-		presetname1: 'preset1',
-		presetname2: 'preset2',
-		presetname3: 'preset3',
-		presetname4: 'preset4',
-		presetname5: 'preset5',
-		presetname6: 'preset6',
-		presetname7: 'preset7',
-		presetname8: 'preset8',
-		presetname9: 'preset9',
-		presetname10: 'preset10',
-		presetname11: 'preset11',
-		presetname12: 'preset12',
-		presetname13: 'preset13',
-		presetname14: 'preset14',
-		presetname15: 'preset15',
-		presetname16: 'preset16',
-		presetname17: 'preset17',
-		presetname18: 'preset18',
-		presetname19: 'preset19',
-		presetname20: 'preset20',
 		presetLastUsed: 1,
 		presetRecallMode: 'normal',
 		presetTimeValue: 2000,
 		presetSpeedValue: 1
+	}
+
+	//preset names
+	for (let i = 1; i <= 100; i++) {
+		self.data['presetname' + i] = 'preset' + i;
 	}
 
 	self.ptSpeed = 625

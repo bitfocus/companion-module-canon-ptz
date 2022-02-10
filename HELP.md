@@ -84,11 +84,11 @@ The actions are separated into the following categories:
 
 **Save presets**
 
-- Save Preset 1-20, with options to set name and settings to save (ptz, focus, exposure, etc.)
+- Save Preset 1-100, with options to set name and settings to save (ptz, focus, exposure, etc.)
 
 **Recall Presets**
 
-- Recall Preset 1-20
+- Recall Preset 1-100
 - Set Preset Playback Mode Normal
 - Set Preset Playback Time
 - Set Preset Playback Speed
