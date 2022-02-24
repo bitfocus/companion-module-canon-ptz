@@ -26,6 +26,7 @@ module.exports = {
 				//zoom/focus
 				zoomSpeed: true, //zoom speed value
 				focusSpeed: true, //focus speed value
+				focusValue: true, //focus length value
 				autoFocusMode: true, //focus mode auto/manual
 				//pan/tilt
 				panTiltSpeedValue: true, //current pan/tilt speed value
@@ -116,6 +117,7 @@ module.exports = {
 				//zoom/focus
 				zoomSpeed: true, //zoom speed value
 				focusSpeed: true, //focus speed value
+				focusValue: true, //focus length value
 				autoFocusMode: true, //focus mode auto/manual
 				//pan/tilt
 				panTiltSpeedValue: true, //current pan/tilt speed value
@@ -199,6 +201,9 @@ module.exports = {
 				firmwareVersion: true, //firmware version
 				protocolVersion: true, //protocol version
 				//zoom/focus
+				zoomSpeed: true, //zoom speed value
+				focusSpeed: true, //focus speed value
+				focusValue: true, //focus length value
 				autoFocusMode: true, //focus mode auto/manual
 				//exposure
 				exposureShootingMode: true, //exposure shooting mode (auto, manual, scene)

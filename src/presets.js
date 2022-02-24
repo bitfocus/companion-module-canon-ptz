@@ -881,6 +881,7 @@ module.exports = {
 					}
 				]
 			})
+
 			presets.push({
 				category: 'Lens',
 				label: 'Focus Speed High',
@@ -937,6 +938,23 @@ module.exports = {
 						options: {
 							speed: 0
 						}
+					}
+				]
+			})
+
+			presets.push({
+				category: 'Lens',
+				label: 'Focus Speed Toggle',
+				bank: {
+					style: 'text',
+					text: 'FOCUS\\nSPEED\\nTOGGLE\\n$(canon-ptz:focusSpeed)',
+					size: '7',
+					color: '16777215',
+					bgcolor: self.rgb(0, 0, 0),
+				},
+				actions: [
+					{
+						action: 'fSpeedToggle'
 					}
 				]
 			})

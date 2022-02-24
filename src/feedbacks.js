@@ -518,7 +518,7 @@ module.exports = {
 						label: 'Select Preset',
 						id: 'preset',
 						default: 1,
-						choices: c.CHOICES_PRESETS
+						choices: c.CHOICES_PRESETS()
 					}
 				],
 				callback: function (feedback, bank) {

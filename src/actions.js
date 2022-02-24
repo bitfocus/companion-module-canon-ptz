@@ -20,12 +20,22 @@ module.exports = {
 						)
 						self.log('warn', 'Send CMD: ' + String(str))
 					}
-					if (err) {
-						self.log('error', 'Error from PTZ: ' + String(err));
-						return
+					try {
+						if (result && result.error && result.error.code) {
+							if (result.error.code === 'ETIMEDOUT') {
+								errString = 'Unable to reach device. Timed out.';
+							}
+							else if (result.error.code === 'ECONNREFUSED') {
+								errString = 'Connection refused. Is this the right IP address?';
+							}
+							else {
+								errString = result.error.code.toString();
+							}
+							self.log('error', 'Error from PTZ: ' + errString);	
+						}
 					}
-					if (('data', result.response.req)) {
-						// console.log("Result from REST:" + result.data);
+					catch(error) {
+						self.log('error', 'PTZ gave an error: ' + error);
 					}
 				}
 			)
@@ -46,12 +56,22 @@ module.exports = {
 						)
 						self.log('warn', 'Send CMD: ' + String(str))
 					}
-					if (err) {
-						self.log('error', 'Error from PTZ: ' + String(err));
-						return
+					try {
+						if (result && result.error && result.error.code) {
+							if (result.error.code === 'ETIMEDOUT') {
+								errString = 'Unable to reach device. Timed out.';
+							}
+							else if (result.error.code === 'ECONNREFUSED') {
+								errString = 'Connection refused. Is this the right IP address?';
+							}
+							else {
+								errString = result.error.code.toString();
+							}
+							self.log('error', 'Error from PTZ: ' + errString);	
+						}
 					}
-					if (('data', result.response.req)) {
-						// console.log("Result from REST:" + result.data);
+					catch(error) {
+						self.log('error', 'PTZ gave an error: ' + error);
 					}
 				}
 			)
@@ -72,12 +92,22 @@ module.exports = {
 						)
 						self.log('warn', 'Send CMD: ' + String(str))
 					}
-					if (err) {
-						self.log('error', 'Error from PTZ: ' + String(err));
-						return
+					try {
+						if (result && result.error && result.error.code) {
+							if (result.error.code === 'ETIMEDOUT') {
+								errString = 'Unable to reach device. Timed out.';
+							}
+							else if (result.error.code === 'ECONNREFUSED') {
+								errString = 'Connection refused. Is this the right IP address?';
+							}
+							else {
+								errString = result.error.code.toString();
+							}
+							self.log('error', 'Error from PTZ: ' + errString);	
+						}
 					}
-					if (('data', result.response.req)) {
-						// console.log("Result from REST:" + result.data);
+					catch(error) {
+						self.log('error', 'PTZ gave an error: ' + error);
 					}
 				}
 			)
@@ -620,7 +650,7 @@ module.exports = {
 
 		if (s.focusSpeed == true) {
 			actions.fSpeedS = {
-				label: 'Lens - Focus Speed',
+				label: 'Lens - Set Focus Speed',
 				options: [
 					{
 						type: 'dropdown',
@@ -644,6 +674,9 @@ module.exports = {
 					}
 					self.fSpeed = c.CHOICES_FOCUSSPEED[self.fSpeedIndex].id
 					self.data.focusSpeed = self.fSpeed;
+
+					self.checkVariables();
+					
 					cmd = 'focus.speed=' + self.data.focusSpeed;
 					self.sendPTZ(cmd);
 					self.getCameraInformation_Delayed();
@@ -653,13 +686,16 @@ module.exports = {
 			actions.fSpeedU = {
 				label: 'Lens - Focus Speed Up',
 				callback: function (action, bank) {
-					if (self.fSpeedIndex == 0) {
+					if (self.fSpeedIndex <= 0) {
 						self.fSpeedIndex = 0
 					} else if (self.fSpeedIndex > 0) {
 						self.fSpeedIndex--
 					}
 					self.fSpeed = c.CHOICES_FOCUS_SPEED[self.fSpeedIndex].id
 					self.data.focusSpeed = self.fSpeed;
+
+					self.checkVariables();
+
 					cmd = 'focus.speed=' + self.data.focusSpeed;
 					self.sendPTZ(cmd);
 					self.getCameraInformation_Delayed();
@@ -669,13 +705,36 @@ module.exports = {
 			actions.fSpeedD = {
 				label: 'Lens - Focus Speed Down',
 				callback: function (action, bank) {
-					if (self.fSpeedIndex == c.CHOICES_FOCUS_SPEED.length) {
-						self.fSpeedIndex = c.CHOICES_FOCUS_SPEED.length
-					} else if (self.fSpeedIndex < c.CHOICES_FOCUS_SPEED.length) {
+					if (self.fSpeedIndex >= c.CHOICES_FOCUS_SPEED.length) {
+						self.fSpeedIndex = c.CHOICES_FOCUS_SPEED.length - 1
+					} else if (self.fSpeedIndex < c.CHOICES_FOCUS_SPEED.length - 1) {
 						self.fSpeedIndex++
 					}
 					self.fSpeed = c.CHOICES_FOCUS_SPEED[self.fSpeedIndex].id
 					self.data.focusSpeed = self.fSpeed;
+
+					self.checkVariables();
+
+					cmd = 'focus.speed=' + self.data.focusSpeed;
+					self.sendPTZ(cmd);
+					self.getCameraInformation_Delayed();
+				}
+			}
+
+			actions.fSpeedToggle = {
+				label: 'Lens - Focus Speed Toggle',
+				callback: function (action, bank) {
+					if (self.fSpeedIndex >= c.CHOICES_FOCUS_SPEED.length - 1) {
+						self.fSpeedIndex = 0
+					} else if (self.fSpeedIndex < c.CHOICES_FOCUS_SPEED.length - 1) {
+						self.fSpeedIndex++
+					}
+
+					self.fSpeed = c.CHOICES_FOCUS_SPEED[self.fSpeedIndex].id
+					self.data.focusSpeed = self.fSpeed;
+
+					self.checkVariables();
+					
 					cmd = 'focus.speed=' + self.data.focusSpeed;
 					self.sendPTZ(cmd);
 					self.getCameraInformation_Delayed();

@@ -259,6 +259,9 @@ instance.prototype.storeData = function (str) {
 			case 'c.1.focus.speed':
 				self.data.focusSpeed = str[1];
 				break;
+			case 'c.1.focus.value':
+				self.data.focusValue = str[1];
+				break;
 			case 'c.1.focus':
 				self.data.autoFocusMode = str[1];
 				break;
@@ -454,7 +457,8 @@ instance.prototype.init = function () {
 
 		//Zoom/Focus
 		zoomSpeed: 8,
-		focusSpeed: 25,
+		focusSpeed: 1,
+		focusValue: 0,
 		autoFocusMode: '',
 
 		//Pan/Tilt

@@ -35,9 +35,9 @@ module.exports = {
 	],
 
 	CHOICES_FOCUS_SPEED: [
-		{ id: 2, label: 'Speed 02 (Fast)' },
-		{ id: 1, label: 'Speed 01' },
-		{ id: 0, label: 'Speed 00 (Slow)' }
+		{ id: 2, label: 'High' },
+		{ id: 1, label: 'Medium' },
+		{ id: 0, label: 'Low' }
 	],
 
 	// ##########################

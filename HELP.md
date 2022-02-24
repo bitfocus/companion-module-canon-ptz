@@ -114,6 +114,7 @@ A list of all the available Variables in this module sorted into the following c
 
 - Zoom Speed
 - Focus Speed
+- Focus Value
 - Auto Focus Mode
 
 **Pan/Tilt**

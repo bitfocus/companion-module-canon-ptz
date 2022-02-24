@@ -69,6 +69,9 @@ module.exports = {
 		if (SERIES.variables.focusSpeed == true) {
 			variables.push({ name: 'focusSpeed', label: 'Focus Speed' })
 		}
+		if (SERIES.variables.focusValue == true) {
+			variables.push({ name: 'focusValue', label: 'Focus Value' })
+		}
 		if (SERIES.variables.autoFocusMode == true) {
 			variables.push({ name: 'autoFocusMode', label: 'Auto Focus Mode' })
 		}
@@ -191,7 +194,8 @@ module.exports = {
 	
 			//Zoom/Focus
 			self.setVariable('zoomSpeed', self.data.zoomSpeed);
-			self.setVariable('focusSpeed', self.data.focusSpeed);
+			self.setVariable('focusSpeed', c.CHOICES_FOCUS_SPEED[self.fSpeedIndex].label);
+			self.setVariable('focusValue', self.data.focusValue);
 			self.setVariable('autoFocusMode', self.data.autoFocusMode);
 	
 			//Pan/Tilt
