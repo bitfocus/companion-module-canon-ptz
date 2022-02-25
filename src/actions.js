@@ -657,7 +657,7 @@ module.exports = {
 						label: 'speed setting',
 						id: 'speed',
 						default: 1,
-						choices: c.CHOICES_FOCUSSPEED,
+						choices: c.CHOICES_FOCUS_SPEED,
 					},
 				],
 				callback: function (action, bank) {
@@ -672,7 +672,7 @@ module.exports = {
 					if (idx > -1) {
 						self.fSpeedIndex = idx
 					}
-					self.fSpeed = c.CHOICES_FOCUSSPEED[self.fSpeedIndex].id
+					self.fSpeed = c.CHOICES_FOCUS_SPEED[self.fSpeedIndex].id
 					self.data.focusSpeed = self.fSpeed;
 
 					self.checkVariables();
