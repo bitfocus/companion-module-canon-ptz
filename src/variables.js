@@ -439,12 +439,12 @@ module.exports = {
 			}	
 
 			if (SERIES.variables.presetTimeValue == true) {
-				let value = c.CHOICES_PSTIME().find((PRESETTIMEVALUE) => PRESETTIMEVALUE.id == self.data.presetTimeValue).label;
+				let value = c.CHOICES_PSTIME().find((PRESETTIMEVALUE) => PRESETTIMEVALUE.id == self.data.presetTimeValue).varLabel;
 				self.setVariable('presetTimeValue', value);
 			}
 
 			if (SERIES.variables.presetSpeedValue == true) {
-				let value = c.CHOICES_PSSPEED().find((PRESETSPEEDVALUE) => PRESETSPEEDVALUE.id == self.data.presetSpeedValue).label;
+				let value = c.CHOICES_PSSPEED().find((PRESETSPEEDVALUE) => PRESETSPEEDVALUE.id == self.data.presetSpeedValue).varLabel;
 				self.setVariable('presetSpeedValue', value);
 			}
 		}

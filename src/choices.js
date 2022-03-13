@@ -473,7 +473,7 @@ module.exports = {
 	CHOICES_PSTIME: function () {
 		var p = []
 		for (var i = 2; i <= 99; ++i) {
-			p.push({ id: (i * 1000), label: i + ' Sec' })
+			p.push({ id: (i * 1000), label: i + ' Sec' , varLabel: i })
 		}
 		return p
 	},
@@ -482,7 +482,7 @@ module.exports = {
 		let p = [];
 
 		for (let i = 1; i <= 100; i++) {
-			p.push({ id: i, label: 'Speed ' + i});
+			p.push({ id: i, label: 'Speed ' + i, varLabel: i });
 		}
 
 		return p
