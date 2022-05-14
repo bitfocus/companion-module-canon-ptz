@@ -86,6 +86,15 @@ module.exports = {
 			variables.push({ name: 'exposureShootingMode', label: 'Exposure Shooting Mode' })
 			variables.push({ name: 'exposureMode', label: 'Exposure Mode' })
 		}
+		if (SERIES.variables.ae == true) {
+			variables.push({ name: 'aeGainLimitMax', label: 'AE Gain Limit Max' })
+			variables.push({ name: 'aeGainLimitMaxMin', label: 'AE Gain Limit Max Min' })
+			variables.push({ name: 'aeGainLimitMaxMax', label: 'AE Gain Limit Max Max' })
+			variables.push({ name: 'aeBrightness', label: 'AE Brightness' })
+			variables.push({ name: 'aePhotometry', label: 'AE Photometry' })
+			variables.push({ name: 'aeFlickerReduct', label: 'AE Flicker Reduct' })
+			variables.push({ name: 'aeResp', label: 'AE Resp' })
+		}
 		if (SERIES.variables.shutterMode == true) {
 			variables.push({ name: 'shutterMode', label: 'Shutter Mode' })
 		}
@@ -244,6 +253,16 @@ module.exports = {
 					}
 				}
 				self.setVariable('exposureMode', exposureModeValue);
+			}
+
+			if (SERIES.variables.ae == true) {
+				self.setVariable('aeGainLimitMax', self.data.aeGainLimitMax);
+				self.setVariable('aeGainLimitMaxMin', self.data.aeGainLimitMaxMin);
+				self.setVariable('aeGainLimitMaxMax', self.data.aeGainLimitMaxMax);
+				self.setVariable('aeBrightness', self.data.aeBrightness);
+				self.setVariable('aePhotometry', self.data.aePhotometry);
+				self.setVariable('aeFlickerReduct', self.data.aeFlickerReduct);
+				self.setVariable('aeResp', self.data.aeResp);
 			}
 
 			if (SERIES.variables.shutterMode == true) {

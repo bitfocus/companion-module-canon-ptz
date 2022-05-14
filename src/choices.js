@@ -131,6 +131,112 @@ module.exports = {
 		return p
 	},
 
+	CHOICES_AEBRIGHTNESS_CRN: function () {
+		var list = [-8,-6,-4,-2,0,2,4,6,8];
+
+		return this.CHOICES_AEBRIGHTNESS_BUILD(list);
+	},
+
+	CHOICES_AEBRIGHTNESS_OTHER: function () {
+		var list = [-8,-6,-4,-2,0,2,4,6,8];
+
+		return this.CHOICES_AEBRIGHTNESS_BUILD(list);
+	},
+
+	CHOICES_AEBRIGHTNESS_BUILD: function (list) {
+		var p = [];
+
+		for (let i = 0; i < list.length; i++) {
+			p.push({
+				id: list[i],
+				label: list[i]
+			})
+		}
+
+		return p
+	},
+
+	CHOICES_AEPHOTOMETRY_CRN: function () {
+		var list = ['center', 'spotlight', 'backlight'];
+
+		return this.CHOICES_AEPHOTOMETRY_BUILD(list);
+	},
+
+	CHOICES_AEPHOTOMETRY_OTHER: function () {
+		var list = ['center', 'spotlight', 'backlight'];
+
+		return this.CHOICES_AEPHOTOMETRY_BUILD(list);
+	},
+
+	CHOICES_AEPHOTOMETRY_BUILD: function (list) {
+		var p = [];
+
+		for (let i = 0; i < list.length; i++) {
+			let label = '';
+
+			switch(list[i]) {
+				case 'center':
+					label = 'Center';
+					break;
+				case 'spotlight':
+					label = 'Spotlight';
+					break;
+				case 'backlight':
+					label = 'Backlight';
+					break;
+				default:
+					label = list[i];
+					break;
+			}
+
+			p.push({
+				id: list[i],
+				label: label
+			})
+		}
+
+		return p
+	},
+
+	CHOICES_AEFLICKERREDUCT_CRN: function () {
+		var list = ['off', 'auto'];
+
+		return this.CHOICES_AEFLICKERREDUCT_BUILD(list);
+	},
+
+	CHOICES_AEFLICKERREDUCT_OTHER: function () {
+		var list = ['off', 'auto'];
+
+		return this.CHOICES_AEFLICKERREDUCT_BUILD(list);
+	},
+
+	CHOICES_AEFLICKERREDUCT_BUILD: function (list) {
+		var p = [];
+
+		for (let i = 0; i < list.length; i++) {
+			let label = '';
+
+			switch(list[i]) {
+				case 'off':
+					label = 'Off';
+					break;
+				case 'auto':
+					label = 'Auto';
+					break;
+				default:
+					label = list[i];
+					break;
+			}
+
+			p.push({
+				id: list[i],
+				label: label
+			})
+		}
+
+		return p
+	},
+
 	// ##########################
 	// #### Shutter Look Ups ####
 	// ##########################

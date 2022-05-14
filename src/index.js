@@ -291,6 +291,70 @@ instance.prototype.storeData = function (str) {
 					self.init_presets();
 				}
 				break;
+			case 'c.1.ae.gainlimit.max':
+				self.data.aeGainLimitMax = parseInt(str[1]);
+				self.actions();
+				self.init_presets();
+				break;
+			case 'c.1.ae.gainlimit.max.min':
+				self.data.aeGainLimitMaxMin = parseInt(str[1]);
+				self.actions();
+				self.init_presets();
+				break;
+			case 'c.1.ae.gainlimit.max':
+				self.data.aeGainLimitMaxMax = parseInt(str[1]);
+				self.actions();
+				self.init_presets();
+				break;
+			case 'c.1.ae.brightness':
+				self.data.aeBrightness = str[1];
+				break;
+			case 'c.1.ae.brightness.list':
+				if (self.data.aeBrightnessListString !== str[1]) { //only rebuild the actions if the list has changed
+					self.data.aeBrightnessListString = str[1];
+					self.log('info', 'New AE Brightness List detected, reloading module: ' + self.data.aeBrightnessListString);
+					self.data.aeBrightnessList = str[1].split(',');
+					self.actions();
+					self.init_presets();
+				}
+				break;
+			case 'c.1.ae.photometry':
+				self.data.aePhotometry = str[1];
+				break;
+			case 'c.1.ae.photometry.list':
+				if (self.data.aePhotometryListString !== str[1]) { //only rebuild the actions if the list has changed
+					self.data.aePhotometryListString = str[1];
+					self.log('info', 'New AE Photometry List detected, reloading module: ' + self.data.aePhotometryListString);
+					self.data.aePhotometryList = str[1].split(',');
+					self.actions();
+					self.init_presets();
+				}
+				break;
+			case 'c.1.ae.flickerreduct':
+				self.data.aeFlickerReduct = str[1];
+				break;
+			case 'c.1.ae.flickerreductlist':
+				if (self.data.aeFlickerReductListString !== str[1]) { //only rebuild the actions if the list has changed
+					self.data.aeFlickerReductListString = str[1];
+					self.log('info', 'New AE Flicker Reduct List detected, reloading module: ' + self.data.aeFlickerReductListString);
+					self.data.aeFlickerReductList = str[1].split(',');
+					self.actions();
+					self.init_presets();
+				}
+				break;
+			case 'c.1.ae.resp':
+				self.data.aeResp = parseInt(str[1]);
+				break;
+			case 'c.1.ae.resp.min':
+				self.data.aeRespMin = parseInt(str[1]);
+				self.actions();
+				self.init_presets();
+				break;
+			case 'c.1.ae.resp.max':
+				self.data.aeRespMax = parseInt(str[1]);
+				self.actions();
+				self.init_presets();
+				break;
 			case 'c.1.me.shutter.mode':
 				self.data.shutterMode = str[1];
 				break;
@@ -471,6 +535,21 @@ instance.prototype.init = function () {
 		exposureMode: 'auto',
 		exposureModeListString: '',
 		exposureModeList: null,
+		aeGainLimitMax: 330,
+		aeGainLimitMaxMin: -60,
+		aeGainLimitMaxMax: 330,
+		aeBrightness: 0,
+		aeBrightnessListString: '',
+		aeBrightnessList: null,
+		aePhotometry: 'center',
+		aePhotometryListString: '',
+		aePhotometryList: null,
+		aeFlickerReduct: 'off',
+		aeFlickerReductListString: '',
+		aeFlickerReductList: null,
+		aeResp: 1,
+		aeRespMin: 0,
+		aeRespMax: 2,
 		shutterMode: 'manual',
 		shutterValue: 2,
 		shutterListString: '',

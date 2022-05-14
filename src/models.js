@@ -32,7 +32,8 @@ module.exports = {
 				panTiltSpeedValue: true, //current pan/tilt speed value
 				//exposure
 				exposureShootingMode: true, //exposure shooting mode (auto, manual, scene)
-				exposureMode: true, //exposure mode auto, av, tv, manual
+				exposureMode: true, //exposure mode auto, av, tv, manual,
+				ae: true, //ae gainlimit, brightness, photometry, flickerreduct
 				shutterMode: true, //shutter mode auto/manual
 				shutterValue: true, //shutter value
 				irisMode: true, //iris auto/manual
@@ -85,6 +86,11 @@ module.exports = {
 				oneshotAutoFocus: true,
 				exposureShootingMode: { cmd: 'c.1.shooting=', dropdown: c.CHOICES_EXPOSURESHOOTINGMODES_CRN() },
 				exposureMode: { cmd: 'c.1.exp=', dropdown: c.CHOICES_EXPOSUREMODES_CRN() },
+				aeGainLimit: true,
+				aeBrightness: { cmd: 'c.1.ae.brightness=', dropdown: c.CHOICES_AEBRIGHTNESS_CRN() },
+				aePhotometry: { cmd: 'c.1.ae.photometry=', dropdown: c.CHOICES_AEPHOTOMETRY_CRN() },
+				aeFlickerReduct: { cmd: 'c.1.ae.flickerreduct=', dropdown: c.CHOICES_AEFLICKERREDUCT_CRN() },
+				aeResp: true,
 				shutter: { cmd: 'c.1.me.shutter=', dropdown: c.CHOICES_SHUTTER_CRN() },
 				iris: { cmd: 'me.diaphragm=', dropdown: c.CHOICES_IRIS_CRN() },
 				gain: { cmd: 'c.1.me.gain=', dropdown: c.CHOICES_GAIN_CRN() },
@@ -124,6 +130,7 @@ module.exports = {
 				//exposure
 				exposureShootingMode: true, //exposure shooting mode (auto, manual, scene)
 				exposureMode: true, //exposure mode auto, av, tv, manual
+				ae: true, //ae gainlimit, brightness, photometry, flickerreduct
 				shutterMode: true, //shutter mode auto/manual
 				shutterValue: true, //shutter value
 				irisMode: true, //iris auto/manual
@@ -176,6 +183,11 @@ module.exports = {
 				oneshotAutoFocus: true,
 				exposureShootingMode: { cmd: 'c.1.shooting=', dropdown: c.CHOICES_EXPOSURESHOOTINGMODES_CRN() },
 				exposureMode: { cmd: 'c.1.exp=', dropdown: c.CHOICES_EXPOSUREMODES_CRN() },
+				aeGainLimit: true,
+				aeBrightness: { cmd: 'c.1.ae.brightness=', dropdown: c.CHOICES_AEBRIGHTNESS_CRN() },
+				aePhotometry: { cmd: 'c.1.ae.photometry=', dropdown: c.CHOICES_AEPHOTOMETRY_CRN() },
+				aeFlickerReduct: { cmd: 'c.1.ae.flickerreduct=', dropdown: c.CHOICES_AEFLICKERREDUCT_CRN() },
+				aeResp: true,
 				shutter: { cmd: 'c.1.me.shutter=', dropdown: c.CHOICES_SHUTTER_CRN() },
 				iris: { cmd: 'c.1.me.diaphragm=', dropdown: c.CHOICES_IRIS_CRN() },
 				gain: { cmd: 'c.1.me.gain=', dropdown: c.CHOICES_GAIN_CRN() },
@@ -208,6 +220,7 @@ module.exports = {
 				//exposure
 				exposureShootingMode: true, //exposure shooting mode (auto, manual, scene)
 				exposureMode: true, //exposure mode auto, av, tv, manual
+				ae: true, //ae gainlimit, brightness, photometry, flickerreduct
 				shutterMode: true, //shutter mode auto/manual
 				shutterValue: true, //shutter value
 				irisMode: true, //iris auto/manual
@@ -260,6 +273,11 @@ module.exports = {
 				oneshotAutoFocus: true, // Has One Shot Auto Focus Support
 				exposureShootingMode: { cmd: 'c.1.shooting=', dropdown: c.CHOICES_EXPOSURESHOOTINGMODES_OTHER() },
 				exposureMode: { cmd: 'c.1.exp=', dropdown: c.CHOICES_EXPOSUREMODES_OTHER() },
+				aeGainLimit: true,
+				aeBrightness: { cmd: 'c.1.ae.brightness=', dropdown: c.CHOICES_AEBRIGHTNESS_OTHER() },
+				aePhotometry: { cmd: 'c.1.ae.photometry=', dropdown: c.CHOICES_AEPHOTOMETRY_OTHER() },
+				aeFlickerReduct: { cmd: 'c.1.ae.flickerreduct=', dropdown: c.CHOICES_AEFLICKERREDUCT_OTHER() },
+				aeResp: true,
 				shutter: { cmd: 'c.1.me.shutter=', dropdown: c.CHOICES_SHUTTER_OTHER() }, // Has Shutter Support
 				iris: { cmd: 'c.1.me.diaphragm=', dropdown: c.CHOICES_IRIS_OTHER() },
 				gain: { cmd: 'c.1.me.gain=', dropdown: c.CHOICES_GAIN_OTHER() }, // Has Gain Support

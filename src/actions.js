@@ -157,6 +157,18 @@ module.exports = {
 			s.exposureMode.dropdown = c.CHOICES_EXPOSUREMODES_BUILD(self.data.exposureModeList); //rebuild the list by running the function again
 		}
 
+		if (self.data.aeBrightnessList !== null) {
+			s.aeBrightness.dropdown = c.CHOICES_AEBRIGHTNESS_BUILD(self.data.aeBrightnessList); //rebuild the list by running the function again
+		}
+
+		if (self.data.aePhotometryList !== null) {
+			s.aePhotometry.dropdown = c.CHOICES_AEPHOTOMETRY_BUILD(self.data.aePhotometryList); //rebuild the list by running the function again
+		}
+
+		if (self.data.aeFlickerReductList !== null) {
+			s.aeFlickerReduct.dropdown = c.CHOICES_AEFLICKERREDUCT_BUILD(self.data.aeFlickerReductList); //rebuild the list by running the function again
+		}
+
 		if (self.data.shutterList !== null) {
 			s.shutter.dropdown = c.CHOICES_SHUTTER_BUILD(self.data.shutterList); //rebuild the list by running the function again
 		}
@@ -875,7 +887,122 @@ module.exports = {
 						self.data.exposureShootingMode = 'manual';
 						cmd = 'c.1.exp=' + self.data.exposureMode;
 						self.sendPTZ(cmd);
-					}					
+					}		
+					self.getCameraInformation_Delayed();
+				}
+			}
+		}
+
+		if (s.aeGainLimit) {
+			actions.aeGainLimit = {
+				label: 'AE Gain Limit Max',
+				options: [
+					{
+						type: 'number',
+						label: 'Value',
+						id: 'val',
+						tooltip: 'Sets the Gain Limit Max',
+						min: self.data.aeGainLimitMaxMin,
+						max: self.data.aeGainLimitMaxMax,
+						default: 330,
+						step: 1,
+						required: true,
+						range: false
+					}
+				],
+				callback: function (action, bank) {
+					cmd = 'c.1.ae.gainlimit.max=' + action.options.val;
+					self.sendPTZ(cmd);
+					self.data.aeGainLimitMax = action.options.val;
+					self.getCameraInformation_Delayed();
+				}
+			}
+		}
+
+		if (s.aeBrightness.cmd) {
+			actions.aeBrightness = {
+				label: 'AE Brightness',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'AE Brightness',
+						id: 'val',
+						default: s.aeBrightness.dropdown[0].id,
+						choices: s.aeBrightness.dropdown
+					}
+				],
+				callback: function (action, bank) {
+					cmd = 'c.1.ae.brightness=' + action.options.val;
+					self.sendPTZ(cmd);
+					self.data.aeBrightness = action.options.val;
+					self.getCameraInformation_Delayed();
+				}
+			}
+		}
+
+		if (s.aePhotometry.cmd) {
+			actions.aePhotometry = {
+				label: 'AE Photometry',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'AE Photometry',
+						id: 'val',
+						default: s.aePhotometry.dropdown[0].id,
+						choices: s.aePhotometry.dropdown
+					}
+				],
+				callback: function (action, bank) {
+					cmd = 'c.1.ae.photometry=' + action.options.val;
+					self.sendPTZ(cmd);
+					self.data.aePhotometry = action.options.val;
+					self.getCameraInformation_Delayed();
+				}
+			}
+		}
+
+		if (s.aeFlickerReduct.cmd) {
+			actions.aeFlickerReduct = {
+				label: 'AE Flicker Reduct',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'AE Flicker Reduct',
+						id: 'val',
+						default: s.aeFlickerReduct.dropdown[0].id,
+						choices: s.aeFlickerReduct.dropdown
+					}
+				],
+				callback: function (action, bank) {
+					cmd = 'c.1.ae.flickerreduct=' + action.options.val;
+					self.sendPTZ(cmd);
+					self.data.aeFlickerReduct = action.options.val;
+					self.getCameraInformation_Delayed();
+				}
+			}
+		}
+
+		if (s.aeResp) {
+			actions.aeResp = {
+				label: 'AE Resp',
+				options: [
+					{
+						type: 'number',
+						label: 'Value',
+						id: 'val',
+						tooltip: 'Sets the AE Resp Value',
+						min: self.data.aeRespMin,
+						max: self.data.aeRespMax,
+						default: 1,
+						step: 1,
+						required: true,
+						range: false
+					}
+				],
+				callback: function (action, bank) {
+					cmd = 'c.1.ae.resp=' + action.options.val;
+					self.sendPTZ(cmd);
+					self.data.aeResp = action.options.val;
 					self.getCameraInformation_Delayed();
 				}
 			}
