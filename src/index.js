@@ -608,7 +608,7 @@ instance.prototype.config_fields = function () {
 		{
 			type: 'text',
 			id: 'tallyOnPGMInfo',
-			width: 4,
+			width: 12,
 			label: 'PGM Tally On',
 			value:
 				'Support for Tally On is no longer possible. Instead you can set this up as a trigger, and get additional control',
