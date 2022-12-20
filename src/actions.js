@@ -1742,7 +1742,7 @@ module.exports = {
 						type: 'dropdown',
 						label: 'Preset Number',
 						id: 'val',
-						default: c.CHOICES_PRESETS()[0].id,
+						default: c.CHOICES_PRESETS()[1].id,
 						choices: c.CHOICES_PRESETS(),
 					},
 					{
@@ -1790,7 +1790,13 @@ module.exports = {
 					}
 				],
 				callback: function (action, bank) {
-					cmd = 'p=' + action.options.val + '&name=' + action.options.name;
+					if (action.options.val === 0) {
+						cmd = 'p=' + self.data.presetLastUsed;
+					}
+					else {
+						cmd = 'p=' + action.options.val;
+					}
+					cmd += '&name=' + action.options.name;
 					if ((action.options.save_ptz) && (action.options.save_focus) && (action.options.save_exposure) && (action.options.save_whitebalance) && (action.options.save_is) && (action.options.save_cp)) {
 						cmd += '&all=enabled';
 					}
@@ -1843,7 +1849,7 @@ module.exports = {
 						type: 'dropdown',
 						label: 'Preset Number',
 						id: 'val',
-						default: c.CHOICES_PRESETS()[0].id,
+						default: c.CHOICES_PRESETS()[1].id,
 						choices: c.CHOICES_PRESETS(),
 					},
 				],
@@ -1854,7 +1860,13 @@ module.exports = {
 						self.data.presetRecallMode = 'normal';
 					}
 
-					cmd = 'p=' + action.options.val;
+					if (action.options.val === 0) {
+						cmd = 'p=' + self.data.presetLastUsed;
+					}
+					else {
+						cmd = 'p=' + action.options.val;
+						self.data.presetLastUsed = action.options.val;
+					}
 
 					switch(self.presetRecallMode) {
 						case 'time':
@@ -1864,8 +1876,6 @@ module.exports = {
 							cmd += '&p.ptzspeed=' + self.data.presetSpeedValue;
 							break;
 					}
-
-					self.data.presetLastUsed = action.options.val;
 
 					self.sendPTZ(cmd);
 				}

@@ -2153,6 +2153,33 @@ module.exports = {
 				})
 			}
 
+			presets.push({
+				category: 'Save Preset',
+				label: 'Save Last Preset',
+				bank: {
+					style: 'text',
+					text: 'Save\\nLast PSET\\n$(canon-ptz:presetLastUsed)',
+					size: '14',
+					color: '16777215',
+					bgcolor: self.rgb(0, 0, 0)
+				},
+				actions: [
+					{
+						action: 'savePset',
+						options: {
+							val: 0,
+							name: 'Last Preset Used',
+							save_ptz: true,
+							save_focus: true,
+							save_exposure: true,
+							save_whitebalance: true,
+							save_is: true,
+							save_cp: true
+						}
+					}
+				]
+			})
+
 			for (var recall = 1; recall <= 100; recall++) {
 				presets.push({
 					category: 'Recall Preset',
@@ -2192,11 +2219,19 @@ module.exports = {
 				label: 'Preset Last Used',
 				bank: {
 					style: 'text',
-					text: '$(canon-ptz:presetLastUsed)',
+					text: 'Recall\\nLast PSET\\n$(canon-ptz:presetLastUsed)',
 					size: '14',
 					color: '16777215',
 					bgcolor: self.rgb(0, 0, 0)
-				}
+				},
+				actions: [
+					{
+						action: 'recallPset',
+						options: {
+							val: 0
+						}
+					}
+				]
 			})
 		}		
 

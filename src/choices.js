@@ -560,6 +560,7 @@ module.exports = {
 
 	CHOICES_PRESETS: function () {
 		var p = [];
+		p.push({ id: 0, label: 'Last Preset Used'})
 		for (let i = 1; i <= 100; i++) {
 			p.push({ id: i, label: 'Preset ' + i})
 		}
