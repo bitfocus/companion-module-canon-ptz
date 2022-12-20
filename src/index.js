@@ -12,118 +12,6 @@ instance.prototype.INTERVAL = null; //used for polling device
 // #########################
 // #### Other Functions ####
 // #########################
-instance.prototype.updateVariableAndInstanceLists = function () {
-	const self = this
-
-	const dynamicVariableChoices = []
-	const instanceList = []
-	var i = 0
-
-	// Gets a List of all variables that exist currently
-	self.system.emit('variable_get_definitions', (definitions) =>
-		Object.entries(definitions).forEach(([instanceLabel, variables]) => {
-			variables.forEach((variable) =>
-				dynamicVariableChoices.push({
-					id: `${instanceLabel}:${variable.name}`,
-					label: `${instanceLabel}:${variable.name}`,
-				})
-			)
-		})
-	)
-
-	// Creates a list of all insances curently loaded active or not
-	system.emit('instance_getall', function (instances) {
-		try {
-			Object.entries(instances).forEach(([instanceID, instanceData]) => {
-				instanceList.push({
-					nr: `${i}`,
-					product: `${instanceData.product}`,
-					label: `${instanceData.label}`,
-					id: `${instanceID}`,
-				})
-				i++
-			})
-		} catch (e) {}
-	})
-
-	this.dynamicVariableChoices = dynamicVariableChoices
-	this.instanceList = instanceList
-}
-
-instance.prototype.tallyOnPGMListener = function (variables) {
-	const self = this
-	const { tallyOnPGMEnabled, tallyOnPGMVariable, tallyOnPGMValue } = self.config
-
-	for (var key in variables) {
-		if (variables.hasOwnProperty(key)) {
-			// debug(key + " -> " + variables[key]);
-
-			if (!tallyOnPGMEnabled || key !== tallyOnPGMVariable) {
-				return
-			}
-
-			self.system.emit('variable_parse', tallyOnPGMValue, (parsedValue) => {
-				variables[key] = variables[key].toString()
-				debug('variable changed... updating PGM tally', variables)
-				self.system.emit('action_run', {
-					action: variables[key] === parsedValue ? 'tallyProgramOn' : 'tallyProgramOff',
-					instance: self.id,
-				})
-			})
-		}
-	}
-}
-
-instance.prototype.tallyOnPVWListener = function (variables) {
-	const self = this
-	const { tallyOnPVWEnabled, tallyOnPVWVariable, tallyOnPVWValue } = self.config
-
-	for (var key in variables) {
-		if (variables.hasOwnProperty(key)) {
-			// debug(key + " -> " + variables[key]);
-
-			if (!tallyOnPVWEnabled || key !== tallyOnPVWVariable) {
-				return
-			}
-
-			self.system.emit('variable_parse', tallyOnPVWValue, (parsedValue) => {
-				variables[key] = variables[key].toString()
-				debug('variable changed... updating PVW tally', variables)
-				self.system.emit('action_run', {
-					action: variables[key] === parsedValue ? 'tallyPreviewOn' : 'tallyPreviewOff',
-					instance: self.id,
-				})
-			})
-		}
-	}
-}
-
-instance.prototype.setupEventListeners = function () {
-	const self = this
-
-	if (self.config.tallyOnPGMEnabled && self.config.tallyOnPGMVariable) {
-		if (!self.activeTallyOnPGMListener) {
-			self.activeTallyOnPGMListener = self.tallyOnPGMListener.bind(self)
-			self.system.on('variables_changed', self.activeTallyOnPGMListener)
-		}
-	}
-	else if (self.activeTallyOnPGMListener) {
-		self.system.removeListener('variables_changed', self.activeTallyOnPGMListener)
-		delete self.activeTallyOnPGMListener
-	}
-
-	if (self.config.tallyOnPVWEnabled && self.config.tallyOnPVWVariable) {
-		if (!self.activeTallyOnPVWListener) {
-			self.activeTallyOnPVWListener = self.tallyOnPVWListener.bind(self)
-			self.system.on('variables_changed', self.activeTallyOnPVWListener)
-		}
-	}
-	else if (self.activeTallyOnPVWListener) {
-		self.system.removeListener('variables_changed', self.activeTallyOnPVWListener)
-		delete self.activeTallyOnPVWListener
-	}
-}
-
 instance.prototype.getCameraInformation = function () {
 	//Get all information from Camera
 	var self = this
@@ -478,16 +366,6 @@ instance.GetUpgradeScripts = function () {
 instance.prototype.destroy = function () {
 	var self = this
 
-	if (self.activePGMListener) {
-		self.system.removeListener('variables_changed', self.activeTallyOnPGMListener)
-		delete self.activeTallyOnPGMListener
-	}
-
-	if (self.activePVWListener) {
-		self.system.removeListener('variables_changed', self.activeTallyOnPVWListener)
-		delete self.activeTallyOnPVWListener
-	}
-
 	if (self.INTERVAL) {
 		clearInterval(self.INTERVAL);
 		self.INTERVAL = null;
@@ -619,8 +497,6 @@ instance.prototype.init = function () {
 	self.config.model = this.config.model || 'Auto'
 	self.config.debug = this.config.debug || false
 	self.config.interval = this.config.interval || 5000
-	self.dynamicVariableChoices = []
-	self.instanceList = []
 
 	self.status(self.STATUS_WARNING, 'connecting')
 	self.getCameraInformation()
@@ -631,8 +507,6 @@ instance.prototype.init = function () {
 	self.checkVariables()
 	self.init_feedbacks()
 	self.checkFeedbacks()
-	self.updateVariableAndInstanceLists()
-	self.setupEventListeners()
 }
 
 // Update module after a config change
@@ -648,8 +522,6 @@ instance.prototype.updateConfig = function (config) {
 	self.checkVariables()
 	self.init_feedbacks()
 	self.checkFeedbacks()
-	self.updateVariableAndInstanceLists()
-	self.setupEventListeners()
 }
 
 // Return config fields for web config
@@ -670,7 +542,7 @@ instance.prototype.config_fields = function () {
 			id: 'host',
 			label: 'Camera IP',
 			width: 4,
-			regex: self.REGEX_IP
+			regex: self.REGEX_IP,
 		},
 		{
 			type: 'textinput',
@@ -708,14 +580,15 @@ instance.prototype.config_fields = function () {
 			id: 'intervalInfo',
 			width: 12,
 			label: 'Update Interval',
-			value: 'Please enter the amount of time in milliseconds to request new information from the camera. Set to 0 to disable.',
+			value:
+				'Please enter the amount of time in milliseconds to request new information from the camera. Set to 0 to disable.',
 		},
 		{
 			type: 'textinput',
 			id: 'interval',
 			label: 'Update Interval',
 			width: 3,
-			default: 5000
+			default: 5000,
 		},
 		{
 			type: 'text',
@@ -733,66 +606,12 @@ instance.prototype.config_fields = function () {
 				'These setting can be left on the default values and should give you a consistent setup, but they are there for you to use if need be.',
 		},
 		{
-			type: 'checkbox',
-			id: 'tallyOnPGMEnabled',
-			width: 1,
-			label: 'Enable',
-			default: true,
-		},
-		{
 			type: 'text',
 			id: 'tallyOnPGMInfo',
 			width: 4,
 			label: 'PGM Tally On',
-			value: 'Set camera PGM tally ON when the instance variable equals the value',
-		},
-		{
-			type: 'dropdown',
-			id: 'tallyOnPGMVariable',
-			label: 'PGM Tally On Variable',
-			width: 4,
-			tooltip: 'The instance label and variable name',
-			choices: self.dynamicVariableChoices,
-			minChoicesForSearch: 5,
-		},
-		{
-			type: 'textinput',
-			id: 'tallyOnPGMValue',
-			label: 'PGM Tally On Value',
-			width: 3,
-			tooltip:
-				'When the variable equals this value, the camera Program tally light will be turned on. Also supports dynamic variable references. For example, $(atem:short_1)',
-		},
-		{
-			type: 'checkbox',
-			id: 'tallyOnPVWEnabled',
-			width: 1,
-			label: 'Enable',
-			default: true,
-		},
-		{
-			type: 'text',
-			id: 'tallyOnPVWInfo',
-			width: 4,
-			label: 'PVW Tally On',
-			value: 'Set camera PVW tally ON when the instance variable equals the value',
-		},
-		{
-			type: 'dropdown',
-			id: 'tallyOnPVWVariable',
-			label: 'PVW Tally On Variable',
-			width: 4,
-			tooltip: 'The instance label and variable name',
-			choices: self.dynamicVariableChoices,
-			minChoicesForSearch: 5,
-		},
-		{
-			type: 'textinput',
-			id: 'tallyOnPVWValue',
-			label: 'PVW Tally On Value',
-			width: 3,
-			tooltip:
-				'When the variable equals this value, the camera Preview tally light will be turned on. Also supports dynamic variable references. For example, $(atem:short_1)',
+			value:
+				'Support for Tally On is no longer possible. Instead you can set this up as a trigger, and get additional control',
 		},
 		{
 			type: 'checkbox',
@@ -834,7 +653,7 @@ instance.prototype.checkVariables = function () {
 // ############################
 // #### Instance Feedbacks ####
 // ############################
-instance.prototype.init_feedbacks = function (system) {
+instance.prototype.init_feedbacks = function () {
 	this.setFeedbackDefinitions(feedbacks.setFeedbacks(this));
 }
 
@@ -853,7 +672,7 @@ instance.prototype.sendSavePreset = function(str) {
 	actions.sendSavePreset(this, str);
 }
 
-instance.prototype.actions = function (system) {
+instance.prototype.actions = function () {
 	this.setActions(actions.setActions(this));
 }
 
