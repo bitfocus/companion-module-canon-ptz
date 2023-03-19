@@ -6,183 +6,111 @@ module.exports = {
 	// #### Send Actions ####
 	// ######################
 
-	sendPTZ: function (i, str) {
-		var self = i
+	async sendPTZ(command, str) {
+		try {
+			if (str !== undefined) {
+				const connection = new API(this.config)
 
-		if (str !== undefined) {
-			self.system.emit(
-				'rest_get',
-				'http://' + self.config.host + ':' + self.config.httpPort + '/-wvhttp-01-/control.cgi?' + str,
-				function (err, result) {
-					if (self.config.debug == true) {
-						self.debug(
-							'http://' + self.config.host + ':' + self.config.httpPort + '/-wvhttp-01-/control.cgi?' + str
-						)
-						self.log('warn', 'Send CMD: ' + String(str))
-					}
-					try {
-						if (result && result.error && result.error.code) {
-							if (result.error.code === 'ETIMEDOUT') {
-								errString = 'Unable to reach device. Timed out.';
-							}
-							else if (result.error.code === 'ECONNREFUSED') {
-								errString = 'Connection refused. Is this the right IP address?';
-							}
-							else {
-								errString = result.error.code.toString();
-							}
-							self.log('error', 'Error from PTZ: ' + errString);	
-						}
-					}
-					catch(error) {
-						self.log('error', 'PTZ gave an error: ' + error);
-					}
+				let cmd = `${command}${str}`
+
+				if (this.config.verbose) {
+					this.log('debug', `Sending command: ${cmd}`);
 				}
-			)
-		}
-	},
 
-	sendPower: function (i, str) {
-		var self = i
+				const result = await connection.sendRequest(cmd)
 
-		if (str !== undefined) {
-			self.system.emit(
-				'rest_get',
-				'http://' + self.config.host + ':' + self.config.httpPort + '/-wvhttp-01-/standby.cgi?' + str,
-				function (err, result) {
-					if (self.config.debug == true) {
-						self.debug(
-							'http://' + self.config.host + ':' + self.config.httpPort + '/-wvhttp-01-/standby.cgi?' + str
-						)
-						self.log('warn', 'Send CMD: ' + String(str))
-					}
-					try {
-						if (result && result.error && result.error.code) {
-							if (result.error.code === 'ETIMEDOUT') {
-								errString = 'Unable to reach device. Timed out.';
-							}
-							else if (result.error.code === 'ECONNREFUSED') {
-								errString = 'Connection refused. Is this the right IP address?';
-							}
-							else {
-								errString = result.error.code.toString();
-							}
-							self.log('error', 'Error from PTZ: ' + errString);	
-						}
-					}
-					catch(error) {
-						self.log('error', 'PTZ gave an error: ' + error);
-					}
+				if (result.status === 'success') {
+					this.updateStatus('ok')
+				} else {
+					this.updateStatus('error')
+					this.log('error', result.status);
 				}
-			)
-		}
-	},
+			}
+		} catch (error) {
+			this.updateStatus('error')
 
-	sendSavePreset: function (i, str) {
-		var self = i
+			let errorText = String(error);
 
-		if (str !== undefined) {
-			self.system.emit(
-				'rest_get',
-				'http://' + self.config.host + ':' + self.config.httpPort + '/-wvhttp-01-/preset/set?' + str,
-				function (err, result) {
-					if (self.config.debug == true) {
-						self.debug(
-							'http://' + self.config.host + ':' + self.config.httpPort + '/-wvhttp-01-/preset/set?' + str
-						)
-						self.log('warn', 'Send CMD: ' + String(str))
-					}
-					try {
-						if (result && result.error && result.error.code) {
-							if (result.error.code === 'ETIMEDOUT') {
-								errString = 'Unable to reach device. Timed out.';
-							}
-							else if (result.error.code === 'ECONNREFUSED') {
-								errString = 'Connection refused. Is this the right IP address?';
-							}
-							else {
-								errString = result.error.code.toString();
-							}
-							self.log('error', 'Error from PTZ: ' + errString);	
-						}
-					}
-					catch(error) {
-						self.log('error', 'PTZ gave an error: ' + error);
-					}
-				}
-			)
+			if (errorText.match('ECONNREFUSED')) {
+				this.log('error', 'Unable to connect to the server.')
+			}
+			else if (errorText.match('ETIMEDOUT') || errorText.match('ENOTFOUND')) {
+				this.log('error', 'Connection to server has timed out.')
+			}
+			else {
+				this.log('error', `An error has occurred: ${errorText}`);
+			}
 		}
 	},
 
 	// ##########################
 	// #### Instance Actions ####
 	// ##########################
-	setActions: function (i) {
-		var self = i
-		var actions = {}
-		var SERIES = {}
-		var cmd = ''
+	initActions: function () {
+		let actions = {}
+		let SERIES = {}
+		let cmd = ''
 
 		// Set the model and series selected, if in auto, detect what model is connected
-		if (self.config.model === 'Auto') {
-			self.data.model = self.data.modelDetected
+		if (this.config.model === 'Auto') {
+			this.data.model = this.data.modelDetected
 		} else {
-			self.data.model = self.config.model
+			this.data.model = this.config.model
 		}
 
-		if (self.data.model !== '') {
-			self.data.series = MODELS.find((MODELS) => MODELS.id == self.data.model).series
+		if (this.data.model !== '') {
+			this.data.series = MODELS.find((MODELS) => MODELS.id == this.data.model).series
 		}
 
 		// Find the specific commands for a given series
 		if (
-			self.data.series === 'Auto' ||
-			self.data.series === 'Other' ||
-			SERIES_SPECS.find((SERIES_SPECS) => SERIES_SPECS.id == self.data.series) == undefined
+			this.data.series === 'Auto' ||
+			this.data.series === 'Other' ||
+			SERIES_SPECS.find((SERIES_SPECS) => SERIES_SPECS.id == this.data.series) == undefined
 		) {
 			SERIES = SERIES_SPECS.find((SERIES_SPECS) => SERIES_SPECS.id == 'Other')
 		}
 		else {
-			SERIES = SERIES_SPECS.find((SERIES_SPECS) => SERIES_SPECS.id == self.data.series)
+			SERIES = SERIES_SPECS.find((SERIES_SPECS) => SERIES_SPECS.id == this.data.series)
 		}
 
 		var s = SERIES.actions;
 
 		//check if any lists need to be updated
-		if (self.data.exposureShootingModeList !== null) {
-			s.exposureShootingMode.dropdown = c.CHOICES_EXPOSURESHOOTINGMODES_BUILD(self.data.exposureShootingModeList); //rebuild the list by running the function again
+		if (this.data.exposureShootingModeList !== null) {
+			s.exposureShootingMode.dropdown = c.CHOICES_EXPOSURESHOOTINGMODES_BUILD(this.data.exposureShootingModeList); //rebuild the list by running the function again
 		}
 
-		if (self.data.exposureModeList !== null) {
-			s.exposureMode.dropdown = c.CHOICES_EXPOSUREMODES_BUILD(self.data.exposureModeList); //rebuild the list by running the function again
+		if (this.data.exposureModeList !== null) {
+			s.exposureMode.dropdown = c.CHOICES_EXPOSUREMODES_BUILD(this.data.exposureModeList); //rebuild the list by running the function again
 		}
 
-		if (self.data.aeBrightnessList !== null) {
-			s.aeBrightness.dropdown = c.CHOICES_AEBRIGHTNESS_BUILD(self.data.aeBrightnessList); //rebuild the list by running the function again
+		if (this.data.aeBrightnessList !== null) {
+			s.aeBrightness.dropdown = c.CHOICES_AEBRIGHTNESS_BUILD(this.data.aeBrightnessList); //rebuild the list by running the function again
 		}
 
-		if (self.data.aePhotometryList !== null) {
-			s.aePhotometry.dropdown = c.CHOICES_AEPHOTOMETRY_BUILD(self.data.aePhotometryList); //rebuild the list by running the function again
+		if (this.data.aePhotometryList !== null) {
+			s.aePhotometry.dropdown = c.CHOICES_AEPHOTOMETRY_BUILD(this.data.aePhotometryList); //rebuild the list by running the function again
 		}
 
-		if (self.data.aeFlickerReductList !== null) {
-			s.aeFlickerReduct.dropdown = c.CHOICES_AEFLICKERREDUCT_BUILD(self.data.aeFlickerReductList); //rebuild the list by running the function again
+		if (this.data.aeFlickerReductList !== null) {
+			s.aeFlickerReduct.dropdown = c.CHOICES_AEFLICKERREDUCT_BUILD(this.data.aeFlickerReductList); //rebuild the list by running the function again
 		}
 
-		if (self.data.shutterList !== null) {
-			s.shutter.dropdown = c.CHOICES_SHUTTER_BUILD(self.data.shutterList); //rebuild the list by running the function again
+		if (this.data.shutterList !== null) {
+			s.shutter.dropdown = c.CHOICES_SHUTTER_BUILD(this.data.shutterList); //rebuild the list by running the function again
 		}
 
-		if (self.data.irisList !== null) {
-			s.iris.dropdown = c.CHOICES_IRIS_BUILD(self.data.irisList); //rebuild the list by running the function again
+		if (this.data.irisList !== null) {
+			s.iris.dropdown = c.CHOICES_IRIS_BUILD(this.data.irisList); //rebuild the list by running the function again
 		}
 
-		if (self.data.kelvinList !== null) {
-			s.kelvin.dropdown = c.CHOICES_KELVIN_BUILD(self.data.kelvinList); //rebuild the list
+		if (this.data.kelvinList !== null) {
+			s.kelvin.dropdown = c.CHOICES_KELVIN_BUILD(this.data.kelvinList); //rebuild the list
 		}
 
-		if (self.data.whitebalanceModeList !== null) {
-			s.whitebalanceMode.dropdown = c.CHOICES_WBMODE_BUILD(self.data.whitebalanceModeList); //rebuild the list by running the function again
+		if (this.data.whitebalanceModeList !== null) {
+			s.whitebalanceMode.dropdown = c.CHOICES_WBMODE_BUILD(this.data.whitebalanceModeList); //rebuild the list by running the function again
 		}
 
 		// ########################
@@ -191,45 +119,48 @@ module.exports = {
 
 		if (s.powerState == true) {
 			actions.powerOff = {
-				label: 'System - Power Off',
-				callback: function (action, bank) {
+				name: 'System - Power Off',
+				options: [],
+				callback: async (action) => {
 					cmd = 'cmd=standby'
-					self.sendPower(cmd);
-					self.data.powerState = 'standby';
-					self.getCameraInformation_Delayed();
+					this.sendPTZ(this.powerCommand, cmd);
+					this.data.powerState = 'standby';
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.powerOn = {
-				label: 'System - Power On',
-				callback: function (action, bank) {
+				name: 'System - Power On',
+				options: [],
+				callback: async (action) => {
 					cmd = 'cmd=idle'
-					self.sendPower(cmd);
-					self.data.powerState = 'idle';
-					self.getCameraInformation_Delayed();
+					this.sendPTZ(this.powerCommand, cmd);
+					this.data.powerState = 'idle';
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.powerToggle = {
-				label: 'System - Power Toggle',
-				callback: function (action, bank) {
-					if (self.data.powerState === 'idle') {
+				name: 'System - Power Toggle',
+				options: [],
+				callback: async (action) => {
+					if (this.data.powerState === 'idle') {
 						cmd = 'cmd=standby';
-						self.data.powerState = 'standby';
+						this.data.powerState = 'standby';
 					}
 					else {
 						cmd = 'cmd=idle';
-						self.data.powerState = 'idle';
+						this.data.powerState = 'idle';
 					}
-					self.sendPower(cmd);
-					self.getCameraInformation_Delayed();
+					this.sendPTZ(this.powerCommand, cmd);
+					this.getCameraInformation_Delayed();
 				}
 			}
 		}
 
 		if (s.cameraName.cmd) {
 			actions.cameraName = {
-				label: 'Set Camera Name',
+				name: 'Set Camera Name',
 				options: [
 					{
 						type: 'textinput',
@@ -239,10 +170,10 @@ module.exports = {
 						tooltip: 'Set the name of the camera.'
 					}
 				],
-				callback: function (action, bank) {
+				callback: async (action) => {
 					cmd = 'c.1.name.utf8=' + action.options.name;
 					if (cmd !== '') {
-						self.sendPTZ(cmd)
+						this.sendPTZ(this.ptzCommand, cmd)
 					}
 				}
 			}
@@ -250,77 +181,82 @@ module.exports = {
 
 		if (s.tallyProgram == true) {
 			actions.tallyProgramOff = {
-				label: 'System - Tally Off (Program)',
-				callback: function (action, bank) {
+				name: 'System - Tally Off (Program)',
+				options: [],
+				callback: async (action) => {
 					cmd = 'tally=off&tally.mode=program'
-					self.sendPTZ(cmd)
-					self.data.tallyProgram = 'off';
-					if (self.data.tallyPreview === 'on') {
+					this.sendPTZ(this.ptzCommand, cmd)
+					this.data.tallyProgram = 'off';
+					if (this.data.tallyPreview === 'on') {
 						cmd = 'tally=on&tally.mode=preview'
-						self.sendPTZ(cmd);
+						this.sendPTZ(this.ptzCommand, cmd);
 					}
-					self.getCameraInformation_Delayed();
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.tallyProgramOn = {
-				label: 'System - Tally On (Program)',
-				callback: function (action, bank) {
+				name: 'System - Tally On (Program)',
+				options: [],
+				callback: async (action) => {
 					cmd = 'tally=on&tally.mode=program'
-					self.sendPTZ(cmd)
-					self.data.tallyProgram = 'on';
-					self.getCameraInformation_Delayed();
+					this.sendPTZ(this.ptzCommand, cmd)
+					this.data.tallyProgram = 'on';
+					this.getCameraInformation_Delayed();
 				}
 			}
 		}
 
 		if (s.tallyPreview == true) {
 			actions.tallyPreviewOff = {
-				label: 'System - Tally Off (Preview)',
-				callback: function (action, bank) {
+				name: 'System - Tally Off (Preview)',
+				options: [],
+				callback: async (action) => {
 					cmd = 'tally=off&tally.mode=preview'
-					self.sendPTZ(cmd)
-					self.data.tallyPreview = 'off';
-					if (self.data.tallyProgram === 'on') {
+					this.sendPTZ(this.ptzCommand, cmd)
+					this.data.tallyPreview = 'off';
+					if (this.data.tallyProgram === 'on') {
 						cmd = 'tally=on&tally.mode=program'
-						self.sendPTZ(cmd);
+						this.sendPTZ(this.ptzCommand, cmd);
 					}
-					self.getCameraInformation_Delayed();
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.tallyPreviewOn = {
-				label: 'System - Tally On (Preview)',
-				callback: function (action, bank) {
+				name: 'System - Tally On (Preview)',
+				options: [],
+				callback: async (action) => {
 					cmd = 'tally=on&tally.mode=preview'
-					self.sendPTZ(cmd)
-					self.data.tallyPreview = 'on';
-					self.getCameraInformation_Delayed();
+					this.sendPTZ(this.ptzCommand, cmd)
+					this.data.tallyPreview = 'on';
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.tallyToggle = {
-				label: 'System - Tally Toggle',
-				callback: function (action, bank) {
-					if (self.data.tallyProgram === 'on') {
+				name: 'System - Tally Toggle',
+				options: [],
+				callback: async (action) => {
+					if (this.data.tallyProgram === 'on') {
 						cmd = 'tally=on&tally.mode=preview';
-						self.data.tallyPreview = 'on';
-						self.data.tallyProgram = 'off';
+						this.data.tallyPreview = 'on';
+						this.data.tallyProgram = 'off';
 					}
 					else {
 						cmd = 'tally=on&tally.mode=program';
-						self.data.tallyProgram = 'on';
-						self.data.tallyPreview = 'off';
+						this.data.tallyProgram = 'on';
+						this.data.tallyPreview = 'off';
 					}	
-					self.sendPTZ(cmd)
-					self.getCameraInformation_Delayed();
+					this.sendPTZ(this.ptzCommand, cmd)
+					this.getCameraInformation_Delayed();
 				}
 			}
 		}
 
 		if (s.digitalZoom == true) {
 			actions.digitalZoom = {
-				label: 'Digital Zoom On/Off',
+				name: 'Digital Zoom On/Off',
 				options: [
 					{
 						type: 'dropdown',
@@ -333,24 +269,24 @@ module.exports = {
 						],
 					},
 				],
-				callback: function (action, bank) {
+				callback: async (action) => {
 					if (action.options.bol == 0) {
 						cmd = 'c.1.zoom.mode=off'
-						self.data.digitalZoom = 'off';
+						this.data.digitalZoom = 'off';
 					}
 					if (action.options.bol == 1) {
 						cmd = 'c.1.zoom.mode=dzoom'
-						self.data.digitalZoom = 'dzoom';
+						this.data.digitalZoom = 'dzoom';
 					}
-					self.sendPTZ(cmd)
-					self.getCameraInformation_Delayed();
+					this.sendPTZ(this.ptzCommand, cmd)
+					this.getCameraInformation_Delayed();
 				}
 			}
 		}
 
 		if (s.imageStabilization == true) {
 			actions.imageStabilization = {
-				label: 'Image Stabilization On/Off',
+				name: 'Image Stabilization On/Off',
 				options: [
 					{
 						type: 'dropdown',
@@ -363,24 +299,24 @@ module.exports = {
 						],
 					},
 				],
-				callback: function (action, bank) {
+				callback: async (action) => {
 					if (action.options.bol == 0) {
 						cmd = 'c.1.is=off'
-						self.data.imageStabilization = 'off';
+						this.data.imageStabilization = 'off';
 					}
 					if (action.options.bol == 1) {
 						cmd = 'c.1.is=on1'
-						self.data.imageStabilization = 'on1';
+						this.data.imageStabilization = 'on1';
 					}
-					self.sendPTZ(cmd)
-					self.getCameraInformation_Delayed();
+					this.sendPTZ(this.ptzCommand, cmd)
+					this.getCameraInformation_Delayed();
 				}
 			}
 		}
 
 		if (s.custom == true) {
 			actions.customCommand = {
-				label: 'Send Custom Command',
+				name: 'Send Custom Command',
 				options: [
 					{
 						type: 'textinput',
@@ -388,13 +324,13 @@ module.exports = {
 						id: 'command',
 						default: '',
 						tooltip: 'Send a custom command. If it is not a supported command, the device may reject it.'
-					  }
+					}
 				],
-				callback: function (action, bank) {
+				callback: async (action) => {
 					cmd = action.options.command
 					if (cmd !== '') {
-						self.sendPTZ(cmd)
-						self.getCameraInformation_Delayed();
+						this.sendPTZ(this.ptzCommand, cmd)
+						this.getCameraInformation_Delayed();
 					}
 				}
 			}
@@ -406,141 +342,153 @@ module.exports = {
 
 		if (s.panTilt == true) {
 			actions.left = {
-				label: 'Pan/Tilt - Pan Left',
-				callback: function (action, bank) {
-					cmd = 'pan=left&pan.speed.dir=' + self.ptSpeed
-					self.sendPTZ(cmd)
+				name: 'Pan/Tilt - Pan Left',
+				options: [],
+				callback: async (action) => {
+					cmd = 'pan=left&pan.speed.dir=' + this.ptSpeed
+					this.sendPTZ(this.ptzCommand, cmd)
 				}
 			}
 
 			actions.right = {
-				label: 'Pan/Tilt - Pan Right',
-				callback: function (action, bank) {
-					cmd = 'pan=right&pan.speed.dir=' + self.ptSpeed
-					self.sendPTZ(cmd)
+				name: 'Pan/Tilt - Pan Right',
+				options: [],
+				callback: async (action) => {
+					cmd = 'pan=right&pan.speed.dir=' + this.ptSpeed
+					this.sendPTZ(this.ptzCommand, cmd)
 				}
 			}
 
 			actions.up = {
-				label: 'Pan/Tilt - Tilt Up',
-				callback: function (action, bank) {
-					cmd = 'tilt=up&tilt.speed.dir=' + self.ptSpeed
-					self.sendPTZ(cmd)
+				name: 'Pan/Tilt - Tilt Up',
+				options: [],
+				callback: async (action) => {
+					cmd = 'tilt=up&tilt.speed.dir=' + this.ptSpeed
+					this.sendPTZ(this.ptzCommand, cmd)
 				}
 			}
 
 			actions.down = {
-				label: 'Pan/Tilt - Tilt Down',
-				callback: function (action, bank) {
-					cmd = 'tilt=down&tilt.speed.dir=' + self.ptSpeed
-					self.sendPTZ(cmd)
+				name: 'Pan/Tilt - Tilt Down',
+				options: [],
+				callback: async (action) => {
+					cmd = 'tilt=down&tilt.speed.dir=' + this.ptSpeed
+					this.sendPTZ(this.ptzCommand, cmd)
 				}
 			}
 
 			actions.upLeft = {
-				label: 'Pan/Tilt - Up Left',
-				callback: function (action, bank) {
-					cmd = 'pan=left&pan.speed.dir=' + self.ptSpeed + '&tilt=up&tilt.speed.dir=' + self.ptSpeed
-					self.sendPTZ(cmd)
+				name: 'Pan/Tilt - Up Left',
+				options: [],
+				callback: async (action) => {
+					cmd = 'pan=left&pan.speed.dir=' + this.ptSpeed + '&tilt=up&tilt.speed.dir=' + this.ptSpeed
+					this.sendPTZ(this.ptzCommand, cmd)
 				}
 			}
 
 			actions.upRight = {
-				label: 'Pan/Tilt - Up Right',
-				callback: function (action, bank) {
-					cmd = 'pan=right&pan.speed.dir=' + self.ptSpeed + '&tilt=up&tilt.speed.dir=' + self.ptSpeed
-					self.sendPTZ(cmd)
+				name: 'Pan/Tilt - Up Right',
+				options: [],
+				callback: async (action) => {
+					cmd = 'pan=right&pan.speed.dir=' + this.ptSpeed + '&tilt=up&tilt.speed.dir=' + this.ptSpeed
+					this.sendPTZ(this.ptzCommand, cmd)
 				}
 			}
 
 			actions.downLeft = {
-				label: 'Pan/Tilt - Down Left',
-				callback: function (action, bank) {
-					cmd = 'pan=left&pan.speed.dir=' + self.ptSpeed + '&tilt=down&tilt.speed.dir=' + self.ptSpeed
-					self.sendPTZ(cmd)
+				name: 'Pan/Tilt - Down Left',
+				options: [],
+				callback: async (action) => {
+					cmd = 'pan=left&pan.speed.dir=' + this.ptSpeed + '&tilt=down&tilt.speed.dir=' + this.ptSpeed
+					this.sendPTZ(this.ptzCommand, cmd)
 				}
 			}
 
 			actions.downRight = {
-				label: 'Pan/Tilt - Down Right',
-				callback: function (action, bank) {
-					cmd = 'pan=right&pan.speed.dir=' + self.ptSpeed + '&tilt=down&tilt.speed.dir=' + self.ptSpeed
-					self.sendPTZ(cmd)
+				name: 'Pan/Tilt - Down Right',
+				options: [],
+				callback: async (action) => {
+					cmd = 'pan=right&pan.speed.dir=' + this.ptSpeed + '&tilt=down&tilt.speed.dir=' + this.ptSpeed
+					this.sendPTZ(this.ptzCommand, cmd)
 				}
 			}
 
 			actions.stop = {
-				label: 'Pan/Tilt - Stop',
-				callback: function (action, bank) {
+				name: 'Pan/Tilt - Stop',
+				options: [],
+				callback: async (action) => {
 					cmd = 'pan=stop&tilt=stop'
-					self.sendPTZ(cmd)
+					this.sendPTZ(this.ptzCommand, cmd)
 				}
 			}
 
 			actions.home = {
-				label: 'Pan/Tilt - Home',
-				callback: function (action, bank) {
+				name: 'Pan/Tilt - Home',
+				options: [],
+				callback: async (action) => {
 					cmd = 'pan=0&tilt=0'
-					self.sendPTZ(cmd)
+					this.sendPTZ(this.ptzCommand, cmd)
 				}
 			}
 		}
 
 		if (s.ptSpeed == true) {
 			actions.ptSpeedU = {
-				label: 'Pan/Tilt - Speed Up',
-				callback: function (action, bank) {
-					if (self.ptSpeedIndex == 0) {
-						self.ptSpeedIndex = 0
-					} else if (self.ptSpeedIndex > 0) {
-						self.ptSpeedIndex--
+				name: 'Pan/Tilt - Speed Up',
+				options: [],
+				callback: async (action) => {
+					if (this.ptSpeedIndex == 0) {
+						this.ptSpeedIndex = 0
+					} else if (this.ptSpeedIndex > 0) {
+						this.ptSpeedIndex--
 					}
-					self.ptSpeed = c.CHOICES_PT_SPEED[self.ptSpeedIndex].id
-					self.data.panTiltSpeedValue = self.ptSpeed;
-					self.getCameraInformation_Delayed();
+					this.ptSpeed = c.CHOICES_PT_SPEED[this.ptSpeedIndex].id
+					this.data.panTiltSpeedValue = this.ptSpeed;
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.ptSpeedD = {
-				label: 'Pan/Tilt - Speed Down',
-				callback: function (action, bank) {
-					if (self.ptSpeedIndex == c.CHOICES_PT_SPEED.length) {
-						self.ptSpeedIndex = c.CHOICES_PT_SPEED.length
-					} else if (self.ptSpeedIndex < c.CHOICES_PT_SPEED.length) {
-						self.ptSpeedIndex++
+				name: 'Pan/Tilt - Speed Down',
+				options: [],
+				callback: async (action) => {
+					if (this.ptSpeedIndex == c.CHOICES_PT_SPEED.length) {
+						this.ptSpeedIndex = c.CHOICES_PT_SPEED.length
+					} else if (this.ptSpeedIndex < c.CHOICES_PT_SPEED.length) {
+						this.ptSpeedIndex++
 					}
-					self.ptSpeed = c.CHOICES_PT_SPEED[self.ptSpeedIndex].id
-					self.data.panTiltSpeedValue = self.ptSpeed;
-					self.getCameraInformation_Delayed();
+					this.ptSpeed = c.CHOICES_PT_SPEED[this.ptSpeedIndex].id
+					this.data.panTiltSpeedValue = this.ptSpeed;
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.ptSpeedS = {
-				label: 'Pan/Tilt - Set Speed',
+				name: 'Pan/Tilt - Set Speed',
 				options: [
 					{
 						type: 'dropdown',
-						label: 'speed setting',
+						label: 'Pan/Tilt Speed Setting',
 						id: 'speed',
 						default: 625,
 						choices: c.CHOICES_PT_SPEED,
 					},
 				],
-				callback: function (action, bank) {
-					self.ptSpeed = action.options.speed
+				callback: async (action) => {
+					this.ptSpeed = action.options.speed
 					var idx = -1
 					for (var i = 0; i < c.CHOICES_PT_SPEED.length; ++i) {
-						if (c.CHOICES_PT_SPEED[i].id == self.ptSpeed) {
+						if (c.CHOICES_PT_SPEED[i].id == this.ptSpeed) {
 							idx = i
 							break
 						}
 					}
 					if (idx > -1) {
-						self.ptSpeedIndex = idx
+						this.ptSpeedIndex = idx
 					}
-					self.ptSpeed = c.CHOICES_PT_SPEED[self.ptSpeedIndex].id
-					self.data.panTiltSpeedValue = self.ptSpeed;
-					self.getCameraInformation_Delayed();
+					this.ptSpeed = c.CHOICES_PT_SPEED[this.ptSpeedIndex].id
+					this.data.panTiltSpeedValue = this.ptSpeed;
+					this.getCameraInformation_Delayed();
 				}
 			}
 		}
@@ -551,212 +499,242 @@ module.exports = {
 
 		if (s.zoom == true) {
 			actions.zoomI = {
-				label: 'Lens - Zoom In',
-				callback: function (action, bank) {
-					cmd = 'zoom=tele&zoom.speed.dir=' + self.zSpeed
-					self.sendPTZ(cmd)
+				name: 'Lens - Zoom In',
+				options: [],
+				callback: async (action) => {
+					cmd = 'zoom=tele&zoom.speed.dir=' + this.zSpeed
+					this.sendPTZ(this.ptzCommand, cmd)
 				}
 			}
 
 			actions.zoomO = {
-				label: 'Lens - Zoom Out',
-				callback: function (action, bank) {
-					cmd = 'zoom=wide&zoom.speed.dir=' + self.zSpeed
-					self.sendPTZ(cmd)
+				name: 'Lens - Zoom Out',
+				options: [],
+				callback: async (action) => {
+					cmd = 'zoom=wide&zoom.speed.dir=' + this.zSpeed
+					this.sendPTZ(this.ptzCommand, cmd)
 				}
 			}
 
 			actions.zoomS = {
-				label: 'Lens - Zoom Stop',
-				callback: function (action, bank) {
+				name: 'Lens - Zoom Stop',
+				options: [],
+				callback: async (action) => {
 					cmd = 'zoom=stop'
-					self.sendPTZ(cmd)
+					this.sendPTZ(this.ptzCommand, cmd)
+				}
+			}
+		}
+
+		if (s.zoomValue == true) {
+			actions.zoomValue = {
+				name: 'Lens - Set Zoom Value',
+				options: [
+					{
+						type: 'textinput',
+						label: 'Zoom Value',
+						id: 'value',
+						default: '',
+						tooltip: 'Set a custom zoom level. If it is not within range, the device may reject it.'
+					}
+				],
+				callback: async (action) => {
+					cmd = 'zoom=' + action.options.value;
+					this.sendPTZ(this.ptzCommand, cmd)
 				}
 			}
 		}
 
 		if (s.zoomSpeed == true) {
 			actions.zSpeedS = {
-				label: 'Lens - Set Zoom Speed',
+				name: 'Lens - Set Zoom Speed',
 				options: [
 					{
 						type: 'dropdown',
-						label: 'speed setting',
+						label: 'Zoom Speed Setting',
 						id: 'speed',
 						default: 8,
 						choices: c.CHOICES_ZOOM_SPEED,
 					},
 				],
-				callback: function (action, bank) {
-					self.zSpeed = action.options.speed
+				callback: async (action) => {
+					this.zSpeed = action.options.speed
 					var idx = -1
 					for (var i = 0; i < c.CHOICES_ZOOM_SPEED.length; ++i) {
-						if (c.CHOICES_ZOOM_SPEED[i].id == self.zSpeed) {
+						if (c.CHOICES_ZOOM_SPEED[i].id == this.zSpeed) {
 							idx = i
 							break
 						}
 					}
 					if (idx > -1) {
-						self.zSpeedIndex = idx
+						this.zSpeedIndex = idx
 					}
-					self.zSpeed = c.CHOICES_ZOOM_SPEED[self.zSpeedIndex].id
-					self.data.zoomSpeed = self.zSpeed;
-					self.getCameraInformation_Delayed();
+					this.zSpeed = c.CHOICES_ZOOM_SPEED[this.zSpeedIndex].id
+					this.data.zoomSpeed = this.zSpeed;
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.zSpeedU = {
-				label: 'Lens - Zoom Speed Up',
-				callback: function (action, bank) {
-					if (self.zSpeedIndex == 0) {
-						self.zSpeedIndex = 0
-					} else if (self.zSpeedIndex > 0) {
-						self.zSpeedIndex--
+				name: 'Lens - Zoom Speed Up',
+				options: [],
+				callback: async (action) => {
+					if (this.zSpeedIndex == 0) {
+						this.zSpeedIndex = 0
+					} else if (this.zSpeedIndex > 0) {
+						this.zSpeedIndex--
 					}
-					self.zSpeed = c.CHOICES_ZOOM_SPEED[self.zSpeedIndex].id
-					self.data.zoomSpeed = self.zSpeed;
-					self.getCameraInformation_Delayed();
+					this.zSpeed = c.CHOICES_ZOOM_SPEED[this.zSpeedIndex].id
+					this.data.zoomSpeed = this.zSpeed;
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.zSpeedD = {
-				label: 'Lens - Zoom Speed Down',
-				callback: function (action, bank) {
-					if (self.zSpeedIndex == c.CHOICES_ZOOM_SPEED.length) {
-						self.zSpeedIndex = c.CHOICES_ZOOM_SPEED.length
-					} else if (self.zSpeedIndex < c.CHOICES_ZOOM_SPEED.length) {
-						self.zSpeedIndex++
+				name: 'Lens - Zoom Speed Down',
+				options: [],
+				callback: async (action) => {
+					if (this.zSpeedIndex == c.CHOICES_ZOOM_SPEED.length) {
+						this.zSpeedIndex = c.CHOICES_ZOOM_SPEED.length
+					} else if (this.zSpeedIndex < c.CHOICES_ZOOM_SPEED.length) {
+						this.zSpeedIndex++
 					}
-					self.zSpeed = c.CHOICES_ZOOM_SPEED[self.zSpeedIndex].id
-					self.data.zoomSpeed = self.zSpeed;
-					self.getCameraInformation_Delayed();
+					this.zSpeed = c.CHOICES_ZOOM_SPEED[this.zSpeedIndex].id
+					this.data.zoomSpeed = this.zSpeed;
+					this.getCameraInformation_Delayed();
 				}
 			}
 		}
 
 		if (s.focus == true) {
 			actions.focusN = {
-				label: 'Lens - Focus Near',
-				callback: function (action, bank) {
+				name: 'Lens - Focus Near',
+				options: [],
+				callback: async (action) => {
 					cmd = 'focus.action=near'
-					self.sendPTZ(cmd)
+					this.sendPTZ(this.ptzCommand, cmd)
 				}
 			}
 
 			actions.focusF = {
-				label: 'Lens - Focus Far',
-				callback: function (action, bank) {
+				name: 'Lens - Focus Far',
+				options: [],
+				callback: async (action) => {
 					cmd = 'focus.action=far'
-					self.sendPTZ(cmd)
+					this.sendPTZ(this.ptzCommand, cmd)
 				}
 			}
 
 			actions.focusS = {
-				label: 'Lens - Focus Stop',
-				callback: function (action, bank) {
+				name: 'Lens - Focus Stop',
+				options: [],
+				callback: async (action) => {
 					cmd = 'focus.action=stop'
-					self.sendPTZ(cmd)
+					this.sendPTZ(this.ptzCommand, cmd)
 				}
 			}
 		}
 
 		if (s.focusSpeed == true) {
 			actions.fSpeedS = {
-				label: 'Lens - Set Focus Speed',
+				name: 'Lens - Set Focus Speed',
 				options: [
 					{
 						type: 'dropdown',
-						label: 'speed setting',
+						label: 'Focus Speed Setting',
 						id: 'speed',
 						default: 1,
 						choices: c.CHOICES_FOCUS_SPEED,
 					},
 				],
-				callback: function (action, bank) {
-					self.fSpeed = action.options.speed
+				callback: async (action) => {
+					this.fSpeed = action.options.speed
 					var idx = -1
 					for (var i = 0; i < c.CHOICES_FOCUS_SPEED.length; ++i) {
-						if (c.CHOICES_FOCUS_SPEED[i].id == self.fSpeed) {
+						if (c.CHOICES_FOCUS_SPEED[i].id == this.fSpeed) {
 							idx = i
 							break
 						}
 					}
 					if (idx > -1) {
-						self.fSpeedIndex = idx
+						this.fSpeedIndex = idx
 					}
-					self.fSpeed = c.CHOICES_FOCUS_SPEED[self.fSpeedIndex].id
-					self.data.focusSpeed = self.fSpeed;
+					this.fSpeed = c.CHOICES_FOCUS_SPEED[this.fSpeedIndex].id
+					this.data.focusSpeed = this.fSpeed;
 
-					self.checkVariables();
+					this.checkVariables();
 					
-					cmd = 'focus.speed=' + self.data.focusSpeed;
-					self.sendPTZ(cmd);
-					self.getCameraInformation_Delayed();
+					cmd = 'focus.speed=' + this.data.focusSpeed;
+					this.sendPTZ(this.ptzCommand, cmd);
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.fSpeedU = {
-				label: 'Lens - Focus Speed Up',
-				callback: function (action, bank) {
-					if (self.fSpeedIndex <= 0) {
-						self.fSpeedIndex = 0
-					} else if (self.fSpeedIndex > 0) {
-						self.fSpeedIndex--
+				name: 'Lens - Focus Speed Up',
+				options: [],
+				callback: async (action) => {
+					if (this.fSpeedIndex <= 0) {
+						this.fSpeedIndex = 0
+					} else if (this.fSpeedIndex > 0) {
+						this.fSpeedIndex--
 					}
-					self.fSpeed = c.CHOICES_FOCUS_SPEED[self.fSpeedIndex].id
-					self.data.focusSpeed = self.fSpeed;
+					this.fSpeed = c.CHOICES_FOCUS_SPEED[this.fSpeedIndex].id
+					this.data.focusSpeed = this.fSpeed;
 
-					self.checkVariables();
+					this.checkVariables();
 
-					cmd = 'focus.speed=' + self.data.focusSpeed;
-					self.sendPTZ(cmd);
-					self.getCameraInformation_Delayed();
+					cmd = 'focus.speed=' + this.data.focusSpeed;
+					this.sendPTZ(this.ptzCommand, cmd);
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.fSpeedD = {
-				label: 'Lens - Focus Speed Down',
-				callback: function (action, bank) {
-					if (self.fSpeedIndex >= c.CHOICES_FOCUS_SPEED.length) {
-						self.fSpeedIndex = c.CHOICES_FOCUS_SPEED.length - 1
-					} else if (self.fSpeedIndex < c.CHOICES_FOCUS_SPEED.length - 1) {
-						self.fSpeedIndex++
+				name: 'Lens - Focus Speed Down',
+				options: [],
+				callback: async (action) => {
+					if (this.fSpeedIndex >= c.CHOICES_FOCUS_SPEED.length) {
+						this.fSpeedIndex = c.CHOICES_FOCUS_SPEED.length - 1
+					} else if (this.fSpeedIndex < c.CHOICES_FOCUS_SPEED.length - 1) {
+						this.fSpeedIndex++
 					}
-					self.fSpeed = c.CHOICES_FOCUS_SPEED[self.fSpeedIndex].id
-					self.data.focusSpeed = self.fSpeed;
+					this.fSpeed = c.CHOICES_FOCUS_SPEED[this.fSpeedIndex].id
+					this.data.focusSpeed = this.fSpeed;
 
-					self.checkVariables();
+					this.checkVariables();
 
-					cmd = 'focus.speed=' + self.data.focusSpeed;
-					self.sendPTZ(cmd);
-					self.getCameraInformation_Delayed();
+					cmd = 'focus.speed=' + this.data.focusSpeed;
+					this.sendPTZ(this.ptzCommand, cmd);
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.fSpeedToggle = {
-				label: 'Lens - Focus Speed Toggle',
-				callback: function (action, bank) {
-					if (self.fSpeedIndex >= c.CHOICES_FOCUS_SPEED.length - 1) {
-						self.fSpeedIndex = 0
-					} else if (self.fSpeedIndex < c.CHOICES_FOCUS_SPEED.length - 1) {
-						self.fSpeedIndex++
+				name: 'Lens - Focus Speed Toggle',
+				options: [],
+				callback: async (action) => {
+					if (this.fSpeedIndex >= c.CHOICES_FOCUS_SPEED.length - 1) {
+						this.fSpeedIndex = 0
+					} else if (this.fSpeedIndex < c.CHOICES_FOCUS_SPEED.length - 1) {
+						this.fSpeedIndex++
 					}
 
-					self.fSpeed = c.CHOICES_FOCUS_SPEED[self.fSpeedIndex].id
-					self.data.focusSpeed = self.fSpeed;
+					this.fSpeed = c.CHOICES_FOCUS_SPEED[this.fSpeedIndex].id
+					this.data.focusSpeed = this.fSpeed;
 
-					self.checkVariables();
+					this.checkVariables();
 					
-					cmd = 'focus.speed=' + self.data.focusSpeed;
-					self.sendPTZ(cmd);
-					self.getCameraInformation_Delayed();
+					cmd = 'focus.speed=' + this.data.focusSpeed;
+					this.sendPTZ(this.ptzCommand, cmd);
+					this.getCameraInformation_Delayed();
 				}
 			}
 		}
 
 		if (s.autoFocus == true) {
 			actions.focusM = {
-				label: 'Lens - Focus Mode (Auto/Manual Focus)',
+				name: 'Lens - Focus Mode (Auto/Manual Focus)',
 				options: [
 					{
 						type: 'dropdown',
@@ -769,42 +747,44 @@ module.exports = {
 						],
 					},
 				],
-				callback: function (action, bank) {
+				callback: async (action) => {
 					if (action.options.bol == 0) {
 						cmd = 'focus=auto'
-						self.data.focusMode = 'auto';
+						this.data.focusMode = 'auto';
 					}
 					if (action.options.bol == 1) {
 						cmd = 'focus=manual'
-						self.data.focusMode = 'manual';
+						this.data.focusMode = 'manual';
 					}
-					self.sendPTZ(cmd)
-					self.getCameraInformation_Delayed();
+					this.sendPTZ(this.ptzCommand, cmd)
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.focusToggle = {
-				label: 'Lens - Toggle Focus Mode (Auto/Manual Focus)',
-				callback: function (action, bank) {
-					if (self.data.focusMode === 'auto') {
-						self.data.focusMode = 'manual';
+				name: 'Lens - Toggle Focus Mode (Auto/Manual Focus)',
+				options: [],
+				callback: async (action) => {
+					if (this.data.focusMode === 'auto') {
+						this.data.focusMode = 'manual';
 					}
 					else {
-						self.data.focusMode = 'auto';
+						this.data.focusMode = 'auto';
 					}
-					cmd = 'focus=' + self.data.focusMode;
-					self.sendPTZ(cmd)
-					self.getCameraInformation_Delayed();
+					cmd = 'focus=' + this.data.focusMode;
+					this.sendPTZ(this.ptzCommand, cmd)
+					this.getCameraInformation_Delayed();
 				}
 			}
 		}
 
 		if (s.oneshotAutoFocus == true) {
 			actions.focusOSAF = {
-				label: 'Lens - Focus - One Shot Auto Focus',
-				callback: function (action, bank) {
+				name: 'Lens - Focus - One Shot Auto Focus',
+				options: [],
+				callback: async (action) => {
 					cmd = 'focus=one_shot'
-					self.sendPTZ(cmd)
+					this.sendPTZ(this.ptzCommand, cmd)
 				}
 			}
 		}
@@ -815,7 +795,7 @@ module.exports = {
 
 		if (s.exposureShootingMode.cmd) {
 			actions.exposureShootingMode = {
-				label: 'Exposure Shooting Mode',
+				name: 'Exposure Shooting Mode',
 				options: [
 					{
 						type: 'dropdown',
@@ -825,18 +805,18 @@ module.exports = {
 						choices: s.exposureShootingMode.dropdown
 					}
 				],
-				callback: function (action, bank) {
+				callback: async (action) => {
 					cmd = s.exposureShootingMode.cmd + action.options.val;
-					self.sendPTZ(cmd);
+					this.sendPTZ(this.ptzCommand, cmd);
 										
-					self.getCameraInformation_Delayed();
+					this.getCameraInformation_Delayed();
 				}
 			}
 		}
 
 		if (s.exposureMode.cmd) {
 			actions.exposureM = {
-				label: 'Exposure Mode',
+				name: 'Exposure Mode',
 				options: [
 					{
 						type: 'dropdown',
@@ -846,82 +826,83 @@ module.exports = {
 						choices: s.exposureMode.dropdown
 					}
 				],
-				callback: function (action, bank) {
+				callback: async (action) => {
 					cmd = 'c.1.shooting=manual';
-					self.sendPTZ(cmd);
-					self.data.exposureShootingMode = 'manual';
+					this.sendPTZ(this.ptzCommand, cmd);
+					this.data.exposureShootingMode = 'manual';
 					cmd = 'c.1.exp=' + action.options.val;
-					self.sendPTZ(cmd);
-					self.data.exposureMode = action.options.val;
-					self.getCameraInformation_Delayed();
+					this.sendPTZ(this.ptzCommand, cmd);
+					this.data.exposureMode = action.options.val;
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.exposureModeToggle = {
-				label: 'Exposure Mode Toggle',
-				callback: function (action, bank) {
-					self.exposureModeIndex = s.exposureMode.dropdown.findIndex((EXPOSUREMODE) => EXPOSUREMODE.id == self.data.exposureMode);
+				name: 'Exposure Mode Toggle',
+				options: [],
+				callback: async (action) => {
+					this.exposureModeIndex = s.exposureMode.dropdown.findIndex((EXPOSUREMODE) => EXPOSUREMODE.id == this.data.exposureMode);
 
-					if (!self.exposureModeIndex) {
-						self.exposureModeIndex = 0;
+					if (!this.exposureModeIndex) {
+						this.exposureModeIndex = 0;
 					}
 
-					if (self.exposureModeIndex >= s.exposureMode.dropdown.length - 1) {
-						self.exposureModeIndex = 0;
-					} else if (self.exposureModeIndex < s.exposureMode.dropdown.length) {
-						self.exposureModeIndex++;
+					if (this.exposureModeIndex >= s.exposureMode.dropdown.length - 1) {
+						this.exposureModeIndex = 0;
+					} else if (this.exposureModeIndex < s.exposureMode.dropdown.length) {
+						this.exposureModeIndex++;
 					}
 
-					self.exposureMode = s.exposureMode.dropdown[self.exposureModeIndex].id
-					self.data.exposureMode = self.exposureMode;
+					this.exposureMode = s.exposureMode.dropdown[this.exposureModeIndex].id
+					this.data.exposureMode = this.exposureMode;
 
-					if (self.data.exposureMode === 'fullauto') {
+					if (this.data.exposureMode === 'fullauto') {
 						cmd = 'c.1.shooting=fullauto';
-						self.sendPTZ(cmd);
-						self.data.exposureShootingMode = 'fullauto';
-						self.data.exposureMode = 'fullauto';
+						this.sendPTZ(this.ptzCommand, cmd);
+						this.data.exposureShootingMode = 'fullauto';
+						this.data.exposureMode = 'fullauto';
 					}
 					else {
 						cmd = 'c.1.shooting=manual';
-						self.sendPTZ(cmd);
-						self.data.exposureShootingMode = 'manual';
-						cmd = 'c.1.exp=' + self.data.exposureMode;
-						self.sendPTZ(cmd);
+						this.sendPTZ(this.ptzCommand, cmd);
+						this.data.exposureShootingMode = 'manual';
+						cmd = 'c.1.exp=' + this.data.exposureMode;
+						this.sendPTZ(this.ptzCommand, cmd);
 					}		
-					self.getCameraInformation_Delayed();
+					this.getCameraInformation_Delayed();
 				}
 			}
 		}
 
 		if (s.aeGainLimit) {
 			actions.aeGainLimit = {
-				label: 'AE Gain Limit Max',
+				name: 'AE Gain Limit Max',
 				options: [
 					{
 						type: 'number',
 						label: 'Value',
 						id: 'val',
 						tooltip: 'Sets the Gain Limit Max',
-						min: self.data.aeGainLimitMaxMin,
-						max: self.data.aeGainLimitMaxMax,
+						min: this.data.aeGainLimitMaxMin,
+						max: this.data.aeGainLimitMaxMax,
 						default: 330,
 						step: 1,
 						required: true,
 						range: false
 					}
 				],
-				callback: function (action, bank) {
+				callback: async (action) => {
 					cmd = 'c.1.ae.gainlimit.max=' + action.options.val;
-					self.sendPTZ(cmd);
-					self.data.aeGainLimitMax = action.options.val;
-					self.getCameraInformation_Delayed();
+					this.sendPTZ(this.ptzCommand, cmd);
+					this.data.aeGainLimitMax = action.options.val;
+					this.getCameraInformation_Delayed();
 				}
 			}
 		}
 
 		if (s.aeBrightness.cmd) {
 			actions.aeBrightness = {
-				label: 'AE Brightness',
+				name: 'AE Brightness',
 				options: [
 					{
 						type: 'dropdown',
@@ -931,18 +912,18 @@ module.exports = {
 						choices: s.aeBrightness.dropdown
 					}
 				],
-				callback: function (action, bank) {
+				callback: async (action) => {
 					cmd = 'c.1.ae.brightness=' + action.options.val;
-					self.sendPTZ(cmd);
-					self.data.aeBrightness = action.options.val;
-					self.getCameraInformation_Delayed();
+					this.sendPTZ(this.ptzCommand, cmd);
+					this.data.aeBrightness = action.options.val;
+					this.getCameraInformation_Delayed();
 				}
 			}
 		}
 
 		if (s.aePhotometry.cmd) {
 			actions.aePhotometry = {
-				label: 'AE Photometry',
+				name: 'AE Photometry',
 				options: [
 					{
 						type: 'dropdown',
@@ -952,18 +933,18 @@ module.exports = {
 						choices: s.aePhotometry.dropdown
 					}
 				],
-				callback: function (action, bank) {
+				callback: async (action) => {
 					cmd = 'c.1.ae.photometry=' + action.options.val;
-					self.sendPTZ(cmd);
-					self.data.aePhotometry = action.options.val;
-					self.getCameraInformation_Delayed();
+					this.sendPTZ(this.ptzCommand, cmd);
+					this.data.aePhotometry = action.options.val;
+					this.getCameraInformation_Delayed();
 				}
 			}
 		}
 
 		if (s.aeFlickerReduct.cmd) {
 			actions.aeFlickerReduct = {
-				label: 'AE Flicker Reduct',
+				name: 'AE Flicker Reduct',
 				options: [
 					{
 						type: 'dropdown',
@@ -973,37 +954,37 @@ module.exports = {
 						choices: s.aeFlickerReduct.dropdown
 					}
 				],
-				callback: function (action, bank) {
+				callback: async (action) => {
 					cmd = 'c.1.ae.flickerreduct=' + action.options.val;
-					self.sendPTZ(cmd);
-					self.data.aeFlickerReduct = action.options.val;
-					self.getCameraInformation_Delayed();
+					this.sendPTZ(this.ptzCommand, cmd);
+					this.data.aeFlickerReduct = action.options.val;
+					this.getCameraInformation_Delayed();
 				}
 			}
 		}
 
 		if (s.aeResp) {
 			actions.aeResp = {
-				label: 'AE Resp',
+				name: 'AE Resp',
 				options: [
 					{
 						type: 'number',
 						label: 'Value',
 						id: 'val',
 						tooltip: 'Sets the AE Resp Value',
-						min: self.data.aeRespMin,
-						max: self.data.aeRespMax,
+						min: this.data.aeRespMin,
+						max: this.data.aeRespMax,
 						default: 1,
 						step: 1,
 						required: true,
 						range: false
 					}
 				],
-				callback: function (action, bank) {
+				callback: async (action) => {
 					cmd = 'c.1.ae.resp=' + action.options.val;
-					self.sendPTZ(cmd);
-					self.data.aeResp = action.options.val;
-					self.getCameraInformation_Delayed();
+					this.sendPTZ(this.ptzCommand, cmd);
+					this.data.aeResp = action.options.val;
+					this.getCameraInformation_Delayed();
 				}
 			}
 		}
@@ -1014,7 +995,7 @@ module.exports = {
 			}
 
 			actions.shutterM = {
-				label: 'Exposure - Shutter Mode (Auto Shutter)',
+				name: 'Exposure - Shutter Mode (Auto Shutter)',
 				options: [
 					{
 						type: 'dropdown',
@@ -1027,112 +1008,115 @@ module.exports = {
 						],
 					},
 				],
-				callback: function (action, bank) {
+				callback: async (action) => {
 					if (action.options.bol == 0) {
 						cmd = 'c.1.me.shutter.mode=auto'
 					}
 					if (action.options.bol == 1) {
 						cmd = 'c.1.me.shutter.mode=speed'
 					}
-					self.sendPTZ(cmd)
-					self.getCameraInformation_Delayed();
+					this.sendPTZ(this.ptzCommand, cmd)
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.shutterToggle = {
-				label: 'Exposure - Toggle Shutter Mode (Auto/Manual Shutter)',
-				callback: function (action, bank) {
-					if (self.data.shutterMode === 'auto') {
-						self.data.shutterMode = 'speed';
+				name: 'Exposure - Toggle Shutter Mode (Auto/Manual Shutter)',
+				options: [],
+				callback: async (action) => {
+					if (this.data.shutterMode === 'auto') {
+						this.data.shutterMode = 'speed';
 					}
 					else {
-						self.data.shutterMode = 'auto';
+						this.data.shutterMode = 'auto';
 					}
-					cmd = 'c.1.me.shutter.mode=' + self.data.shutterMode;
-					self.sendPTZ(cmd)
-					self.getCameraInformation_Delayed();
+					cmd = 'c.1.me.shutter.mode=' + this.data.shutterMode;
+					this.sendPTZ(this.ptzCommand, cmd)
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.shutterUp = {
-				label: 'Exposure - Shutter Up',
-				callback: function (action, bank) {
-					if (self.shutterIndex == s.shutter.dropdown.length) {
-						self.shutterIndex = s.shutter.dropdown.length
-					} else if (self.shutterIndex < s.shutter.dropdown.length) {
-						self.shutterIndex++
+				name: 'Exposure - Shutter Up',
+				options: [],
+				callback: async (action) => {
+					if (this.shutterIndex == s.shutter.dropdown.length) {
+						this.shutterIndex = s.shutter.dropdown.length
+					} else if (this.shutterIndex < s.shutter.dropdown.length) {
+						this.shutterIndex++
 					}
-					self.shutterValue = s.shutter.dropdown[self.shutterIndex].id
-					self.data.shutterValue = self.shutterValue;
+					this.shutterValue = s.shutter.dropdown[this.shutterIndex].id
+					this.data.shutterValue = this.shutterValue;
 
-					if (self.shutterValue === 'auto') {
+					if (this.shutterValue === 'auto') {
 						cmd = 'c.1.me.shutter.mode=auto'
-						self.sendPTZ(cmd)
+						this.sendPTZ(this.ptzCommand, cmd)
 					}
 					else {
 						cmd = 'c.1.me.shutter.mode=speed'
-						self.sendPTZ(cmd)
-						cmd = s.shutter.cmd + self.shutterValue
-						self.sendPTZ(cmd)
+						this.sendPTZ(this.ptzCommand, cmd)
+						cmd = s.shutter.cmd + this.shutterValue
+						this.sendPTZ(this.ptzCommand, cmd)
 					}
-					self.getCameraInformation_Delayed();
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.shutterDown = {
-				label: 'Exposure - Shutter Down',
-				callback: function (action, bank) {
-					if (self.shutterIndex == 0) {
-						self.shutterIndex = 0
+				name: 'Exposure - Shutter Down',
+				options: [],
+				callback: async (action) => {
+					if (this.shutterIndex == 0) {
+						this.shutterIndex = 0
 					}
-					else if (self.shutterIndex > 0) {
-						self.shutterIndex--
+					else if (this.shutterIndex > 0) {
+						this.shutterIndex--
 					}
-					self.shutterValue = s.shutter.dropdown[self.shutterIndex].id
-					self.data.shutterValue = self.shutterValue;
+					this.shutterValue = s.shutter.dropdown[this.shutterIndex].id
+					this.data.shutterValue = this.shutterValue;
 
-					if (self.shutterValue === 'auto') {
+					if (this.shutterValue === 'auto') {
 						cmd = 'c.1.me.shutter.mode=auto'
-						self.sendPTZ(cmd)
+						this.sendPTZ(this.ptzCommand, cmd)
 					}
 					else {
 						cmd = 'c.1.me.shutter.mode=speed'
-						self.sendPTZ(cmd)
-						cmd = s.shutter.cmd + self.shutterValue
-						self.sendPTZ(cmd)
+						this.sendPTZ(this.ptzCommand, cmd)
+						cmd = s.shutter.cmd + this.shutterValue
+						this.sendPTZ(this.ptzCommand, cmd)
 					}
-					self.getCameraInformation_Delayed();
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.shutterSet = {
-				label: 'Exposure - Set Shutter',
+				name: 'Exposure - Set Shutter',
 				options: [
 					{
 						type: 'dropdown',
-						label: 'Shutter setting',
+						label: 'Shutter Setting',
 						id: 'val',
 						default: s.shutter.dropdown[0].id,
 						choices: s.shutter.dropdown,
 					},
 				],
-				callback: function (action, bank) {
-					self.shutterValue = action.options.val;
-					self.data.shutterValue = self.shutterValue;
+				callback: async (action) => {
+					this.shutterValue = action.options.val;
+					this.data.shutterValue = this.shutterValue;
 
-					if (self.shutterValue === 'auto') {
+					if (this.shutterValue === 'auto') {
 						cmd = 'c.1.me.shutter.mode=auto'
-						self.sendPTZ(cmd)
+						this.sendPTZ(this.ptzCommand, cmd)
 					}
 					else {
 						cmd = 'c.1.me.shutter.mode=speed'
-						self.sendPTZ(cmd)
+						this.sendPTZ(this.ptzCommand, cmd)
 
-						self.shutterIndex = s.shutter.dropdown.findIndex((SHUTTER) => SHUTTER.id == action.options.val);
-						cmd = s.shutter.cmd + self.shutterValue;
-						self.sendPTZ(cmd);
+						this.shutterIndex = s.shutter.dropdown.findIndex((SHUTTER) => SHUTTER.id == action.options.val);
+						cmd = s.shutter.cmd + this.shutterValue;
+						this.sendPTZ(this.ptzCommand, cmd);
 					}
-					self.getCameraInformation_Delayed();
+					this.getCameraInformation_Delayed();
 				}
 			}
 		}
@@ -1143,88 +1127,90 @@ module.exports = {
 			}
 
 			actions.irisU = {
-				label: 'Exposure - Iris Up',
-				callback: function (action, bank) {
-					if (self.irisIndex == s.iris.dropdown.length) {
-						self.irisIndex = s.iris.dropdown.length
-					} else if (self.irisIndex < s.iris.dropdown.length) {
-						self.irisIndex++
+				name: 'Exposure - Iris Up',
+				options: [],
+				callback: async (action) => {
+					if (this.irisIndex == s.iris.dropdown.length) {
+						this.irisIndex = s.iris.dropdown.length
+					} else if (this.irisIndex < s.iris.dropdown.length) {
+						this.irisIndex++
 					}
-					self.irisValue = s.iris.dropdown[self.irisIndex].id
-					self.data.irisValue = self.irisValue;
+					this.irisValue = s.iris.dropdown[this.irisIndex].id
+					this.data.irisValue = this.irisValue;
 					
-					if (self.irisValue === 'auto') {
+					if (this.irisValue === 'auto') {
 						cmd = 'c.1.me.diaphragm.mode=auto'
-						self.sendPTZ(cmd)
+						this.sendPTZ(this.ptzCommand, cmd)
 					}
 					else {
 						cmd = 'c.1.me.diaphragm.mode=manual'
-						self.sendPTZ(cmd)
-						cmd = s.iris.cmd + self.irisValue
-						self.sendPTZ(cmd)
+						this.sendPTZ(this.ptzCommand, cmd)
+						cmd = s.iris.cmd + this.irisValue
+						this.sendPTZ(this.ptzCommand, cmd)
 					}
-					self.getCameraInformation_Delayed();
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.irisD = {
-				label: 'Exposure - Iris Down',
-				callback: function (action, bank) {
-					if (self.irisIndex == 0) {
-						self.irisIndex = 0
-					} else if (self.irisIndex > 0) {
-						self.irisIndex--
+				name: 'Exposure - Iris Down',
+				options: [],
+				callback: async (action) => {
+					if (this.irisIndex == 0) {
+						this.irisIndex = 0
+					} else if (this.irisIndex > 0) {
+						this.irisIndex--
 					}
-					self.irisValue = s.iris.dropdown[self.irisIndex].id
-					self.data.irisValue = self.irisValue;
+					this.irisValue = s.iris.dropdown[this.irisIndex].id
+					this.data.irisValue = this.irisValue;
 					
-					if (self.irisValue === 'auto') {
+					if (this.irisValue === 'auto') {
 						cmd = 'c.1.me.diaphragm.mode=auto'
-						self.sendPTZ(cmd)
+						this.sendPTZ(this.ptzCommand, cmd)
 					}
 					else {
 						cmd = 'c.1.me.diaphragm.mode=manual'
-						self.sendPTZ(cmd)
-						cmd = s.iris.cmd + self.irisValue
-						self.sendPTZ(cmd)
+						this.sendPTZ(this.ptzCommand, cmd)
+						cmd = s.iris.cmd + this.irisValue
+						this.sendPTZ(this.ptzCommand, cmd)
 					}
-					self.getCameraInformation_Delayed();
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.irisS = {
-				label: 'Exposure - Set Iris',
+				name: 'Exposure - Set Iris',
 				options: [
 					{
 						type: 'dropdown',
-						label: 'Iris setting',
+						label: 'Iris Setting',
 						id: 'val',
 						default: s.iris.dropdown[0].id,
 						choices: s.iris.dropdown,
 					},
 				],
-				callback: function (action, bank) {
-					self.irisIndex = s.iris.dropdown.findIndex((IRIS) => IRIS.id == action.options.val);
-					self.irisValue = action.options.val;
-					self.data.irisValue = self.irisValue;
+				callback: async (action) => {
+					this.irisIndex = s.iris.dropdown.findIndex((IRIS) => IRIS.id == action.options.val);
+					this.irisValue = action.options.val;
+					this.data.irisValue = this.irisValue;
 
-					if (self.irisValue === 'auto') {
+					if (this.irisValue === 'auto') {
 						cmd = 'c.1.me.diaphragm.mode=auto'
-						self.sendPTZ(cmd)
+						this.sendPTZ(this.ptzCommand, cmd)
 					}
 					else {
 						cmd = 'c.1.me.diaphragm.mode=manual'
-						self.sendPTZ(cmd)
+						this.sendPTZ(this.ptzCommand, cmd)
 
-						cmd = s.iris.cmd + self.irisValue;
-						self.sendPTZ(cmd);
+						cmd = s.iris.cmd + this.irisValue;
+						this.sendPTZ(this.ptzCommand, cmd);
 					}
-					self.getCameraInformation_Delayed();
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.irisM = {
-				label: 'Exposure - Iris Mode (Auto Iris)',
+				name: 'Exposure - Iris Mode (Auto Iris)',
 				options: [
 					{
 						type: 'dropdown',
@@ -1237,30 +1223,31 @@ module.exports = {
 						],
 					},
 				],
-				callback: function (action, bank) {
+				callback: async (action) => {
 					if (action.options.bol == 0) {
 						cmd = 'c.1.me.diaphragm.mode=auto'
 					}
 					if (action.options.bol == 1) {
 						cmd = 'c.1.me.diaphragm.mode=manual'
 					}
-					self.sendPTZ(cmd)
-					self.getCameraInformation_Delayed();
+					this.sendPTZ(this.ptzCommand, cmd)
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.irisToggle = {
-				label: 'Exposure - Toggle Iris Mode (Auto/Manual Iris)',
-				callback: function (action, bank) {
-					if (self.data.irisMode === 'auto') {
-						self.data.irisMode = 'manual';
+				name: 'Exposure - Toggle Iris Mode (Auto/Manual Iris)',
+				options: [],
+				callback: async (action) => {
+					if (this.data.irisMode === 'auto') {
+						this.data.irisMode = 'manual';
 					}
 					else {
-						self.data.irisMode = 'auto';
+						this.data.irisMode = 'auto';
 					}
-					cmd = 'c.1.me.diaphragm.mode=' + self.data.irisMode;
-					self.sendPTZ(cmd)
-					self.getCameraInformation_Delayed();
+					cmd = 'c.1.me.diaphragm.mode=' + this.data.irisMode;
+					this.sendPTZ(this.ptzCommand, cmd)
+					this.getCameraInformation_Delayed();
 				}
 			}
 		}
@@ -1271,72 +1258,75 @@ module.exports = {
 			}
 
 			actions.gainU = {
-				label: 'Exposure - Gain Up',
-				callback: function (action, bank) {
-					if (self.gainIndex == s.gain.dropdown.length) {
-						self.gainIndex = s.gain.dropdown.length
-					} else if (self.gainIndex < s.gain.dropdown.length) {
-						self.gainIndex++
+				name: 'Exposure - Gain Up',
+				options: [],
+				callback: async (action) => {
+					if (this.gainIndex == s.gain.dropdown.length) {
+						this.gainIndex = s.gain.dropdown.length
+					} else if (this.gainIndex < s.gain.dropdown.length) {
+						this.gainIndex++
 					}
-					self.gainValue = s.gain.dropdown[self.gainIndex].id
-					self.data.gainValue = self.gainValue;
+					this.gainValue = s.gain.dropdown[this.gainIndex].id
+					this.data.gainValue = this.gainValue;
 
-					if (self.gainValue === 'auto') {
+					if (this.gainValue === 'auto') {
 						cmd = 'c.1.me.gain.mode=auto'
-						self.sendPTZ(cmd)
+						this.sendPTZ(this.ptzCommand, cmd)
 					}
 					else {
 						cmd = 'c.1.me.gain.mode=manual'
-						self.sendPTZ(cmd)
-						cmd = s.gain.cmd + self.gainValue
-						self.sendPTZ(cmd)
+						this.sendPTZ(this.ptzCommand, cmd)
+						cmd = s.gain.cmd + this.gainValue
+						this.sendPTZ(this.ptzCommand, cmd)
 					}
-					self.getCameraInformation_Delayed();
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.gainD = {
-				label: 'Exposure - Gain Down',
-				callback: function (action, bank) {
-					if (self.gainIndex == 0) {
-						self.gainIndex = 0
-					} else if (self.gainIndex > 0) {
-						self.gainIndex--
+				name: 'Exposure - Gain Down',
+				options: [],
+				callback: async (action) => {
+					if (this.gainIndex == 0) {
+						this.gainIndex = 0
+					} else if (this.gainIndex > 0) {
+						this.gainIndex--
 					}
-					self.gainValue = s.gain.dropdown[self.gainIndex].id
-					self.data.gainValue = self.gainValue;
+					this.gainValue = s.gain.dropdown[this.gainIndex].id
+					this.data.gainValue = this.gainValue;
 
-					if (self.gainValue === 'auto') {
+					if (this.gainValue === 'auto') {
 						cmd = 'c.1.me.gain.mode=auto'
-						self.sendPTZ(cmd)
+						this.sendPTZ(this.ptzCommand, cmd)
 					}
 					else {
 						cmd = 'c.1.me.gain.mode=manual'
-						self.sendPTZ(cmd)
-						cmd = s.gain.cmd + self.gainValue
-						self.sendPTZ(cmd)
+						this.sendPTZ(this.ptzCommand, cmd)
+						cmd = s.gain.cmd + this.gainValue
+						this.sendPTZ(this.ptzCommand, cmd)
 					}
-					self.getCameraInformation_Delayed();
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.gainToggle = {
-				label: 'Exposure - Toggle Gain Mode (Auto/Manual Gain)',
-				callback: function (action, bank) {
-					if (self.data.gainMode === 'auto') {
-						self.data.gainMode = 'manual';
+				name: 'Exposure - Toggle Gain Mode (Auto/Manual Gain)',
+				options: [],
+				callback: async (action) => {
+					if (this.data.gainMode === 'auto') {
+						this.data.gainMode = 'manual';
 					}
 					else {
-						self.data.gainMode = 'auto';
+						this.data.gainMode = 'auto';
 					}
-					cmd = 'c.1.me.gain.mode=' + self.data.gainMode;
-					self.sendPTZ(cmd)
-					self.getCameraInformation_Delayed();
+					cmd = 'c.1.me.gain.mode=' + this.data.gainMode;
+					this.sendPTZ(this.ptzCommand, cmd)
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.gainS = {
-				label: 'Exposure - Set Gain',
+				name: 'Exposure - Set Gain',
 				options: [
 					{
 						type: 'dropdown',
@@ -1346,24 +1336,24 @@ module.exports = {
 						choices: s.gain.dropdown,
 					},
 				],
-				callback: function (action, bank) {
-					self.gainIndex = action.options.val;
+				callback: async (action) => {
+					this.gainIndex = action.options.val;
 
-					if (self.gainValue === 'auto') {
+					if (this.gainValue === 'auto') {
 						cmd = 'c.1.me.gain.mode=auto'
-						self.sendPTZ(cmd)
+						this.sendPTZ(this.ptzCommand, cmd)
 					}
 					else {
 						cmd = 'c.1.me.gain.mode=manual'
-						self.sendPTZ(cmd)
+						this.sendPTZ(this.ptzCommand, cmd)
 
-						self.gainIndex = s.gain.dropdown.findIndex((GAIN) => GAIN.id == action.options.val);
-						self.gainValue = action.options.val;
-						self.data.gainValue = self.gainValue;
-						cmd = s.gain.cmd + self.gainValue;
-						self.sendPTZ(cmd);
+						this.gainIndex = s.gain.dropdown.findIndex((GAIN) => GAIN.id == action.options.val);
+						this.gainValue = action.options.val;
+						this.data.gainValue = this.gainValue;
+						cmd = s.gain.cmd + this.gainValue;
+						this.sendPTZ(this.ptzCommand, cmd);
 					}
-					self.getCameraInformation_Delayed();
+					this.getCameraInformation_Delayed();
 				}
 			}
 		}
@@ -1374,55 +1364,57 @@ module.exports = {
 			}
 
 			actions.ndfilterUp = {
-				label: 'Exposure - ND Filter Up',
-				callback: function (action, bank) {
-					if (self.ndfilterIndex == s.ndfilter.dropdown.length) {
-						self.ndfilterIndex = s.ndfilter.dropdown.length
-					} else if (self.ndfilterIndex < s.ndfilter.dropdown.length) {
-						self.ndfilterIndex++
+				name: 'Exposure - ND Filter Up',
+				options: [],
+				callback: async (action) => {
+					if (this.ndfilterIndex == s.ndfilter.dropdown.length) {
+						this.ndfilterIndex = s.ndfilter.dropdown.length
+					} else if (this.ndfilterIndex < s.ndfilter.dropdown.length) {
+						this.ndfilterIndex++
 					}
-					self.ndfilterValue = s.ndfilter.dropdown[self.ndfilterIndex].id
-					self.data.ndfilterValue = self.ndfilterValue;
-					cmd = s.ndfilter.cmd + self.ndfilterValue
-					self.sendPTZ(cmd)
-					self.getCameraInformation_Delayed();
+					this.ndfilterValue = s.ndfilter.dropdown[this.ndfilterIndex].id
+					this.data.ndfilterValue = this.ndfilterValue;
+					cmd = s.ndfilter.cmd + this.ndfilterValue
+					this.sendPTZ(this.ptzCommand, cmd)
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.ndfilterDown = {
-				label: 'Exposure - ND Filter Down',
-				callback: function (action, bank) {
-					if (self.ndfilterIndex == 0) {
-						self.ndfilterIndex = 0
-					} else if (self.ndfilterIndex > 0) {
-						self.ndfilterIndex--
+				name: 'Exposure - ND Filter Down',
+				options: [],
+				callback: async (action) => {
+					if (this.ndfilterIndex == 0) {
+						this.ndfilterIndex = 0
+					} else if (this.ndfilterIndex > 0) {
+						this.ndfilterIndex--
 					}
-					self.ndfilterValue = s.ndfilter.dropdown[self.ndfilterIndex].id
-					self.data.ndfilterValue = self.ndfilterValue;
-					cmd = s.ndfilter.cmd + self.ndfilterValue
-					self.sendPTZ(cmd)
-					self.getCameraInformation_Delayed();
+					this.ndfilterValue = s.ndfilter.dropdown[this.ndfilterIndex].id
+					this.data.ndfilterValue = this.ndfilterValue;
+					cmd = s.ndfilter.cmd + this.ndfilterValue
+					this.sendPTZ(this.ptzCommand, cmd)
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.filterSet = {
-				label: 'Exposure - Set ND Filter',
+				name: 'Exposure - Set ND Filter',
 				options: [
 					{
 						type: 'dropdown',
-						label: 'ND Filter setting',
+						label: 'ND Filter Setting',
 						id: 'val',
 						default: s.ndfilter.dropdown[0].id,
 						choices: s.ndfilter.dropdown,
 					},
 				],
-				callback: function (action, bank) {
-					self.ndfilterIndex = s.ndfilter.dropdown.findIndex((NDFILTER) => NDFILTER.id == action.options.val);
-					self.ndfilterValue = action.options.val;
-					self.data.ndfilterValue = self.ndfilterValue;
-					cmd = s.ndfilter.cmd + self.ndfilterValue;
-					self.sendPTZ(cmd);
-					self.getCameraInformation_Delayed();
+				callback: async (action) => {
+					this.ndfilterIndex = s.ndfilter.dropdown.findIndex((NDFILTER) => NDFILTER.id == action.options.val);
+					this.ndfilterValue = action.options.val;
+					this.data.ndfilterValue = this.ndfilterValue;
+					cmd = s.ndfilter.cmd + this.ndfilterValue;
+					this.sendPTZ(this.ptzCommand, cmd);
+					this.getCameraInformation_Delayed();
 				}
 			}
 		}
@@ -1433,55 +1425,57 @@ module.exports = {
 			}
 
 			actions.pedestalUp = {
-				label: 'Exposure - Pedestal Up',
-				callback: function (action, bank) {
-					if (self.pedestalIndex == s.pedestal.dropdown.length) {
-						self.pedestalIndex = s.pedestal.dropdown.length
-					} else if (self.pedestalIndex < s.pedestal.dropdown.length) {
-						self.pedestalIndex++
+				name: 'Exposure - Pedestal Up',
+				options: [],
+				callback: async (action) => {
+					if (this.pedestalIndex == s.pedestal.dropdown.length) {
+						this.pedestalIndex = s.pedestal.dropdown.length
+					} else if (this.pedestalIndex < s.pedestal.dropdown.length) {
+						this.pedestalIndex++
 					}
-					self.pedestalValue = s.pedestal.dropdown[self.pedestalIndex].id
-					self.data.pedestalValue = self.pedestalValue;
-					cmd = s.pedestal.cmd + self.pedestalValue
-					self.sendPTZ(cmd)
-					self.getCameraInformation_Delayed();
+					this.pedestalValue = s.pedestal.dropdown[this.pedestalIndex].id
+					this.data.pedestalValue = this.pedestalValue;
+					cmd = s.pedestal.cmd + this.pedestalValue
+					this.sendPTZ(this.ptzCommand, cmd)
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.pedestalDown = {
-				label: 'Exposure - Pedestal Down',
-				callback: function (action, bank) {
-					if (self.pedestalIndex == 0) {
-						self.pedestalIndex = 0
-					} else if (self.pedestalIndex > 0) {
-						self.pedestalIndex--
+				name: 'Exposure - Pedestal Down',
+				options: [],
+				callback: async (action) => {
+					if (this.pedestalIndex == 0) {
+						this.pedestalIndex = 0
+					} else if (this.pedestalIndex > 0) {
+						this.pedestalIndex--
 					}
-					self.pedestalValue = s.pedestal.dropdown[self.pedestalIndex].id
-					self.data.pedestalValue = self.pedestalValue;
-					cmd = s.pedestal.cmd + self.pedestalValue
-					self.sendPTZ(cmd)
-					self.getCameraInformation_Delayed();
+					this.pedestalValue = s.pedestal.dropdown[this.pedestalIndex].id
+					this.data.pedestalValue = this.pedestalValue;
+					cmd = s.pedestal.cmd + this.pedestalValue
+					this.sendPTZ(this.ptzCommand, cmd)
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.pedestalSet = {
-				label: 'Exposure - Set Pedestal',
+				name: 'Exposure - Set Pedestal',
 				options: [
 					{
 						type: 'dropdown',
-						label: 'Pedestal setting',
+						label: 'Pedestal Setting',
 						id: 'val',
 						default: s.pedestal.dropdown[0].id,
 						choices: s.pedestal.dropdown,
 					},
 				],
-				callback: function (action, bank) {
-					self.pedestalIndex = s.pedestal.dropdown.findIndex((PEDESTAL) => PEDESTAL.id == action.options.val);
-					self.pedestalValue = s.pedestal.dropdown[self.pedestalIndex].id
-					self.data.pedestalValue = self.pedestalValue;
-					cmd = s.pedestal.cmd + self.pedestalValue;
-					self.sendPTZ(cmd)
-					self.getCameraInformation_Delayed();
+				callback: async (action) => {
+					this.pedestalIndex = s.pedestal.dropdown.findIndex((PEDESTAL) => PEDESTAL.id == action.options.val);
+					this.pedestalValue = s.pedestal.dropdown[this.pedestalIndex].id
+					this.data.pedestalValue = this.pedestalValue;
+					cmd = s.pedestal.cmd + this.pedestalValue;
+					this.sendPTZ(this.ptzCommand, cmd)
+					this.getCameraInformation_Delayed();
 				}
 			}
 		}
@@ -1496,7 +1490,7 @@ module.exports = {
 			}
 
 			actions.whitebalanceModeSet = {
-				label: 'White Balance - Set Mode',
+				name: 'White Balance - Set Mode',
 				options: [
 					{
 						type: 'dropdown',
@@ -1506,39 +1500,40 @@ module.exports = {
 						choices: s.whitebalanceMode.dropdown,
 					},
 				],
-				callback: function (action, bank) {
+				callback: async (action) => {
 					cmd = s.whitebalanceMode.cmd + action.options.val;
-					self.sendPTZ(cmd);
-					self.getCameraInformation_Delayed();
+					this.sendPTZ(this.ptzCommand, cmd);
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.whitebalanceModeToggle = {
-				label: 'White Balance Mode Toggle',
-				callback: function (action, bank) {
-					self.whitebalanceModeIndex = s.whitebalanceMode.dropdown.findIndex((WBMODE) => WBMODE.id == self.data.whitebalanceMode);
+				name: 'White Balance Mode Toggle',
+				options: [],
+				callback: async (action) => {
+					this.whitebalanceModeIndex = s.whitebalanceMode.dropdown.findIndex((WBMODE) => WBMODE.id == this.data.whitebalanceMode);
 
-					if (!self.whitebalanceModeIndex) {
-						self.whitebalanceModeIndex = 0;
+					if (!this.whitebalanceModeIndex) {
+						this.whitebalanceModeIndex = 0;
 					}
 
-					if (self.whitebalanceModeIndex >= s.whitebalanceMode.dropdown.length - 1) {
-						self.whitebalanceModeIndex = 0;
-					} else if (self.whitebalanceModeIndex < s.whitebalanceMode.dropdown.length - 1) {
-						self.whitebalanceModeIndex++;
+					if (this.whitebalanceModeIndex >= s.whitebalanceMode.dropdown.length - 1) {
+						this.whitebalanceModeIndex = 0;
+					} else if (this.whitebalanceModeIndex < s.whitebalanceMode.dropdown.length - 1) {
+						this.whitebalanceModeIndex++;
 					}
 
-					self.whitebalanceMode = s.whitebalanceMode.dropdown[self.whitebalanceModeIndex].id
-					self.data.whitebalanceMode = self.whitebalanceMode;
+					this.whitebalanceMode = s.whitebalanceMode.dropdown[this.whitebalanceModeIndex].id
+					this.data.whitebalanceMode = this.whitebalanceMode;
 
-					cmd = s.whitebalanceMode.cmd + self.data.whitebalanceMode;
-					self.sendPTZ(cmd);
-					self.getCameraInformation_Delayed();
+					cmd = s.whitebalanceMode.cmd + this.data.whitebalanceMode;
+					this.sendPTZ(this.ptzCommand, cmd);
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.whitebalanceCalibration = {
-				label: 'White Balance Calibration',
+				name: 'White Balance Calibration',
 				options: [
 					{
 						type: 'dropdown',
@@ -1548,10 +1543,10 @@ module.exports = {
 						choices: [ { id: 'a', label: 'WB A Mode'}, { id: 'b', label: 'WB B Mode'}]
 					}
 				],
-				callback: function (action, bank) {
+				callback: async (action) => {
 					cmd = 'c.1.wb.action=one_shot_' + action.options.mode;
-					self.sendPTZ(cmd);
-					self.getCameraInformation_Delayed();
+					this.sendPTZ(this.ptzCommand, cmd);
+					this.getCameraInformation_Delayed();
 				}
 			}
 		}
@@ -1561,39 +1556,41 @@ module.exports = {
 				s.kelvin.dropdown = c.CHOICES_KELVIN_OTHER();
 			}
 			actions.kelvinUp = {
-				label: 'White Balance - Kelvin Value Up',
-				callback: function (action, bank) {
-					if (self.kelvinIndex >= s.kelvin.dropdown.length) {
-						self.kelvinIndex = s.kelvin.dropdown.length
-					} else if (self.kelvinIndex < s.kelvin.dropdown.length) {
-						self.kelvinIndex++
+				name: 'White Balance - Kelvin Value Up',
+				options: [],
+				callback: async (action) => {
+					if (this.kelvinIndex >= s.kelvin.dropdown.length) {
+						this.kelvinIndex = s.kelvin.dropdown.length
+					} else if (this.kelvinIndex < s.kelvin.dropdown.length) {
+						this.kelvinIndex++
 					}
-					self.kelvinValue = s.kelvin.dropdown[self.kelvinIndex].id
-					self.data.kelvinValue = self.kelvinValue;
-					cmd = s.kelvin.cmd + self.kelvinValue
-					self.sendPTZ(cmd)
-					self.getCameraInformation_Delayed();
+					this.kelvinValue = s.kelvin.dropdown[this.kelvinIndex].id
+					this.data.kelvinValue = this.kelvinValue;
+					cmd = s.kelvin.cmd + this.kelvinValue
+					this.sendPTZ(this.ptzCommand, cmd)
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.kelvinDown = {
-				label: 'White Balance - Kelvin Value Down',
-				callback: function (action, bank) {
-					if (self.kelvinIndex <= 0) {
-						self.kelvinIndex = 0
-					} else if (self.kelvinIndex > 0) {
-						self.kelvinIndex--
+				name: 'White Balance - Kelvin Value Down',
+				options: [],
+				callback: async (action) => {
+					if (this.kelvinIndex <= 0) {
+						this.kelvinIndex = 0
+					} else if (this.kelvinIndex > 0) {
+						this.kelvinIndex--
 					}
-					self.kelvinValue = s.kelvin.dropdown[self.kelvinIndex].id
-					self.data.kelvinValue = self.kelvinValue;
-					cmd = s.kelvin.cmd + self.kelvinValue
-					self.sendPTZ(cmd)
-					self.getCameraInformation_Delayed();
+					this.kelvinValue = s.kelvin.dropdown[this.kelvinIndex].id
+					this.data.kelvinValue = this.kelvinValue;
+					cmd = s.kelvin.cmd + this.kelvinValue
+					this.sendPTZ(this.ptzCommand, cmd)
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.kelvinSet = {
-				label: 'White Balance - Set Kelvin Value',
+				name: 'White Balance - Set Kelvin Value',
 				options: [
 					{
 						type: 'dropdown',
@@ -1603,13 +1600,13 @@ module.exports = {
 						choices: s.kelvin.dropdown,
 					},
 				],
-				callback: function (action, bank) {
-					self.kelvinIndex = s.kelvin.dropdown.findIndex((KELVIN) => KELVIN.id == action.options.val);
-					self.kelvinValue = action.options.val;
-					self.data.kelvinValue = self.kelvinValue;
-					cmd = s.kelvin.cmd + self.kelvinValue;
-					self.sendPTZ(cmd);
-					self.getCameraInformation_Delayed();
+				callback: async (action) => {
+					this.kelvinIndex = s.kelvin.dropdown.findIndex((KELVIN) => KELVIN.id == action.options.val);
+					this.kelvinValue = action.options.val;
+					this.data.kelvinValue = this.kelvinValue;
+					cmd = s.kelvin.cmd + this.kelvinValue;
+					this.sendPTZ(this.ptzCommand, cmd);
+					this.getCameraInformation_Delayed();
 				}
 			}
 		}
@@ -1619,39 +1616,41 @@ module.exports = {
 				s.rGain.dropdown = c.CHOICES_RGAIN_OTHER();
 			}
 			actions.rGainUp = {
-				label: 'White Balance - Red Gain Up',
-				callback: function (action, bank) {
-					if (self.rGainIndex >= s.rGain.dropdown.length) {
-						self.rGainIndex = s.rGain.dropdown.length
-					} else if (self.rGainIndex < s.rGain.dropdown.length) {
-						self.rGainIndex++
+				name: 'White Balance - Red Gain Up',
+				options: [],
+				callback: async (action) => {
+					if (this.rGainIndex >= s.rGain.dropdown.length) {
+						this.rGainIndex = s.rGain.dropdown.length
+					} else if (this.rGainIndex < s.rGain.dropdown.length) {
+						this.rGainIndex++
 					}
-					self.rGainValue = s.rGain.dropdown[self.rGainIndex].id
-					self.data.rGainValue = self.rGainValue;
-					cmd = s.rGain.cmd + self.rGainValue
-					self.sendPTZ(cmd)
-					self.getCameraInformation_Delayed();
+					this.rGainValue = s.rGain.dropdown[this.rGainIndex].id
+					this.data.rGainValue = this.rGainValue;
+					cmd = s.rGain.cmd + this.rGainValue
+					this.sendPTZ(this.ptzCommand, cmd)
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.rGainDown = {
-				label: 'White Balance - Red Gain Down',
-				callback: function (action, bank) {
-					if (self.rGainIndex <= 0) {
-						self.rGainIndex = 0
-					} else if (self.rGainIndex > 0) {
-						self.rGainIndex--
+				name: 'White Balance - Red Gain Down',
+				options: [],
+				callback: async (action) => {
+					if (this.rGainIndex <= 0) {
+						this.rGainIndex = 0
+					} else if (this.rGainIndex > 0) {
+						this.rGainIndex--
 					}
-					self.rGainValue = s.rGain.dropdown[self.rGainIndex].id
-					self.data.rGainValue = self.rGainValue;
-					cmd = s.rGain.cmd + self.rGainValue
-					self.sendPTZ(cmd)
-					self.getCameraInformation_Delayed();
+					this.rGainValue = s.rGain.dropdown[this.rGainIndex].id
+					this.data.rGainValue = this.rGainValue;
+					cmd = s.rGain.cmd + this.rGainValue
+					this.sendPTZ(this.ptzCommand, cmd)
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.rGainSet = {
-				label: 'White Balance - Set Red Gain',
+				name: 'White Balance - Set Red Gain',
 				options: [
 					{
 						type: 'dropdown',
@@ -1661,13 +1660,13 @@ module.exports = {
 						choices: s.rGain.dropdown
 					},
 				],
-				callback: function (action, bank) {
-					self.rGainIndex = s.rGain.dropdown.findIndex((RGAIN) => RGAIN.id == action.options.val);
-					self.rGainValue = action.options.val;
-					self.data.rGainValue = self.rGainValue;
-					cmd = s.rGain.cmd + self.rGainValue;
-					self.sendPTZ(cmd);
-					self.getCameraInformation_Delayed();
+				callback: async (action) => {
+					this.rGainIndex = s.rGain.dropdown.findIndex((RGAIN) => RGAIN.id == action.options.val);
+					this.rGainValue = action.options.val;
+					this.data.rGainValue = this.rGainValue;
+					cmd = s.rGain.cmd + this.rGainValue;
+					this.sendPTZ(this.ptzCommand, cmd);
+					this.getCameraInformation_Delayed();
 				}
 			}
 		}
@@ -1677,39 +1676,41 @@ module.exports = {
 				s.bGain.dropdown = c.CHOICES_BGAIN_OTHER();
 			}
 			actions.bGainUp = {
-				label: 'White Balance - Blue Gain Up',
-				callback: function (action, bank) {
-					if (self.bGainIndex >= s.bGain.dropdown.length) {
-						self.bGainIndex = s.bGain.dropdown.length
-					} else if (self.bGainIndex < s.bGain.dropdown.length) {
-						self.bGainIndex++
+				name: 'White Balance - Blue Gain Up',
+				options: [],
+				callback: async (action) => {
+					if (this.bGainIndex >= s.bGain.dropdown.length) {
+						this.bGainIndex = s.bGain.dropdown.length
+					} else if (this.bGainIndex < s.bGain.dropdown.length) {
+						this.bGainIndex++
 					}
-					self.bGainValue = s.bGain.dropdown[self.bGainIndex].id
-					self.data.bGainValue = self.bGainValue;
-					cmd = s.bGain.cmd + self.bGainValue;
-					self.sendPTZ(cmd)
-					self.getCameraInformation_Delayed();
+					this.bGainValue = s.bGain.dropdown[this.bGainIndex].id
+					this.data.bGainValue = this.bGainValue;
+					cmd = s.bGain.cmd + this.bGainValue;
+					this.sendPTZ(this.ptzCommand, cmd)
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.bGainDown = {
-				label: 'White Balance - Blue Gain Down',
-				callback: function (action, bank) {
-					if (self.bGainIndex <= 0) {
-						self.bGainIndex = 0
-					} else if (self.bGainIndex > 0) {
-						self.bGainIndex--
+				name: 'White Balance - Blue Gain Down',
+				options: [],
+				callback: async (action) => {
+					if (this.bGainIndex <= 0) {
+						this.bGainIndex = 0
+					} else if (this.bGainIndex > 0) {
+						this.bGainIndex--
 					}
-					self.bGainValue = s.bGain.dropdown[self.bGainIndex].id
-					self.data.bGainValue = self.bGainValue;
-					cmd = s.bGain.cmd + self.bGainValue;
-					self.sendPTZ(cmd)
-					self.getCameraInformation_Delayed();
+					this.bGainValue = s.bGain.dropdown[this.bGainIndex].id
+					this.data.bGainValue = this.bGainValue;
+					cmd = s.bGain.cmd + this.bGainValue;
+					this.sendPTZ(this.ptzCommand, cmd)
+					this.getCameraInformation_Delayed();
 				}
 			}
 
 			actions.bGainSet = {
-				label: 'White Balance - Set Blue Gain',
+				name: 'White Balance - Set Blue Gain',
 				options: [
 					{
 						type: 'dropdown',
@@ -1719,13 +1720,13 @@ module.exports = {
 						choices: s.bGain.dropdown,
 					},
 				],
-				callback: function (action, bank) {
-					self.bGainIndex = s.bGain.dropdown.findIndex((BGAIN) => BGAIN.id == action.options.val);
-					self.bGainValue = action.options.val;
-					self.data.bGainValue = self.bGainValue;
-					cmd = s.bGain.cmd + self.bGainValue;
-					self.sendPTZ(cmd);
-					self.getCameraInformation_Delayed();
+				callback: async (action) => {
+					this.bGainIndex = s.bGain.dropdown.findIndex((BGAIN) => BGAIN.id == action.options.val);
+					this.bGainValue = action.options.val;
+					this.data.bGainValue = this.bGainValue;
+					cmd = s.bGain.cmd + this.bGainValue;
+					this.sendPTZ(this.ptzCommand, cmd);
+					this.getCameraInformation_Delayed();
 				}
 			}
 		}
@@ -1736,7 +1737,7 @@ module.exports = {
 
 		if (s.presets == true) {
 			actions.savePset = {
-				label: 'Preset - Save',
+				name: 'Preset - Save',
 				options: [
 					{
 						type: 'dropdown',
@@ -1789,7 +1790,7 @@ module.exports = {
 						default: true
 					}
 				],
-				callback: function (action, bank) {
+				callback: async (action) => {
 					cmd = 'p=' + action.options.val + '&name=' + action.options.name;
 					if ((action.options.save_ptz) && (action.options.save_focus) && (action.options.save_exposure) && (action.options.save_whitebalance) && (action.options.save_is) && (action.options.save_cp)) {
 						cmd += '&all=enabled';
@@ -1832,12 +1833,12 @@ module.exports = {
 							cmd += '&cp=disabled';
 						}
 					}
-					self.sendSavePreset(cmd);
+					this.sendPTZ(this.savePresetCommand, cmd);
 				}
 			}
 		
 			actions.recallPset = {
-				label: 'Preset - Recall',
+				name: 'Preset - Recall',
 				options: [
 					{
 						type: 'dropdown',
@@ -1847,54 +1848,55 @@ module.exports = {
 						choices: c.CHOICES_PRESETS(),
 					},
 				],
-				callback: function (action, bank) {
+				callback: async (action) => {
 					//need to determine drive mode first (normal, time, speed) and then recall with appropriate command
-					if (!self.presetRecallMode) {
-						self.presetRecallMode = 'normal';
-						self.data.presetRecallMode = 'normal';
+					if (!this.presetRecallMode) {
+						this.presetRecallMode = 'normal';
+						this.data.presetRecallMode = 'normal';
 					}
 
 					cmd = 'p=' + action.options.val;
 
-					switch(self.presetRecallMode) {
+					switch(this.presetRecallMode) {
 						case 'time':
-							cmd += '&p.ptztime=' + self.data.presetTimeValue;
+							cmd += '&p.ptztime=' + this.data.presetTimeValue;
 							break;
 						case 'speed':
-							cmd += '&p.ptzspeed=' + self.data.presetSpeedValue;
+							cmd += '&p.ptzspeed=' + this.data.presetSpeedValue;
 							break;
 					}
 
-					self.data.presetLastUsed = action.options.val;
+					this.data.presetLastUsed = action.options.val;
 
-					self.sendPTZ(cmd);
+					this.sendPTZ(this.ptzCommand, cmd);
 				}
 			}
 		}
 		if (s.presets == true) {
 			actions.recallModePsetToggle = {
-				label: 'Preset - Toggle Recall Mode',
-				callback: function (action, bank) {
-					self.presetRecallModeIndex = c.CHOICES_PRESETRECALLMODES.findIndex((PRESETRECALLMODE) => PRESETRECALLMODE.id == self.data.presetRecallMode);
+				name: 'Preset - Toggle Recall Mode',
+				options: [],
+				callback: async (action) => {
+					this.presetRecallModeIndex = c.CHOICES_PRESETRECALLMODES.findIndex((PRESETRECALLMODE) => PRESETRECALLMODE.id == this.data.presetRecallMode);
 
-					if (!self.presetRecallModeIndex) {
-						self.presetRecallModeIndex = 0;
+					if (!this.presetRecallModeIndex) {
+						this.presetRecallModeIndex = 0;
 					}
 
-					if (self.presetRecallModeIndex >= c.CHOICES_PRESETRECALLMODES.length - 1) {
-						self.presetRecallModeIndex = 0;
-					} else if (self.presetRecallModeIndex < c.CHOICES_PRESETRECALLMODES.length - 1) {
-						self.presetRecallModeIndex++;
+					if (this.presetRecallModeIndex >= c.CHOICES_PRESETRECALLMODES.length - 1) {
+						this.presetRecallModeIndex = 0;
+					} else if (this.presetRecallModeIndex < c.CHOICES_PRESETRECALLMODES.length - 1) {
+						this.presetRecallModeIndex++;
 					}
 
-					self.presetRecallMode = c.CHOICES_PRESETRECALLMODES[self.presetRecallModeIndex].id
-					self.data.presetRecallMode = self.presetRecallMode;
-					self.checkVariables();
+					this.presetRecallMode = c.CHOICES_PRESETRECALLMODES[this.presetRecallModeIndex].id
+					this.data.presetRecallMode = this.presetRecallMode;
+					this.checkVariables();
 				}
 			}
 
 			actions.recallModePset = {
-				label: 'Preset - Set Recall Mode',
+				name: 'Preset - Set Recall Mode',
 				options: [
 					{
 						type: 'dropdown',
@@ -1904,49 +1906,51 @@ module.exports = {
 						choices: c.CHOICES_PRESETRECALLMODES
 					},
 				],
-				callback: function (action, bank) {
-					self.presetRecallMode = action.options.val;
-					self.data.presetRecallMode = action.options.val;
-					self.checkVariables();
+				callback: async (action) => {
+					this.presetRecallMode = action.options.val;
+					this.data.presetRecallMode = action.options.val;
+					this.checkVariables();
 				}
 			}
 		}
 
 		if (s.timePset == true) {
 			actions.timePsetUp = {
-				label: 'Preset - Drive Time Up',
-				callback: function (action, bank) {
+				name: 'Preset - Drive Time Up',
+				options: [],
+				callback: async (action) => {
 					let choices_pstime = c.CHOICES_PSTIME();
 
-					if (self.presetDriveTimeIndex >= choices_pstime.length) {
-						self.presetDriveTimeIndex = choices_pstime.length
-					} else if (self.presetDriveTimeIndex < choices_pstime.length) {
-						self.presetDriveTimeIndex++
+					if (this.presetDriveTimeIndex >= choices_pstime.length) {
+						this.presetDriveTimeIndex = choices_pstime.length
+					} else if (this.presetDriveTimeIndex < choices_pstime.length) {
+						this.presetDriveTimeIndex++
 					}
-					self.presetTimeValue = choices_pstime[self.presetDriveTimeIndex].id
-					self.data.presetTimeValue = self.presetTimeValue;
-					self.checkVariables();
+					this.presetTimeValue = choices_pstime[this.presetDriveTimeIndex].id
+					this.data.presetTimeValue = this.presetTimeValue;
+					this.checkVariables();
 				}				
 			}
 
 			actions.timePsetDown = {
-				label: 'Preset - Drive Time Down',
-				callback: function (action, bank) {
+				name: 'Preset - Drive Time Down',
+				options: [],
+				callback: async (action) => {
 					let choices_pstime = c.CHOICES_PSTIME();
 
-					if (self.presetDriveTimeIndex <= 0) {
-						self.presetDriveTimeIndex = 0
-					} else if (self.presetDriveTimeIndex > 0) {
-						self.presetDriveTimeIndex--
+					if (this.presetDriveTimeIndex <= 0) {
+						this.presetDriveTimeIndex = 0
+					} else if (this.presetDriveTimeIndex > 0) {
+						this.presetDriveTimeIndex--
 					}
-					self.presetTimeValue = choices_pstime[self.presetDriveTimeIndex].id
-					self.data.presetTimeValue = self.presetTimeValue;
-					self.checkVariables();
+					this.presetTimeValue = choices_pstime[this.presetDriveTimeIndex].id
+					this.data.presetTimeValue = this.presetTimeValue;
+					this.checkVariables();
 				}
 			}
 
 			actions.timePset = {
-				label: 'Preset - Set Drive Time',
+				name: 'Preset - Set Drive Time',
 				options: [
 					{
 						type: 'dropdown',
@@ -1956,49 +1960,51 @@ module.exports = {
 						choices: c.CHOICES_PSTIME(),
 					},
 				],
-				callback: function (action, bank) {
-					self.presetRecallTime = action.options.time;
-					self.data.presetTimeValue = action.options.time;
-					self.checkVariables();
+				callback: async (action) => {
+					this.presetRecallTime = action.options.time;
+					this.data.presetTimeValue = action.options.time;
+					this.checkVariables();
 				}
 			}
 		}
 
 		if (s.speedPset == true) {
 			actions.speedPsetUp = {
-				label: 'Preset - Drive Speed Up',
-				callback: function (action, bank) {
+				name: 'Preset - Drive Speed Up',
+				options: [],
+				callback: async (action) => {
 					let choices_psspeed = c.CHOICES_PSSPEED();
 
-					if (self.presetDriveSpeedIndex >= choices_psspeed.length) {
-						self.presetDriveSpeedIndex = choices_psspeed.length
-					} else if (self.presetDriveSpeedIndex < choices_psspeed.length) {
-						self.presetDriveSpeedIndex++
+					if (this.presetDriveSpeedIndex >= choices_psspeed.length) {
+						this.presetDriveSpeedIndex = choices_psspeed.length
+					} else if (this.presetDriveSpeedIndex < choices_psspeed.length) {
+						this.presetDriveSpeedIndex++
 					}
-					self.presetSpeedValue = choices_psspeed[self.presetDriveSpeedIndex].id
-					self.data.presetSpeedValue = self.presetSpeedValue;
-					self.checkVariables();
+					this.presetSpeedValue = choices_psspeed[this.presetDriveSpeedIndex].id
+					this.data.presetSpeedValue = this.presetSpeedValue;
+					this.checkVariables();
 				}				
 			}
 
 			actions.speedPsetDown = {
-				label: 'Preset - Drive Speed Down',
-				callback: function (action, bank) {
+				name: 'Preset - Drive Speed Down',
+				options: [],
+				callback: async (action) => {
 					let choices_psspeed = c.CHOICES_PSSPEED();
 
-					if (self.presetDriveSpeedIndex <= 0) {
-						self.presetDriveSpeedIndex = 0
-					} else if (self.presetDriveSpeedIndex > 0) {
-						self.presetDriveSpeedIndex--
+					if (this.presetDriveSpeedIndex <= 0) {
+						this.presetDriveSpeedIndex = 0
+					} else if (this.presetDriveSpeedIndex > 0) {
+						this.presetDriveSpeedIndex--
 					}
-					self.presetSpeedValue = choices_psspeed[self.presetDriveSpeedIndex].id
-					self.data.presetSpeedValue = self.presetSpeedValue;
-					self.checkVariables();
+					this.presetSpeedValue = choices_psspeed[this.presetDriveSpeedIndex].id
+					this.data.presetSpeedValue = this.presetSpeedValue;
+					this.checkVariables();
 				}
 			}
 
 			actions.speedPset = {
-				label: 'Preset - Set Drive Speed',
+				name: 'Preset - Set Drive Speed',
 				options: [
 					{
 						type: 'dropdown',
@@ -2008,14 +2014,106 @@ module.exports = {
 						choices: c.CHOICES_PSSPEED(),
 					},
 				],
-				callback: function (action, bank) {
-					self.presetRecallSpeed = action.options.speed;
-					self.data.presetSpeedValue = action.options.speed;
-					self.checkVariables();
+				callback: async (action) => {
+					this.presetRecallSpeed = action.options.speed;
+					this.data.presetSpeedValue = action.options.speed;
+					this.checkVariables();
 				}
 			}
 		}
 
-		return actions
+		if (s.traces == true) {
+			actions.tracePrepare = {
+				name: 'Trace - Prepare',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Trace Number',
+						id: 'trace',
+						default: 1,
+						choices: [
+							{ id: 1, label: 'Trace 1'},
+							{ id: 2, label: 'Trace 2'},
+							{ id: 3, label: 'Trace 3'},
+							{ id: 4, label: 'Trace 4'},
+							{ id: 5, label: 'Trace 5'},
+							{ id: 6, label: 'Trace 6'},
+							{ id: 7, label: 'Trace 7'},
+							{ id: 8, label: 'Trace 8'},
+							{ id: 9, label: 'Trace 9'},
+							{ id: 10, label: 'Trace 10'},
+						],
+					}
+				],
+				callback: async (action) => {
+					let trace = action.options.trace;
+
+					cmd = 'control?t=' + trace + '&cmd=prepare'
+					this.sendPTZ(this.traceCommand, cmd);
+				}
+			}
+
+			actions.traceStart = {
+				name: 'Trace - Start',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Trace Number',
+						id: 'trace',
+						default: 1,
+						choices: [
+							{ id: 1, label: 'Trace 1'},
+							{ id: 2, label: 'Trace 2'},
+							{ id: 3, label: 'Trace 3'},
+							{ id: 4, label: 'Trace 4'},
+							{ id: 5, label: 'Trace 5'},
+							{ id: 6, label: 'Trace 6'},
+							{ id: 7, label: 'Trace 7'},
+							{ id: 8, label: 'Trace 8'},
+							{ id: 9, label: 'Trace 9'},
+							{ id: 10, label: 'Trace 10'},
+						],
+					}
+				],
+				callback: async (action) => {
+					let trace = action.options.trace;
+
+					cmd = 'control?t=' + trace + '&cmd=start'
+					this.sendPTZ(this.traceCommand, cmd);
+				}
+			}
+
+			actions.traceStop = {
+				name: 'Trace - Stop',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Trace Number',
+						id: 'trace',
+						default: 1,
+						choices: [
+							{ id: 1, label: 'Trace 1'},
+							{ id: 2, label: 'Trace 2'},
+							{ id: 3, label: 'Trace 3'},
+							{ id: 4, label: 'Trace 4'},
+							{ id: 5, label: 'Trace 5'},
+							{ id: 6, label: 'Trace 6'},
+							{ id: 7, label: 'Trace 7'},
+							{ id: 8, label: 'Trace 8'},
+							{ id: 9, label: 'Trace 9'},
+							{ id: 10, label: 'Trace 10'},
+						],
+					}
+				],
+				callback: async (action) => {
+					let trace = action.options.trace;
+
+					cmd = 'control?t=' + trace + '&cmd=stop'
+					this.sendPTZ(this.traceCommand, cmd);
+				}
+			}
+		}
+
+		this.setActionDefinitions(actions)
 	}
 }

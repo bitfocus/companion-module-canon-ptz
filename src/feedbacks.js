@@ -1,49 +1,50 @@
-var { MODELS, SERIES_SPECS } = require('./models.js')
+const { combineRgb } = require('@companion-module/base')
+
+const { MODELS, SERIES_SPECS } = require('./models.js')
 const c = require('./choices.js')
 
 module.exports = {
 	// ##########################
 	// #### Define Feedbacks ####
 	// ##########################
-	setFeedbacks: function (i) {
-		var self = i
-		var feedbacks = {}
-		var SERIES = {}
+	initFeedbacks: function () {
+		let feedbacks = {}
+		let SERIES = {}
 
 		// Set the model and series selected, if in auto, detect what model is connected
-		if (self.config.model === 'Auto') {
-			self.data.model = self.data.modelDetected
+		if (this.config.model === 'Auto') {
+			this.data.model = this.data.modelDetected
 		} else {
-			self.data.model = self.config.model
+			this.data.model = this.config.model
 		}
 
-		if (self.data.model !== '') {
-			self.data.series = MODELS.find((MODELS) => MODELS.id == self.data.model).series
+		if (this.data.model !== '') {
+			this.data.series = MODELS.find((MODELS) => MODELS.id == this.data.model).series
 		}
 
 		// Find the specific commands for a given series
 		if (
-			self.data.series === 'Auto' ||
-			self.data.series === 'Other' ||
-			SERIES_SPECS.find((SERIES_SPECS) => SERIES_SPECS.id == self.data.series) == undefined
+			this.data.series === 'Auto' ||
+			this.data.series === 'Other' ||
+			SERIES_SPECS.find((SERIES_SPECS) => SERIES_SPECS.id == this.data.series) == undefined
 		) {
 			SERIES = SERIES_SPECS.find((SERIES_SPECS) => SERIES_SPECS.id == 'Other')
 		}
 		else {
-			SERIES = SERIES_SPECS.find((SERIES_SPECS) => SERIES_SPECS.id == self.data.series)
+			SERIES = SERIES_SPECS.find((SERIES_SPECS) => SERIES_SPECS.id == this.data.series)
 		}
 
-		const foregroundColor = self.rgb(255, 255, 255) // White
-		const backgroundColorRed = self.rgb(255, 0, 0) // Red
-		const backgroundColorGreen = self.rgb(0, 255, 0) // Green
-		const backgroundColorOrange = self.rgb(255, 102, 0) // Orange
+		const foregroundColor = combineRgb(255, 255, 255) // White
+		const backgroundColorRed = combineRgb(255, 0, 0) // Red
+		const backgroundColorGreen = combineRgb(0, 255, 0) // Green
+		const backgroundColorOrange = combineRgb(255, 102, 0) // Orange
 
 		if (SERIES.feedbacks.powerState == true) {
 			feedbacks.powerState = {
 				type: 'boolean',
 				label: 'System - Power State',
 				description: 'Indicate if PTZ is Idle or Standby',
-				style: {
+				defaultStyle: {
 					color: foregroundColor,
 					bgcolor: backgroundColorRed,
 				},
@@ -60,15 +61,15 @@ module.exports = {
 					},
 				],
 				callback: function (feedback, bank) {
-					var opt = feedback.options
+					let opt = feedback.options
 					switch (opt.option) {
 						case '0':
-							if (self.data.powerState === 'idle') {
+							if (this.data.powerState === 'idle') {
 								return true
 							}
 							break
 						case '1':
-							if (self.data.powerState === 'standby') {
+							if (this.data.powerState === 'standby') {
 								return true
 							}
 							break
@@ -85,7 +86,7 @@ module.exports = {
 				type: 'boolean',
 				label: 'System - Program Tally State',
 				description: 'Indicate if Program Tally is ON or OFF',
-				style: {
+				defaultStyle: {
 					color: foregroundColor,
 					bgcolor: backgroundColorRed,
 				},
@@ -102,15 +103,15 @@ module.exports = {
 					},
 				],
 				callback: function (feedback, bank) {
-					var opt = feedback.options
+					let opt = feedback.options
 					switch (opt.option) {
 						case '0':
-							if (self.data.tallyProgram === 'off') {
+							if (this.data.tallyProgram === 'off') {
 								return true
 							}
 							break
 						case '1':
-							if (self.data.tallyProgram === 'on') {
+							if (this.data.tallyProgram === 'on') {
 								return true
 							}
 							break
@@ -127,7 +128,7 @@ module.exports = {
 				type: 'boolean',
 				label: 'System - Preview Tally State',
 				description: 'Indicate if Preview Tally is ON or OFF',
-				style: {
+				defaultStyle: {
 					color: foregroundColor,
 					bgcolor: backgroundColorGreen,
 				},
@@ -144,15 +145,15 @@ module.exports = {
 					},
 				],
 				callback: function (feedback, bank) {
-					var opt = feedback.options
+					let opt = feedback.options
 					switch (opt.option) {
 						case '0':
-							if (self.data.tallyPreview === 'off') {
+							if (this.data.tallyPreview === 'off') {
 								return true
 							}
 							break
 						case '1':
-							if (self.data.tallyPreview === 'on') {
+							if (this.data.tallyPreview === 'on') {
 								return true
 							}
 							break
@@ -169,7 +170,7 @@ module.exports = {
 				type: 'boolean',
 				label: 'System - Digital Zoom State',
 				description: 'Indicate if Digital Zoom is ON or OFF',
-				style: {
+				defaultStyle: {
 					color: foregroundColor,
 					bgcolor: backgroundColorRed,
 				},
@@ -186,15 +187,15 @@ module.exports = {
 					}
 				],
 				callback: function (feedback, bank) {
-					var opt = feedback.options
+					let opt = feedback.options
 					switch (opt.option) {
 						case '0':
-							if (self.data.digitalZoom === 'off') {
+							if (this.data.digitalZoom === 'off') {
 								return true
 							}
 							break
 						case '1':
-							if (self.data.digitalZoom === 'dzoom') {
+							if (this.data.digitalZoom === 'dzoom') {
 								return true
 							}
 							break
@@ -211,7 +212,7 @@ module.exports = {
 				type: 'boolean',
 				label: 'System - Image Stabilization State',
 				description: 'Indicate if Image Stabilization is ON or OFF',
-				style: {
+				defaultStyle: {
 					color: foregroundColor,
 					bgcolor: backgroundColorRed,
 				},
@@ -228,15 +229,15 @@ module.exports = {
 					}
 				],
 				callback: function (feedback, bank) {
-					var opt = feedback.options
+					let opt = feedback.options
 					switch (opt.option) {
 						case '0':
-							if (self.data.imageStabilization === 'off') {
+							if (this.data.imageStabilization === 'off') {
 								return true
 							}
 							break
 						case '1':
-							if (self.data.imageStabilization === 'on1') {
+							if (this.data.imageStabilization === 'on1') {
 								return true
 							}
 							break
@@ -253,7 +254,7 @@ module.exports = {
 				type: 'boolean',
 				label: 'Lens - Auto Focus State',
 				description: 'Indicate if Auto focus is ON or OFF',
-				style: {
+				defaultStyle: {
 					color: foregroundColor,
 					bgcolor: backgroundColorRed,
 				},
@@ -270,15 +271,15 @@ module.exports = {
 					}
 				],
 				callback: function (feedback, bank) {
-					var opt = feedback.options
+					let opt = feedback.options
 					switch (opt.option) {
 						case '0':
-							if (self.data.autoFocusMode === 'manual') {
+							if (this.data.autoFocusMode === 'manual') {
 								return true
 							}
 							break
 						case '1':
-							if (self.data.autoFocusMode === 'auto') {
+							if (this.data.autoFocusMode === 'auto') {
 								return true
 							}
 							break
@@ -295,7 +296,7 @@ module.exports = {
 				type: 'boolean',
 				label: 'Exposure - Shooting Mode',
 				description: 'Indicate if in the selected Exposure Shooting Mode',
-				style: {
+				defaultStyle: {
 					color: foregroundColor,
 					bgcolor: backgroundColorRed,
 				},
@@ -309,9 +310,9 @@ module.exports = {
 					}
 				],
 				callback: function (feedback, bank) {
-					var opt = feedback.options
+					let opt = feedback.options
 					//opt.option
-					if (self.data.exposureShootingMode === opt.option) {
+					if (this.data.exposureShootingMode === opt.option) {
 						return true
 					}
 					return false
@@ -324,7 +325,7 @@ module.exports = {
 				type: 'boolean',
 				label: 'Exposure - Mode',
 				description: 'Indicate if in the selected Exposure Mode',
-				style: {
+				defaultStyle: {
 					color: foregroundColor,
 					bgcolor: backgroundColorRed,
 				},
@@ -338,9 +339,9 @@ module.exports = {
 					}
 				],
 				callback: function (feedback, bank) {
-					var opt = feedback.options
+					let opt = feedback.options
 					//opt.option
-					if ((self.data.exposureShootingMode === 'manual') && (self.data.exposureMode === opt.option)) {
+					if ((this.data.exposureShootingMode === 'manual') && (this.data.exposureMode === opt.option)) {
 						return true
 					}
 					return false
@@ -353,7 +354,7 @@ module.exports = {
 				type: 'boolean',
 				label: 'Lens - Auto Shutter State',
 				description: 'Indicate if Auto Shutter is ON or OFF',
-				style: {
+				defaultStyle: {
 					color: foregroundColor,
 					bgcolor: backgroundColorRed,
 				},
@@ -370,15 +371,15 @@ module.exports = {
 					}
 				],
 				callback: function (feedback, bank) {
-					var opt = feedback.options
+					let opt = feedback.options
 					switch (opt.option) {
 						case '0':
-							if (self.data.shutterMode === 'speed') {
+							if (this.data.shutterMode === 'speed') {
 								return true
 							}
 							break
 						case '1':
-							if (self.data.shutterMode === 'auto') {
+							if (this.data.shutterMode === 'auto') {
 								return true
 							}
 							break
@@ -395,7 +396,7 @@ module.exports = {
 				type: 'boolean',
 				label: 'Lens - Auto Iris State',
 				description: 'Indicate if Auto iris is ON or OFF',
-				style: {
+				defaultStyle: {
 					color: foregroundColor,
 					bgcolor: backgroundColorRed,
 				},
@@ -412,15 +413,15 @@ module.exports = {
 					}
 				],
 				callback: function (feedback, bank) {
-					var opt = feedback.options
+					let opt = feedback.options
 					switch (opt.option) {
 						case '0':
-							if (self.data.irisMode === 'manual') {
+							if (this.data.irisMode === 'manual') {
 								return true
 							}
 							break
 						case '1':
-							if (self.data.irisMode === 'auto') {
+							if (this.data.irisMode === 'auto') {
 								return true
 							}
 							break
@@ -437,7 +438,7 @@ module.exports = {
 				type: 'boolean',
 				label: 'Exposure - Auto Gain State',
 				description: 'Indicate if Auto Gain is ON or OFF',
-				style: {
+				defaultStyle: {
 					color: foregroundColor,
 					bgcolor: backgroundColorRed,
 				},
@@ -454,15 +455,15 @@ module.exports = {
 					}
 				],
 				callback: function (feedback, bank) {
-					var opt = feedback.options
+					let opt = feedback.options
 					switch (opt.option) {
 						case '0':
-							if (self.data.gainMode === 'manual') {
+							if (this.data.gainMode === 'manual') {
 								return true
 							}
 							break
 						case '1':
-							if (self.data.gainMode === 'auto') {
+							if (this.data.gainMode === 'auto') {
 								return true
 							}
 							break
@@ -479,7 +480,7 @@ module.exports = {
 				type: 'boolean',
 				label: 'White Balance - Mode',
 				description: 'Indicate if in the selected White Balance Mode',
-				style: {
+				defaultStyle: {
 					color: foregroundColor,
 					bgcolor: backgroundColorRed,
 				},
@@ -493,9 +494,9 @@ module.exports = {
 					}
 				],
 				callback: function (feedback, bank) {
-					var opt = feedback.options
+					let opt = feedback.options
 					//opt.option
-					if (self.data.whitebalanceMode === opt.option) {
+					if (this.data.whitebalanceMode === opt.option) {
 						return true
 					}
 					return false
@@ -508,7 +509,7 @@ module.exports = {
 				type: 'boolean',
 				label: 'Preset - Last Used',
 				description: 'Indicate what preset was last recalled on the camera',
-				style: {
+				defaultStyle: {
 					color: foregroundColor,
 					bgcolor: backgroundColorRed,
 				},
@@ -522,9 +523,9 @@ module.exports = {
 					}
 				],
 				callback: function (feedback, bank) {
-					var opt = feedback.options
+					let opt = feedback.options
 
-					if (self.data.presetLastUsed === opt.preset) {
+					if (this.data.presetLastUsed === opt.preset) {
 						return true
 					}
 					return false
@@ -537,7 +538,7 @@ module.exports = {
 				type: 'boolean',
 				label: 'Preset - Recall Mode',
 				description: 'Indicate what preset mode is curently selected on the camera',
-				style: {
+				defaultStyle: {
 					color: foregroundColor,
 					bgcolor: backgroundColorRed,
 				},
@@ -555,15 +556,15 @@ module.exports = {
 					}
 				],
 				callback: function (feedback, bank) {
-					var opt = feedback.options
+					let opt = feedback.options
 
-					if (self.data.presetRecallMode === opt.option) {
+					if (this.data.presetRecallMode === opt.option) {
 						return true
 					}
 					return false				}
 			}
 		}
 
-		return feedbacks
+		this.setFeedbackDefinitions(feedbacks);
 	}
 }

@@ -2,9 +2,13 @@ Canon PTZ
 
 ## This module supports the following Canon PTZ cameras:
 
-**CR-N300, CR-N500**
+**CR-N300, CR-N500, CR-N700**
 
-Other devices using the XC protocol may be supported by using the "Other" model type in the list.
+It also supports the following Canon XF series cameras:
+
+**XF-605**
+
+Other devices using the XC protocol may be supported by using the "Other" model type in the list. Try it out!
 
 ## Actions
 
@@ -92,6 +96,12 @@ The actions are separated into the following categories:
 - Set Preset Playback Mode Normal
 - Set Preset Playback Time
 - Set Preset Playback Speed
+
+**Traces**
+
+- Prepare
+- Start
+- Stop
 
 ## Variables
 

@@ -1,29 +1,20 @@
 {
 	"name": "canon-ptz",
-	"version": "1.1.1",
-	"api_version": "1.0.0",
-	"keywords": [
-		"ptz",
-		"Camera"
-	],
-	"manufacturer": "Canon",
-	"product": [
-		"PTZ Camera"
-	],
-	"shortname": "canon-ptz",
-	"description": "Companion module for Canon PTZ Cameras using the XC Protocol",
+	"version": "2.0.0",
 	"main": "src/index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
-	"author": "Joseph Adams <josephdadams@gmail.com>",
 	"license": "MIT",
-	"homepage": "https://github.com/bitfocus/companion-module-canon-ptz#readme",
-	"bugs": {
-		"url": "https://github.com/bitfocus/companion-module-canon-ptz/issues"
-	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/bitfocus/companion-module-canon-ptz.git"
+	},
+	"dependencies": {
+		"@companion-module/base": "^1.0.2",
+		"axios": "^1.2.2"
+	},
+	"devDependencies": {
+		"@companion-module/tools": "^0.5.2"
 	}
 }
