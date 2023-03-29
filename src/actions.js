@@ -1,6 +1,8 @@
 var { MODELS, SERIES_SPECS } = require('./models.js')
 const c = require('./choices.js')
 
+const API = require('./api.js')
+
 module.exports = {
 	// ######################
 	// #### Send Actions ####
