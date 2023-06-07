@@ -8,30 +8,32 @@ module.exports = {
 	// #### Define Feedbacks ####
 	// ##########################
 	initFeedbacks: function () {
+		let self = this;
+
 		let feedbacks = {}
 		let SERIES = {}
 
 		// Set the model and series selected, if in auto, detect what model is connected
-		if (this.config.model === 'Auto') {
-			this.data.model = this.data.modelDetected
+		if (self.config.model === 'Auto') {
+			self.data.model = self.data.modelDetected
 		} else {
-			this.data.model = this.config.model
+			self.data.model = self.config.model
 		}
 
-		if (this.data.model !== '') {
-			this.data.series = MODELS.find((MODELS) => MODELS.id == this.data.model).series
+		if (self.data.model !== '') {
+			self.data.series = MODELS.find((MODELS) => MODELS.id == self.data.model).series
 		}
 
 		// Find the specific commands for a given series
 		if (
-			this.data.series === 'Auto' ||
-			this.data.series === 'Other' ||
-			SERIES_SPECS.find((SERIES_SPECS) => SERIES_SPECS.id == this.data.series) == undefined
+			self.data.series === 'Auto' ||
+			self.data.series === 'Other' ||
+			SERIES_SPECS.find((SERIES_SPECS) => SERIES_SPECS.id == self.data.series) == undefined
 		) {
 			SERIES = SERIES_SPECS.find((SERIES_SPECS) => SERIES_SPECS.id == 'Other')
 		}
 		else {
-			SERIES = SERIES_SPECS.find((SERIES_SPECS) => SERIES_SPECS.id == this.data.series)
+			SERIES = SERIES_SPECS.find((SERIES_SPECS) => SERIES_SPECS.id == self.data.series)
 		}
 
 		const foregroundColor = combineRgb(255, 255, 255) // White
@@ -64,12 +66,12 @@ module.exports = {
 					let opt = feedback.options
 					switch (opt.option) {
 						case '0':
-							if (this.data.powerState === 'idle') {
+							if (self.data.powerState === 'idle') {
 								return true
 							}
 							break
 						case '1':
-							if (this.data.powerState === 'standby') {
+							if (self.data.powerState === 'standby') {
 								return true
 							}
 							break
@@ -106,12 +108,12 @@ module.exports = {
 					let opt = feedback.options
 					switch (opt.option) {
 						case '0':
-							if (this.data.tallyProgram === 'off') {
+							if (self.data.tallyProgram === 'off') {
 								return true
 							}
 							break
 						case '1':
-							if (this.data.tallyProgram === 'on') {
+							if (self.data.tallyProgram === 'on') {
 								return true
 							}
 							break
@@ -148,12 +150,12 @@ module.exports = {
 					let opt = feedback.options
 					switch (opt.option) {
 						case '0':
-							if (this.data.tallyPreview === 'off') {
+							if (self.data.tallyPreview === 'off') {
 								return true
 							}
 							break
 						case '1':
-							if (this.data.tallyPreview === 'on') {
+							if (self.data.tallyPreview === 'on') {
 								return true
 							}
 							break
@@ -190,12 +192,12 @@ module.exports = {
 					let opt = feedback.options
 					switch (opt.option) {
 						case '0':
-							if (this.data.digitalZoom === 'off') {
+							if (self.data.digitalZoom === 'off') {
 								return true
 							}
 							break
 						case '1':
-							if (this.data.digitalZoom === 'dzoom') {
+							if (self.data.digitalZoom === 'dzoom') {
 								return true
 							}
 							break
@@ -232,12 +234,12 @@ module.exports = {
 					let opt = feedback.options
 					switch (opt.option) {
 						case '0':
-							if (this.data.imageStabilization === 'off') {
+							if (self.data.imageStabilization === 'off') {
 								return true
 							}
 							break
 						case '1':
-							if (this.data.imageStabilization === 'on1') {
+							if (self.data.imageStabilization === 'on1') {
 								return true
 							}
 							break
@@ -274,12 +276,12 @@ module.exports = {
 					let opt = feedback.options
 					switch (opt.option) {
 						case '0':
-							if (this.data.autoFocusMode === 'manual') {
+							if (self.data.autoFocusMode === 'manual') {
 								return true
 							}
 							break
 						case '1':
-							if (this.data.autoFocusMode === 'auto') {
+							if (self.data.autoFocusMode === 'auto') {
 								return true
 							}
 							break
@@ -312,7 +314,7 @@ module.exports = {
 				callback: function (feedback, bank) {
 					let opt = feedback.options
 					//opt.option
-					if (this.data.exposureShootingMode === opt.option) {
+					if (self.data.exposureShootingMode === opt.option) {
 						return true
 					}
 					return false
@@ -341,7 +343,7 @@ module.exports = {
 				callback: function (feedback, bank) {
 					let opt = feedback.options
 					//opt.option
-					if ((this.data.exposureShootingMode === 'manual') && (this.data.exposureMode === opt.option)) {
+					if ((self.data.exposureShootingMode === 'manual') && (self.data.exposureMode === opt.option)) {
 						return true
 					}
 					return false
@@ -374,12 +376,12 @@ module.exports = {
 					let opt = feedback.options
 					switch (opt.option) {
 						case '0':
-							if (this.data.shutterMode === 'speed') {
+							if (self.data.shutterMode === 'speed') {
 								return true
 							}
 							break
 						case '1':
-							if (this.data.shutterMode === 'auto') {
+							if (self.data.shutterMode === 'auto') {
 								return true
 							}
 							break
@@ -416,12 +418,12 @@ module.exports = {
 					let opt = feedback.options
 					switch (opt.option) {
 						case '0':
-							if (this.data.irisMode === 'manual') {
+							if (self.data.irisMode === 'manual') {
 								return true
 							}
 							break
 						case '1':
-							if (this.data.irisMode === 'auto') {
+							if (self.data.irisMode === 'auto') {
 								return true
 							}
 							break
@@ -458,12 +460,12 @@ module.exports = {
 					let opt = feedback.options
 					switch (opt.option) {
 						case '0':
-							if (this.data.gainMode === 'manual') {
+							if (self.data.gainMode === 'manual') {
 								return true
 							}
 							break
 						case '1':
-							if (this.data.gainMode === 'auto') {
+							if (self.data.gainMode === 'auto') {
 								return true
 							}
 							break
@@ -496,7 +498,7 @@ module.exports = {
 				callback: function (feedback, bank) {
 					let opt = feedback.options
 					//opt.option
-					if (this.data.whitebalanceMode === opt.option) {
+					if (self.data.whitebalanceMode === opt.option) {
 						return true
 					}
 					return false
@@ -525,7 +527,7 @@ module.exports = {
 				callback: function (feedback, bank) {
 					let opt = feedback.options
 
-					if (this.data.presetLastUsed === opt.preset) {
+					if (self.data.presetLastUsed === opt.preset) {
 						return true
 					}
 					return false
@@ -547,7 +549,7 @@ module.exports = {
 						type: 'dropdown',
 						label: 'Select Mode',
 						id: 'option',
-						default: '0',
+						default: 'normal',
 						choices: [
 							{ id: 'normal', label: 'Normal Mode' },
 							{ id: 'time', label: 'Time Mode' },
@@ -558,13 +560,14 @@ module.exports = {
 				callback: function (feedback, bank) {
 					let opt = feedback.options
 
-					if (this.data.presetRecallMode === opt.option) {
+					if (self.data.presetRecallMode === opt.option) {
 						return true
 					}
-					return false				}
+					return false
+				}
 			}
 		}
 
-		this.setFeedbackDefinitions(feedbacks);
+		self.setFeedbackDefinitions(feedbacks);
 	}
 }
