@@ -115,6 +115,7 @@ module.exports = {
 
 			presets.powerToggle = {
 				category: 'System',
+				type: 'button',
 				name: 'Power Toggle',
 				style: {
 					text: 'Power\\nTOGGLE',
@@ -151,6 +152,7 @@ module.exports = {
 		if (s.cameraName == true) {
 			presets.cameraName = {
 				category: 'System',
+				type: 'button',
 				name: 'Camera Name',
 				style: {
 					text: '$(canon-ptz:cameraName)',
@@ -166,6 +168,7 @@ module.exports = {
 		if (s.tallyProgram == true) {
 			presets.tallyProgramOnOff = {
 				category: 'System',
+				type: 'button',
 				name: 'Tally Program On/Off',
 				style: {
 					text: 'Tally\\nPGM\\nON/OFF',
@@ -207,6 +210,7 @@ module.exports = {
 		if (s.tallyPreview == true) {
 			presets.tallyPreviewOnOff = {
 				category: 'System',
+				type: 'button',
 				name: 'Tally Preview On/Off',
 				style: {
 					text: 'Tally\\nPVW\\nON/OFF',
@@ -246,6 +250,7 @@ module.exports = {
 
 			presets.tallyToggle = {
 				category: 'System',
+				type: 'button',
 				name: 'Tally Toggle',
 				style: {
 					text: 'Tally\\nTOGGLE',
@@ -292,6 +297,7 @@ module.exports = {
 		if (s.digitalZoom == true) {
 			presets.digitalZoomOnOff = {
 				category: 'System',
+				type: 'button',
 				name: 'Digital Zoom On/Off',
 				style: {
 					text: 'DZOOM\\n$(canon-ptz:digitalZoom)',
@@ -337,6 +343,7 @@ module.exports = {
 		if (s.imageStabilization == true) {
 			presets.imageStabilization = {
 				category: 'System',
+				type: 'button',
 				name: 'Image Stabilization On/Off',
 				style: {
 					text: 'IS\\n$(canon-ptz:imageStabilization)',
@@ -386,6 +393,7 @@ module.exports = {
 		if (s.panTilt == true) {
 			presets.panTiltUpStop = {
 				category: 'Pan/Tilt',
+				type: 'button',
 				name: 'UP',
 				style: {
 					style: 'png',
@@ -417,6 +425,7 @@ module.exports = {
 
 			presets.panTiltDownStop = {
 				category: 'Pan/Tilt',
+				type: 'button',
 				name: 'DOWN',
 				style: {
 					style: 'png',
@@ -448,6 +457,7 @@ module.exports = {
 
 			presets.panTiltLeftStop = {
 				category: 'Pan/Tilt',
+				type: 'button',
 				name: 'LEFT',
 				style: {
 					style: 'png',
@@ -479,6 +489,7 @@ module.exports = {
 
 			presets.panTiltRightStop = {
 				category: 'Pan/Tilt',
+				type: 'button',
 				name: 'RIGHT',
 				style: {
 					style: 'png',
@@ -510,6 +521,7 @@ module.exports = {
 
 			presets.panTiltUpRightStop = {
 				category: 'Pan/Tilt',
+				type: 'button',
 				name: 'UP RIGHT',
 				style: {
 					style: 'png',
@@ -541,6 +553,7 @@ module.exports = {
 
 			presets.panTiltUpLeftStop = {
 				category: 'Pan/Tilt',
+				type: 'button',
 				name: 'UP LEFT',
 				style: {
 					style: 'png',
@@ -572,6 +585,7 @@ module.exports = {
 
 			presets.panTiltDownLeft = {
 				category: 'Pan/Tilt',
+				type: 'button',
 				name: 'DOWN LEFT',
 				style: {
 					style: 'png',
@@ -603,6 +617,7 @@ module.exports = {
 
 			presets.panTiltDownRight = {
 				category: 'Pan/Tilt',
+				type: 'button',
 				name: 'DOWN RIGHT',
 				style: {
 					style: 'png',
@@ -634,6 +649,7 @@ module.exports = {
 
 			presets.panTiltHome = {
 				category: 'Pan/Tilt',
+				type: 'button',
 				name: 'Home',
 				style: {
 					
@@ -660,6 +676,7 @@ module.exports = {
 		if (s.ptSpeed == true) {
 			presets.ptSpeedUp = {
 				category: 'Pan/Tilt',
+				type: 'button',
 				name: 'Speed Up',
 				style: {
 					
@@ -684,6 +701,7 @@ module.exports = {
 
 			presets.ptSpeedDown = {
 				category: 'Pan/Tilt',
+				type: 'button',
 				name: 'Speed Down',
 				style: {
 					
@@ -708,6 +726,7 @@ module.exports = {
 
 			presets.ptSpeedSetHigh = {
 				category: 'Pan/Tilt',
+				type: 'button',
 				name: 'Speed Set High',
 				style: {
 					
@@ -734,6 +753,7 @@ module.exports = {
 
 			presets.ptSpeedSetMid = {
 				category: 'Pan/Tilt',
+				type: 'button',
 				name: 'Speed Set Mid',
 				style: {
 					
@@ -760,6 +780,7 @@ module.exports = {
 
 			presets.ptSpeedSetLow = {
 				category: 'Pan/Tilt',
+				type: 'button',
 				name: 'Speed Set Low',
 				style: {
 					
@@ -792,6 +813,7 @@ module.exports = {
 		if (s.zoom == true) {
 			presets.zoomIn = {
 				category: 'Lens',
+				type: 'button',
 				name: 'Zoom In',
 				style: {
 					
@@ -821,6 +843,7 @@ module.exports = {
 
 			presets.zoomOut = {
 				category: 'Lens',
+				type: 'button',
 				name: 'Zoom Out',
 				style: {
 					
@@ -852,6 +875,7 @@ module.exports = {
 		if (s.zoomSpeed == true) {
 			presets.zoomSpeedUp = {
 				category: 'Lens',
+				type: 'button',
 				name: 'Zoom Speed Up',
 				style: {
 					
@@ -876,6 +900,7 @@ module.exports = {
 
 			presets.zoomSpeedDown = {
 				category: 'Lens',
+				type: 'button',
 				name: 'Zoom Speed Down',
 				style: {
 					
@@ -900,6 +925,7 @@ module.exports = {
 
 			presets.zoomSpeedSetHigh = {
 				category: 'Lens',
+				type: 'button',
 				name: 'Zoom Speed High',
 				style: {
 					
@@ -926,6 +952,7 @@ module.exports = {
 
 			presets.zoomSpeedSetMid = {
 				category: 'Lens',
+				type: 'button',
 				name: 'Zoom Speed Mid',
 				style: {
 					
@@ -952,6 +979,7 @@ module.exports = {
 
 			presets.zoomSpeedSetLow = {
 				category: 'Lens',
+				type: 'button',
 				name: 'Zoom Speed Low',
 				style: {
 					
@@ -980,6 +1008,7 @@ module.exports = {
 		if (s.focus == true) {
 			presets.focusNear = {
 				category: 'Lens',
+				type: 'button',
 				name: 'Focus Near',
 				style: {
 					
@@ -1009,6 +1038,7 @@ module.exports = {
 
 			presets.focusFar = {
 				category: 'Lens',
+				type: 'button',
 				name: 'Focus Far',
 				style: {
 					
@@ -1040,6 +1070,7 @@ module.exports = {
 		if (s.focusSpeed == true) {
 			presets.focusSpeedUp = {
 				category: 'Lens',
+				type: 'button',
 				name: 'Focus Speed Up',
 				style: {
 					
@@ -1064,6 +1095,7 @@ module.exports = {
 
 			presets.focusSpeedDown = {
 				category: 'Lens',
+				type: 'button',
 				name: 'Focus Speed Down',
 				style: {
 					
@@ -1088,6 +1120,7 @@ module.exports = {
 
 			presets.focusSpeedSetHigh = {
 				category: 'Lens',
+				type: 'button',
 				name: 'Focus Speed High',
 				style: {
 					
@@ -1114,6 +1147,7 @@ module.exports = {
 
 			presets.focusSpeedSetMid = {
 				category: 'Lens',
+				type: 'button',
 				name: 'Focus Speed Mid',
 				style: {
 					
@@ -1140,6 +1174,7 @@ module.exports = {
 
 			presets.focusSpeedSetLow = {
 				category: 'Lens',
+				type: 'button',
 				name: 'Focus Speed Low',
 				style: {
 					
@@ -1166,6 +1201,7 @@ module.exports = {
 
 			presets.focusSpeedToggle = {
 				category: 'Lens',
+				type: 'button',
 				name: 'Focus Speed Toggle',
 				style: {
 					
@@ -1192,6 +1228,7 @@ module.exports = {
 		if (s.autoFocus == true) {
 			presets.manualFocus = {
 				category: 'Lens',
+				type: 'button',
 				name: 'Manual Focus',
 				style: {
 					
@@ -1229,6 +1266,7 @@ module.exports = {
 
 			presets.autoFocus = {
 				category: 'Lens',
+				type: 'button',
 				name: 'Auto Focus',
 				style: {
 					text: 'AUTO\\nFOCUS',
@@ -1265,6 +1303,7 @@ module.exports = {
 
 			presets.focusToggle = {
 				category: 'Lens',
+				type: 'button',
 				name: 'Toggle Auto/Manual Focus',
 				style: {
 					text: 'TOGGLE\\nFOCUS MODE',
@@ -1301,6 +1340,7 @@ module.exports = {
 		if (s.oneshotAutoFocus == true) {
 			presets.oneshotAutoFocus = {
 				category: 'Lens',
+				type: 'button',
 				name: 'One Shot Auto Focus',
 				style: {
 					
@@ -1343,6 +1383,7 @@ module.exports = {
 			for (let x in s.exposureShootingMode.dropdown) {
 				presets['exposureShootingMode-' + s.exposureShootingMode.dropdown[x].id] = {
 					category: 'Exposure',
+					type: 'button',
 					name: 'Exposure Shooting: ' + s.exposureShootingMode.dropdown[x].label,
 					style: {
 						
@@ -1383,6 +1424,7 @@ module.exports = {
 		if (s.exposureMode.cmd) {
 			presets.exposureMode = {
 				category: 'Exposure',
+				type: 'button',
 				name: 'Toggle Exposure Mode',
 				style: {
 					
@@ -1408,6 +1450,7 @@ module.exports = {
 			for (let x in s.exposureMode.dropdown) {
 				presets['exposure-' + s.exposureMode.dropdown[x].id] = {
 					category: 'Exposure',
+					type: 'button',
 					name: 'Exposure: ' + s.exposureMode.dropdown[x].label,
 					style: {
 						
@@ -1448,6 +1491,7 @@ module.exports = {
 		if (s.shutter.cmd) {
 			presets.shutterUp = {
 				category: 'Exposure',
+				type: 'button',
 				name: 'Shutter Up',
 				style: {
 					text: 'SHUTTER\\nUP',
@@ -1471,6 +1515,7 @@ module.exports = {
 
 			presets.shutterDown = {
 				category: 'Exposure',
+				type: 'button',
 				name: 'Shutter Down',
 				style: {
 					text: 'SHUTTER\\nDOWN',
@@ -1494,6 +1539,7 @@ module.exports = {
 
 			presets.manualShutter = {
 				category: 'Exposure',
+				type: 'button',
 				name: 'Manual Shutter',
 				style: {
 					text: 'MANUAL\\nSHUTTER',
@@ -1530,6 +1576,7 @@ module.exports = {
 
 			presets.autoShutter = {
 				category: 'Exposure',
+				type: 'button',
 				name: 'Auto Shutter',
 				style: {
 					text: 'AUTO\\nSHUTTER',
@@ -1566,6 +1613,7 @@ module.exports = {
 
 			presets.toggleShutterMode = {
 				category: 'Exposure',
+				type: 'button',
 				name: 'Toggle Shutter Mode',
 				style: {
 					text: 'TOGGLE\\nSHUTTER MODE',
@@ -1602,6 +1650,7 @@ module.exports = {
 
 			presets.exposureShutterValue = {
 				category: 'Exposure',
+				type: 'button',
 				name: 'Shutter Value',
 				style: {
 					text: '$(canon-ptz:shutterValue)',
@@ -1617,6 +1666,7 @@ module.exports = {
 		if (s.iris.cmd) {
 			presets.irisUp = {
 				category: 'Exposure',
+				type: 'button',
 				name: 'Iris Up',
 				style: {
 					
@@ -1641,6 +1691,7 @@ module.exports = {
 
 			presets.irisDown = {
 				category: 'Exposure',
+				type: 'button',
 				name: 'Iris Down',
 				style: {
 					
@@ -1665,6 +1716,7 @@ module.exports = {
 
 			presets.manualIris = {
 				category: 'Exposure',
+				type: 'button',
 				name: 'Manual Iris',
 				style: {
 					
@@ -1702,6 +1754,7 @@ module.exports = {
 
 			presets.autoIris = {
 				category: 'Exposure',
+				type: 'button',
 				name: 'Auto Iris',
 				style: {
 					
@@ -1739,6 +1792,7 @@ module.exports = {
 
 			presets.toggleIris = {
 				category: 'Exposure',
+				type: 'button',
 				name: 'Toggle Iris Mode',
 				style: {
 					
@@ -1774,6 +1828,7 @@ module.exports = {
 
 			presets.showIrisValue = {
 				category: 'Exposure',
+				type: 'button',
 				name: 'Iris Value',
 				style: {
 					
@@ -1790,6 +1845,7 @@ module.exports = {
 		if (s.gain.cmd) {
 			presets.gainUp = {
 				category: 'Exposure',
+				type: 'button',
 				name: 'Gain Up',
 				style: {
 					
@@ -1814,6 +1870,7 @@ module.exports = {
 
 			presets.gainDown = {
 				category: 'Exposure',
+				type: 'button',
 				name: 'Gain Down',
 				style: {
 					
@@ -1838,6 +1895,7 @@ module.exports = {
 
 			presets.toggleGain = {
 				category: 'Exposure',
+				type: 'button',
 				name: 'Toggle Gain Mode',
 				style: {
 					
@@ -1873,6 +1931,7 @@ module.exports = {
 
 			presets.showGainValue = {
 				category: 'Exposure',
+				type: 'button',
 				name: 'Gain Value',
 				style: {
 					text: '$(canon-ptz:gainValue)',
@@ -1888,6 +1947,7 @@ module.exports = {
 		if (s.ndfilter.cmd) {
 			presets.ndfilterUp = {
 				category: 'Exposure',
+				type: 'button',
 				name: 'ND Filter Up',
 				style: {
 					text: 'ND Filter\\nUP',
@@ -1911,6 +1971,7 @@ module.exports = {
 
 			presets.ndFilterDown = {
 				category: 'Exposure',
+				type: 'button',
 				name: 'ND Filter Down',
 				style: {
 					
@@ -1936,6 +1997,7 @@ module.exports = {
 			for (let x in s.ndfilter.dropdown) {
 				presets['ndfilterset-' + s.ndfilter.dropdown[x].id] = {
 					category: 'Exposure',
+					type: 'button',
 					name: 'ND Filter Set ' + s.ndfilter.dropdown[x].label,
 					style: {
 						text: 'ND FILTER\\nSET\\n' + s.ndfilter.dropdown[x].label,
@@ -1962,6 +2024,7 @@ module.exports = {
 
 			presets.showNDfilterValue = {
 				category: 'Exposure',
+				type: 'button',
 				name: 'ND Filter Value',
 				style: {
 					
@@ -1978,6 +2041,7 @@ module.exports = {
 		if (s.pedestal.cmd) {
 			presets.pedestalUp = {
 				category: 'Exposure',
+				type: 'button',
 				name: 'Pedestal Up',
 				style: {
 					
@@ -2002,6 +2066,7 @@ module.exports = {
 
 			presets.pedestalDown = {
 				category: 'Exposure',
+				type: 'button',
 				name: 'Pedestal Down',
 				style: {
 					
@@ -2026,6 +2091,7 @@ module.exports = {
 
 			presets.showPedestalValue = {
 				category: 'Exposure',
+				type: 'button',
 				name: 'Pedestal Value',
 				style: {
 					
@@ -2046,6 +2112,7 @@ module.exports = {
 		if (s.whitebalanceMode.cmd) {
 			presets.toggleWhiteBalanceMode = {
 				category: 'White Balance',
+				type: 'button',
 				name: 'Toggle White Balance Mode',
 				style: {
 					
@@ -2070,6 +2137,7 @@ module.exports = {
 
 			presets.whiteBalanceCalibrationA = {
 				category: 'White Balance',
+				type: 'button',
 				name: 'White Balance Calibration',
 				style: {
 					
@@ -2096,6 +2164,7 @@ module.exports = {
 
 			presets.whiteBalanceCalibrationB = {
 				category: 'White Balance',
+				type: 'button',
 				name: 'White Balance Calibration',
 				style: {
 					
@@ -2122,6 +2191,7 @@ module.exports = {
 
 			presets.toggleWhiteBalanceMode = {
 				category: 'White Balance',
+				type: 'button',
 				name: 'Current White Balance Mode',
 				style: {
 					
@@ -2147,6 +2217,7 @@ module.exports = {
 			for (let x in s.whitebalanceMode.dropdown) {
 				presets['whitebalanceMode-' +  s.whitebalanceMode.dropdown[x].id] = {
 					category: 'White Balance',
+					type: 'button',
 					name: 'White Balance Mode Set ' + s.whitebalanceMode.dropdown[x].label,
 					style: {
 						text: 'WB MODE\\nSET\\n' + s.whitebalanceMode.dropdown[x].label,
@@ -2186,6 +2257,7 @@ module.exports = {
 		if (s.kelvin.cmd) {
 			presets.kelvinUp = {
 				category: 'White Balance',
+				type: 'button',
 				name: 'Kelvin Up',
 				style: {
 					
@@ -2210,6 +2282,7 @@ module.exports = {
 
 			presets.kelvinDown = {
 				category: 'White Balance',
+				type: 'button',
 				name: 'Kelvin Down',
 				style: {
 					
@@ -2234,6 +2307,7 @@ module.exports = {
 
 			presets.showKelvinValue = {
 				category: 'White Balance',
+				type: 'button',
 				name: 'Kelvin Value',
 				style: {
 					
@@ -2250,6 +2324,7 @@ module.exports = {
 		if (s.rGain.cmd) {
 			presets.redGainUp = {
 				category: 'White Balance',
+				type: 'button',
 				name: 'Red Gain Up',
 				style: {
 					
@@ -2274,6 +2349,7 @@ module.exports = {
 
 			presets.redGainDown = {
 				category: 'White Balance',
+				type: 'button',
 				name: 'Red Gain Down',
 				style: {
 					
@@ -2298,6 +2374,7 @@ module.exports = {
 
 			presets.showRedGainValue = {
 				category: 'White Balance',
+				type: 'button',
 				name: 'Red Gain Value',
 				style: {
 					
@@ -2314,6 +2391,7 @@ module.exports = {
 		if (s.bGain.cmd) {
 			presets.blueGainUp = {
 				category: 'White Balance',
+				type: 'button',
 				name: 'Blue Gain Up',
 				style: {
 					
@@ -2338,6 +2416,7 @@ module.exports = {
 
 			presets.blueGainDown = {
 				category: 'White Balance',
+				type: 'button',
 				name: 'Blue Gain Down',
 				style: {
 					
@@ -2362,6 +2441,7 @@ module.exports = {
 
 			presets.showBlueGainValue = {
 				category: 'White Balance',
+				type: 'button',
 				name: 'Blue Gain Value',
 				style: {
 					
@@ -2382,6 +2462,7 @@ module.exports = {
 		if (s.presets == true) {
 			presets.presetRecallModeToggle = {
 				category: 'Recall Preset',
+				type: 'button',
 				name: 'Preset Recall Mode - Toggle',
 				style: {
 					
@@ -2406,6 +2487,7 @@ module.exports = {
 
 			presets.presetRecallModeNormal = {
 				category: 'Recall Preset',
+				type: 'button',
 				name: 'Set Preset Recall Mode - Normal',
 				style: {
 					
@@ -2445,6 +2527,7 @@ module.exports = {
 		if (s.timePset == true) {
 			presets.recallPresetModeTime = {
 				category: 'Recall Preset',
+				type: 'button',
 				name: 'Set Preset Recall Mode - Time',
 				style: {
 					
@@ -2473,6 +2556,7 @@ module.exports = {
 		if (s.speedPset == true) {
 			presets.recallPresetModeSpeed = {
 				category: 'Recall Preset',
+				type: 'button',
 				name: 'Set Preset Recall Mode - Speed',
 				style: {
 					
@@ -2501,6 +2585,7 @@ module.exports = {
 		if (s.presets == true) {
 			presets.showRecallPresetModeValue = {
 				category: 'Recall Preset',
+				type: 'button',
 				name: 'Preset Recall Mode Value',
 				style: {
 					
@@ -2517,6 +2602,7 @@ module.exports = {
 		if (s.timePset == true) {
 			presets.timePsetUp = {
 				category: 'Recall Preset',
+				type: 'button',
 				name: 'Recall Time Up',
 				style: {
 					
@@ -2540,6 +2626,7 @@ module.exports = {
 			}
 			presets.timePsetDown = {
 				category: 'Recall Preset',
+				type: 'button',
 				name: 'Recall Time Down',
 				style: {
 					
@@ -2563,6 +2650,7 @@ module.exports = {
 			}
 			presets.showPresetTimeValue = {
 				category: 'Recall Preset',
+				type: 'button',
 				name: 'Recall Time Value',
 				style: {
 					
@@ -2579,6 +2667,7 @@ module.exports = {
 		if (s.speedPset == true) {
 			presets.speedPsetUp = {
 				category: 'Recall Preset',
+				type: 'button',
 				name: 'Recall Speed Up',
 				style: {
 					
@@ -2602,6 +2691,7 @@ module.exports = {
 			}
 			presets.speedPsetDown = {
 				category: 'Recall Preset',
+				type: 'button',
 				name: 'Recall Speed Down',
 				style: {
 					
@@ -2625,6 +2715,7 @@ module.exports = {
 			}
 			presets.showPSetSpeedValue = {
 				category: 'Recall Preset',
+				type: 'button',
 				name: 'Recall Speed Value',
 				style: {
 					
@@ -2642,6 +2733,7 @@ module.exports = {
 			for (let save = 1; save <= 100; save++) {
 				presets['presetSave' + save] = {
 					category: 'Save Preset',
+					type: 'button',
 					name: 'Save Preset ' + save,
 					style: {
 						
@@ -2677,6 +2769,7 @@ module.exports = {
 			for (let recall = 1; recall <= 100; recall++) {
 				presets['recallPreset' + recall] = {
 					category: 'Recall Preset',
+					type: 'button',
 					name: 'Recall Preset ' + recall,
 					style: {
 						
@@ -2715,6 +2808,7 @@ module.exports = {
 
 			presets.showPsetLastUsed = {
 				category: 'Recall Preset',
+				type: 'button',
 				name: 'Preset Last Used',
 				style: {
 					
