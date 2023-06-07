@@ -64,7 +64,8 @@ module.exports = {
 				tallyPreview: true, //pvw tally is on or off
 				digitalZoom: true, //digital zoom is on or off
 				imageStabilization: true, //image stabilization is on or off
-				autoFocusMode: true, //focus mode is auto or manual
+				autoFocusMode: true, //focus mode is auto or manual,
+				exposureShootingMode: true, //exposure shooting mode (auto, manual, scene)
 				exposureMode: true, //exposure mode is full auto, program, tv, av, or manual
 				autoShutterMode: true, //shutter mode is auto or manual
 				autoIrisMode: true, //iris mode is auto or manual
@@ -163,6 +164,7 @@ module.exports = {
 				digitalZoom: true, //digital zoom is on or off
 				imageStabilization: true, //image stabilization is on or off
 				autoFocusMode: true, //focus mode is auto or manual
+				exposureShootingMode: true, //exposure shooting mode (auto, manual, scene)
 				exposureMode: true, //exposure mode is full auto, program, tv, av, or manual
 				autoShutterMode: true, //shutter mode is auto or manual
 				autoIrisMode: true, //iris mode is auto or manual
@@ -261,6 +263,7 @@ module.exports = {
 				digitalZoom: true, //digital zoom is on or off
 				imageStabilization: true, //image stabilization is on or off
 				autoFocusMode: true, //focus mode is auto or manual
+				exposureShootingMode: true, //exposure shooting mode (auto, manual, scene)
 				exposureMode: true, //exposure mode is full auto, program, tv, av, or manual
 				autoShutterMode: true, //shutter mode is auto or manual
 				autoIrisMode: true, //iris mode is auto or manual
@@ -353,6 +356,7 @@ module.exports = {
 				digitalZoom: true, //digital zoom is on or off
 				imageStabilization: true, //image stabilization is on or off
 				autoFocusMode: true, //focus mode is auto or manual
+				exposureShootingMode: true, //exposure shooting mode (auto, manual, scene)
 				exposureMode: true, //exposure mode is full auto, program, tv, av, or manual
 				autoShutterMode: true, //shutter mode is auto or manual
 				autoIrisMode: true, //iris mode is auto or manual
@@ -445,7 +449,8 @@ module.exports = {
 				tallyPreview: true, //pvw tally is on or off
 				digitalZoom: true, //digital zoom is on or off
 				imageStabilization: true, //image stabilization is on or off
-				autoFocusMode: true, //focus mode is auto or manual
+				autoFocusMode: true, //focus mode is auto or manual,
+				exposureShootingMode: true, //exposure shooting mode (auto, manual, scene)
 				exposureMode: true, //exposure mode is full auto, program, tv, av, or manual
 				autoShutterMode: true, //shutter mode is auto or manual
 				autoIrisMode: true, //iris mode is auto or manual
@@ -539,6 +544,7 @@ module.exports = {
 				digitalZoom: true, //digital zoom is on or off
 				imageStabilization: true, //image stabilization is on or off
 				autoFocusMode: true, //focus mode is auto or manual
+				exposureShootingMode: true, //exposure shooting mode (auto, manual, scene)
 				exposureMode: true, //exposure mode is full auto, program, tv, av, or manual
 				autoShutterMode: true, //shutter mode is auto or manual
 				autoIrisMode: true, //iris mode is auto or manual
@@ -632,6 +638,7 @@ module.exports = {
 				digitalZoom: true, //digital zoom is on or off
 				imageStabilization: true, //image stabilization is on or off
 				autoFocusMode: true, //focus mode is auto or manual
+				exposureShootingMode: true, //exposure shooting mode (auto, manual, scene)
 				exposureMode: true, //exposure mode is full auto, program, tv, av, or manual
 				autoShutterMode: true, //shutter mode is auto or manual
 				autoIrisMode: true, //iris mode is auto or manual
