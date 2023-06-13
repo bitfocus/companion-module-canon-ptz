@@ -11,13 +11,14 @@ module.exports = {
 				width: 12,
 				label: 'Information',
 				value:
-					"This module controls Canon PTZ cameras using the XC protocol. You can find supported models in the dropdown below.<br/>If your camera isn't in the list below, feel free to try it anyway with the option 'Other Cameras'.",
+					"This module controls Canon cameras using the XC protocol. You can find supported models in the dropdown below.<br/>If your camera isn't in the list below, feel free to try it anyway with the option 'Other Cameras'.",
 			},
 			{
 				type: 'textinput',
 				id: 'host',
 				label: 'Camera IP',
 				width: 4,
+				default: '',
 				regex: Regex.IP,
 			},
 			{
@@ -83,13 +84,20 @@ module.exports = {
 			},
 			{
 				type: 'checkbox',
+				id: 'verbose',
+				width: 1,
+				label: 'Verbose Mode',
+				default: true,
+			},
+			{
+				type: 'checkbox',
 				id: 'debug',
 				width: 1,
 				label: 'Enable',
 				default: false,
 			},
 			{
-				type: 'text',
+				type: 'static-text',
 				id: 'debugInfo',
 				width: 11,
 				label: 'Enable Debug To Log Window',

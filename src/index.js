@@ -1,6 +1,6 @@
 //Canon PTZ
 
-const { InstanceBase, Regex, runEntrypoint } = require('@companion-module/base')
+const { InstanceBase, runEntrypoint } = require('@companion-module/base')
 const UpgradeScripts = require('./upgrades')
 
 const config = require('./config')
@@ -11,7 +11,7 @@ const presets = require('./presets')
 
 const polling = require('./polling')
 
-class moduleInstance extends InstanceBase {
+class canonptzInstance extends InstanceBase {
 	constructor(internal) {
 		super(internal)
 
@@ -173,17 +173,18 @@ class moduleInstance extends InstanceBase {
 		this.config.model = this.config.model || 'Auto'
 		this.config.debug = this.config.debug || false
 		this.config.interval = this.config.interval || 5000
-	
-		this.updateStatus('Connecting')
-		this.getCameraInformation()
-		
+			
 		this.initActions()
 		this.initFeedbacks()
 		this.initVariables()
 		this.initPresets()
 
-		this.initPolling()
+		if (this.config.host !== '') {
+			this.updateStatus('Connecting')
+			this.getCameraInformation()
+			this.initPolling()
+		}
 	}
 }
 
-runEntrypoint(moduleInstance, UpgradeScripts)
+runEntrypoint(canonptzInstance, UpgradeScripts)

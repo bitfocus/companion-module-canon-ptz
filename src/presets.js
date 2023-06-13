@@ -5,6 +5,8 @@ const c = require('./choices.js')
 
 module.exports = {
 	initPresets: function () {
+		let self = this;
+		
 		let presets = {}
 		let SERIES = {}
 
@@ -14,26 +16,26 @@ module.exports = {
 		const backgroundColorOrange = combineRgb(255, 102, 0) // Orange
 
 		// Set the model and series selected, if in auto, detect what model is connected
-		if (this.config.model === 'Auto') {
-			this.data.model = this.data.modelDetected
+		if (self.config.model === 'Auto') {
+			self.data.model = self.data.modelDetected
 		} else {
-			this.data.model = this.config.model
+			self.data.model = self.config.model
 		}
 
-		if (this.data.model !== '') {
-			this.data.series = MODELS.find((MODELS) => MODELS.id == this.data.model).series
+		if (self.data.model !== '') {
+			self.data.series = MODELS.find((MODELS) => MODELS.id == self.data.model).series
 		}
 
 		// Find the specific commands for a given series
 		if (
-			this.data.series === 'Auto' ||
-			this.data.series === 'Other' ||
-			SERIES_SPECS.find((SERIES_SPECS) => SERIES_SPECS.id == this.data.series) == undefined
+			self.data.series === 'Auto' ||
+			self.data.series === 'Other' ||
+			SERIES_SPECS.find((SERIES_SPECS) => SERIES_SPECS.id == self.data.series) == undefined
 		) {
 			SERIES = SERIES_SPECS.find((SERIES_SPECS) => SERIES_SPECS.id == 'Other')
 		}
 		else {
-			SERIES = SERIES_SPECS.find((SERIES_SPECS) => SERIES_SPECS.id == this.data.series)
+			SERIES = SERIES_SPECS.find((SERIES_SPECS) => SERIES_SPECS.id == self.data.series)
 		}
 
 		let s = SERIES.actions;
@@ -398,7 +400,7 @@ module.exports = {
 				style: {
 					style: 'png',
 					text: '',
-					png64: this.ICON_UP,
+					png64: self.ICON_UP,
 					pngalignment: 'center:center',
 					size: '18',
 					color: '16777215',
@@ -430,7 +432,7 @@ module.exports = {
 				style: {
 					style: 'png',
 					text: '',
-					png64: this.ICON_DOWN,
+					png64: self.ICON_DOWN,
 					pngalignment: 'center:center',
 					size: '18',
 					color: '16777215',
@@ -462,7 +464,7 @@ module.exports = {
 				style: {
 					style: 'png',
 					text: '',
-					png64: this.ICON_LEFT,
+					png64: self.ICON_LEFT,
 					pngalignment: 'center:center',
 					size: '18',
 					color: '16777215',
@@ -494,7 +496,7 @@ module.exports = {
 				style: {
 					style: 'png',
 					text: '',
-					png64: this.ICON_RIGHT,
+					png64: self.ICON_RIGHT,
 					pngalignment: 'center:center',
 					size: '18',
 					color: '16777215',
@@ -526,7 +528,7 @@ module.exports = {
 				style: {
 					style: 'png',
 					text: '',
-					png64: this.ICON_UP_RIGHT,
+					png64: self.ICON_UP_RIGHT,
 					pngalignment: 'center:center',
 					size: '18',
 					color: '16777215',
@@ -558,7 +560,7 @@ module.exports = {
 				style: {
 					style: 'png',
 					text: '',
-					png64: this.ICON_UP_LEFT,
+					png64: self.ICON_UP_LEFT,
 					pngalignment: 'center:center',
 					size: '18',
 					color: '16777215',
@@ -590,7 +592,7 @@ module.exports = {
 				style: {
 					style: 'png',
 					text: '',
-					png64: this.ICON_DOWN_LEFT,
+					png64: self.ICON_DOWN_LEFT,
 					pngalignment: 'center:center',
 					size: '18',
 					color: '16777215',
@@ -622,7 +624,7 @@ module.exports = {
 				style: {
 					style: 'png',
 					text: '',
-					png64: this.ICON_DOWN_RIGHT,
+					png64: self.ICON_DOWN_RIGHT,
 					pngalignment: 'center:center',
 					size: '18',
 					color: '16777215',
@@ -2822,6 +2824,6 @@ module.exports = {
 			}
 		}		
 
-		this.setPresetDefinitions(presets);
+		self.setPresetDefinitions(presets);
 	}
 }

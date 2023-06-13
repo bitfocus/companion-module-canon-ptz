@@ -2,34 +2,33 @@ let { MODELS, SERIES_SPECS } = require('./models.js')
 const c = require('./choices.js')
 
 module.exports = {
-	// ##########################
-	// #### Define Variables ####
-	// ##########################
 	initVariables: function () {
+		let self = this;
+		
 		let variables = []
 		let SERIES = {}
 
 		// Set the model and series selected, if in auto, detect what model is connected
-		if (this.config.model === 'Auto') {
-			this.data.model = this.data.modelDetected
+		if (self.config.model === 'Auto') {
+			self.data.model = self.data.modelDetected
 		} else {
-			this.data.model = this.config.model
+			self.data.model = self.config.model
 		}
 
-		if (this.data.model !== '') {
-			this.data.series = MODELS.find((MODELS) => MODELS.id == this.data.model).series
+		if (self.data.model !== '') {
+			self.data.series = MODELS.find((MODELS) => MODELS.id == self.data.model).series
 		}
 
 		// Find the specific commands for a given series
 		if (
-			this.data.series === 'Auto' ||
-			this.data.series === 'Other' ||
-			SERIES_SPECS.find((SERIES_SPECS) => SERIES_SPECS.id == this.data.series) == undefined
+			self.data.series === 'Auto' ||
+			self.data.series === 'Other' ||
+			SERIES_SPECS.find((SERIES_SPECS) => SERIES_SPECS.id == self.data.series) == undefined
 		) {
 			SERIES = SERIES_SPECS.find((SERIES_SPECS) => SERIES_SPECS.id == 'Other')
 		}
 		else {
-			SERIES = SERIES_SPECS.find((SERIES_SPECS) => SERIES_SPECS.id == this.data.series)
+			SERIES = SERIES_SPECS.find((SERIES_SPECS) => SERIES_SPECS.id == self.data.series)
 		}
 
 		variables.push({ variableId: 'series', name: 'Camera Series' })
@@ -155,80 +154,79 @@ module.exports = {
 			variables.push({ variableId: 'presetSpeedValue', name: 'Preset Speed Value' })
 		}
 
-		return variables
+		self.setVariableDefinitions(variables);
 	},
 
-	// #########################
-	// #### Check Variables ####
-	// #########################
 	checkVariables: function () {
+		let self = this;
+
 		try {
 			let SERIES = {};
 
 			// Set the model and series selected, if in auto, detect what model is connected
-			if (this.config.model === 'Auto') {
-				this.data.model = this.data.modelDetected
+			if (self.config.model === 'Auto') {
+				self.data.model = self.data.modelDetected
 			} else {
-				this.data.model = this.config.model
+				self.data.model = self.config.model
 			}
 
-			if (this.data.model !== '') {
-				this.data.series = MODELS.find((MODELS) => MODELS.id == this.data.model).series
+			if (self.data.model !== '') {
+				self.data.series = MODELS.find((MODELS) => MODELS.id == self.data.model).series
 			}
 
 			// Find the specific commands for a given series
 			if (
-				this.data.series === 'Auto' ||
-				this.data.series === 'Other' ||
-				SERIES_SPECS.find((SERIES_SPECS) => SERIES_SPECS.id == this.data.series) == undefined
+				self.data.series === 'Auto' ||
+				self.data.series === 'Other' ||
+				SERIES_SPECS.find((SERIES_SPECS) => SERIES_SPECS.id == self.data.series) == undefined
 			) {
 				SERIES = SERIES_SPECS.find((SERIES_SPECS) => SERIES_SPECS.id == 'Other')
 			}
 			else {
-				SERIES = SERIES_SPECS.find((SERIES_SPECS) => SERIES_SPECS.id == this.data.series)
+				SERIES = SERIES_SPECS.find((SERIES_SPECS) => SERIES_SPECS.id == self.data.series)
 			}
 
 			variableValues = {};
 
-			variableValues.seris = this.data.series;
-			variableValues.model = this.data.model;
+			variableValues.seris = self.data.series;
+			variableValues.model = self.data.model;
 	
 			//System
-			variableValues.cameraName = this.data.cameraName;
-			variableValues.powerState = this.data.powerState;
-			variableValues.tallyProgram = this.data.tallyProgram;
-			variableValues.tallyPreview = this.data.tallyPreview;
-			variableValues.digitalZoom = this.data.digitalZoom;
-			variableValues.imageStabilization = this.data.imageStabilization;
-			variableValues.firmwareVersion = this.data.firmwareVersion;
-			variableValues.protocolVersion = this.data.protocolVersion;
+			variableValues.cameraName = self.data.cameraName;
+			variableValues.powerState = self.data.powerState;
+			variableValues.tallyProgram = self.data.tallyProgram;
+			variableValues.tallyPreview = self.data.tallyPreview;
+			variableValues.digitalZoom = self.data.digitalZoom;
+			variableValues.imageStabilization = self.data.imageStabilization;
+			variableValues.firmwareVersion = self.data.firmwareVersion;
+			variableValues.protocolVersion = self.data.protocolVersion;
 	
 			//Zoom/Focus
-			variableValues.zoomSpeed = this.data.zoomSpeed;
-			variableValues.zoomValue = this.data.zoomValue;
-			variableValues.focusSpeed = c.CHOICES_FOCUS_SPEED[this.fSpeedIndex].label;
-			variableValues.focusValue = this.data.focusValue;
-			variableValues.autoFocusMode = this.data.autoFocusMode;
+			variableValues.zoomSpeed = self.data.zoomSpeed;
+			variableValues.zoomValue = self.data.zoomValue;
+			variableValues.focusSpeed = c.CHOICES_FOCUS_SPEED[self.fSpeedIndex].label;
+			variableValues.focusValue = self.data.focusValue;
+			variableValues.autoFocusMode = self.data.autoFocusMode;
 	
 			//Pan/Tilt
-			variableValues.panTiltSpeedValue = c.CHOICES_PT_SPEED[this.ptSpeedIndex].label;
+			variableValues.panTiltSpeedValue = c.CHOICES_PT_SPEED[self.ptSpeedIndex].label;
 	
 			//Exposure
 			if (SERIES.variables.exposureShootingMode == true) {
 				let index;
-				let exposureShootingModeValue = this.data.exposureShootingMode;
+				let exposureShootingModeValue = self.data.exposureShootingMode;
 				if (SERIES.actions.exposureShootingMode.dropdown) {
-					index = SERIES.actions.exposureShootingMode.dropdown.findIndex((EXPSHOOTINGMODE) => EXPSHOOTINGMODE.id == this.data.exposureShootingMode);
-					this.exposureShootingModeIndex = index;
-					let exposureShootingMode = SERIES.actions.exposureShootingMode.dropdown[this.exposureShootingModeIndex];
+					index = SERIES.actions.exposureShootingMode.dropdown.findIndex((EXPSHOOTINGMODE) => EXPSHOOTINGMODE.id == self.data.exposureShootingMode);
+					self.exposureShootingModeIndex = index;
+					let exposureShootingMode = SERIES.actions.exposureShootingMode.dropdown[self.exposureShootingModeIndex];
 					if (exposureShootingMode) {
 						exposureShootingModeValue = exposureShootingMode.label;
 					}
 				}
 				else {
-					index = c.CHOICES_EXPOSURESHOOTINGMODES_OTHER().findIndex((EXPSHOOTINGMODE) => EXPSHOOTINGMODE.id == this.data.exposureShootingMode);
-					this.exposureShootingModeIndex = index;
-					let exposureShootingMode = SERIES.actions.exposureShootingMode.dropdown[this.exposureShootingModeIndex];
+					index = c.CHOICES_EXPOSURESHOOTINGMODES_OTHER().findIndex((EXPSHOOTINGMODE) => EXPSHOOTINGMODE.id == self.data.exposureShootingMode);
+					self.exposureShootingModeIndex = index;
+					let exposureShootingMode = SERIES.actions.exposureShootingMode.dropdown[self.exposureShootingModeIndex];
 					if (exposureShootingMode) {
 						exposureShootingModeValue = exposureShootingMode.label;
 					}
@@ -238,19 +236,19 @@ module.exports = {
 
 			if (SERIES.variables.exposureMode == true) {
 				let index;
-				let exposureModeValue = this.data.exposureMode;
+				let exposureModeValue = self.data.exposureMode;
 				if (SERIES.actions.exposureMode.dropdown) {
-					index = SERIES.actions.exposureMode.dropdown.findIndex((EXPMODE) => EXPMODE.id == this.data.exposureMode);
-					this.exposureModeIndex = index;
-					let exposureMode = SERIES.actions.exposureMode.dropdown[this.exposureModeIndex];
+					index = SERIES.actions.exposureMode.dropdown.findIndex((EXPMODE) => EXPMODE.id == self.data.exposureMode);
+					self.exposureModeIndex = index;
+					let exposureMode = SERIES.actions.exposureMode.dropdown[self.exposureModeIndex];
 					if (exposureMode) {
 						exposureModeValue = exposureMode.label;
 					}
 				}
 				else {
-					index = c.CHOICES_EXPOSUREMODES_OTHER().findIndex((EXPMODE) => EXPMODE.id == this.data.exposureMode);
-					this.exposureModeIndex = index;
-					let exposureMode = SERIES.actions.exposureMode.dropdown[this.exposureModeIndex];
+					index = c.CHOICES_EXPOSUREMODES_OTHER().findIndex((EXPMODE) => EXPMODE.id == self.data.exposureMode);
+					self.exposureModeIndex = index;
+					let exposureMode = SERIES.actions.exposureMode.dropdown[self.exposureModeIndex];
 					if (exposureMode) {
 						exposureModeValue = exposureMode.label;
 					}
@@ -259,34 +257,34 @@ module.exports = {
 			}
 
 			if (SERIES.variables.ae == true) {
-				variableValues.aeGainLimitMax = this.data.aeGainLimitMax;
-				variableValues.aeGainLimitMaxMin = this.data.aeGainLimitMaxMin;
-				variableValues.aeGainLimitMaxMax = this.data.aeGainLimitMaxMax;
-				variableValues.aeBrightness = this.data.aeBrightness;
-				variableValues.aePhotometry = this.data.aePhotometry;
-				variableValues.aeFlickerReduct = this.data.aeFlickerReduct;
-				variableValues.aeResp = this.data.aeResp;
+				variableValues.aeGainLimitMax = self.data.aeGainLimitMax;
+				variableValues.aeGainLimitMaxMin = self.data.aeGainLimitMaxMin;
+				variableValues.aeGainLimitMaxMax = self.data.aeGainLimitMaxMax;
+				variableValues.aeBrightness = self.data.aeBrightness;
+				variableValues.aePhotometry = self.data.aePhotometry;
+				variableValues.aeFlickerReduct = self.data.aeFlickerReduct;
+				variableValues.aeResp = self.data.aeResp;
 			}
 
 			if (SERIES.variables.shutterMode == true) {
-				variableValues.shutterMode = this.data.shutterMode;
+				variableValues.shutterMode = self.data.shutterMode;
 			}
 
 			if (SERIES.variables.shutterValue == true) {
 				let index;
-				let shutterValue = this.data.shutterValue;
+				let shutterValue = self.data.shutterValue;
 				if (SERIES.actions.shutter.dropdown) {
-					index = SERIES.actions.shutter.dropdown.findIndex((SHUTTER) => SHUTTER.id == this.data.shutterValue);
-					this.shutterIndex = index;
-					let shutter = SERIES.actions.shutter.dropdown[this.shutterIndex];
+					index = SERIES.actions.shutter.dropdown.findIndex((SHUTTER) => SHUTTER.id == self.data.shutterValue);
+					self.shutterIndex = index;
+					let shutter = SERIES.actions.shutter.dropdown[self.shutterIndex];
 					if (shutter) {
 						shutterValue = shutter.label;
 					}
 				}
 				else {
-					index = c.CHOICES_SHUTTER_OTHER().findIndex((SHUTTER) => SHUTTER.id == this.data.shutterValue);
-					this.shutterIndex = index;
-					let shutter = SERIES.actions.shutter.dropdown[this.shutterIndex];
+					index = c.CHOICES_SHUTTER_OTHER().findIndex((SHUTTER) => SHUTTER.id == self.data.shutterValue);
+					self.shutterIndex = index;
+					let shutter = SERIES.actions.shutter.dropdown[self.shutterIndex];
 					if (shutter) {
 						shutterValue = shutter.label;
 					}
@@ -295,12 +293,12 @@ module.exports = {
 			}
 
 			if (SERIES.variables.irisMode == true) {
-				let value = this.data.irisMode;
+				let value = self.data.irisMode;
 
-				if (this.data.irisMode === 'auto') {
+				if (self.data.irisMode === 'auto') {
 					value = 'Auto';
 				}
-				else if (this.data.irisMode === 'manual') {
+				else if (self.data.irisMode === 'manual') {
 					value = 'Manual';
 				}
 
@@ -309,19 +307,19 @@ module.exports = {
 
 			if (SERIES.variables.irisValue == true) {
 				let index;
-				let irisValue = this.data.irisValue;
+				let irisValue = self.data.irisValue;
 				if (SERIES.actions.iris.dropdown) {
-					index = SERIES.actions.iris.dropdown.findIndex((IRIS) => IRIS.id == this.data.irisValue);
-					this.irisIndex = index;
-					let iris = SERIES.actions.iris.dropdown[this.irisIndex];
+					index = SERIES.actions.iris.dropdown.findIndex((IRIS) => IRIS.id == self.data.irisValue);
+					self.irisIndex = index;
+					let iris = SERIES.actions.iris.dropdown[self.irisIndex];
 					if (iris) {
 						irisValue = iris.label;
 					}
 				}
 				else {
-					index = c.CHOICES_IRIS_OTHER().findIndex((IRIS) => IRIS.id == this.data.irisValue);
-					this.irisIndex = index;
-					let iris = SERIES.actions.iris.dropdown[this.irisIndex];
+					index = c.CHOICES_IRIS_OTHER().findIndex((IRIS) => IRIS.id == self.data.irisValue);
+					self.irisIndex = index;
+					let iris = SERIES.actions.iris.dropdown[self.irisIndex];
 					if (iris) {
 						irisValue = iris.label;
 					}
@@ -330,12 +328,12 @@ module.exports = {
 			}
 
 			if (SERIES.variables.gainMode == true) {
-				let value = this.data.gainMode;
+				let value = self.data.gainMode;
 
-				if (this.data.gainMode === 'auto') {
+				if (self.data.gainMode === 'auto') {
 					value = 'Auto';
 				}
-				else if (this.data.gainMode === 'manual') {
+				else if (self.data.gainMode === 'manual') {
 					value = 'Manual';
 				}
 
@@ -344,19 +342,19 @@ module.exports = {
 
 			if (SERIES.variables.gainValue == true) {
 				let index;
-				let gainValue = this.data.gainValue;
+				let gainValue = self.data.gainValue;
 				if (SERIES.actions.gain.dropdown) {
-					index = SERIES.actions.gain.dropdown.findIndex((GAIN) => GAIN.id == this.data.gainValue);
-					this.gainIndex = index;
-					let gain = SERIES.actions.gain.dropdown[this.gainIndex];
+					index = SERIES.actions.gain.dropdown.findIndex((GAIN) => GAIN.id == self.data.gainValue);
+					self.gainIndex = index;
+					let gain = SERIES.actions.gain.dropdown[self.gainIndex];
 					if (gain) {
 						gainValue = gain.label;
 					}
 				}
 				else {
-					index = c.CHOICES_GAIN_OTHER().findIndex((GAIN) => GAIN.id == this.data.gainValue);
-					this.gainIndex = index;
-					let gain = SERIES.actions.gain.dropdown[this.gainIndex];
+					index = c.CHOICES_GAIN_OTHER().findIndex((GAIN) => GAIN.id == self.data.gainValue);
+					self.gainIndex = index;
+					let gain = SERIES.actions.gain.dropdown[self.gainIndex];
 					if (gain) {
 						gainValue = gain.label;
 					}
@@ -366,19 +364,19 @@ module.exports = {
 
 			if (SERIES.variables.ndfilterValue == true) {
 				let index;
-				let ndfilterValue = this.data.ndfilterValue;
+				let ndfilterValue = self.data.ndfilterValue;
 				if (SERIES.actions.ndfilter.dropdown) {
-					index = SERIES.actions.ndfilter.dropdown.findIndex((NDFILTER) => NDFILTER.id == this.data.ndfilterValue);
-					this.ndfilterIndex = index;
-					let ndfilter = SERIES.actions.ndfilter.dropdown[this.ndfilterIndex];
+					index = SERIES.actions.ndfilter.dropdown.findIndex((NDFILTER) => NDFILTER.id == self.data.ndfilterValue);
+					self.ndfilterIndex = index;
+					let ndfilter = SERIES.actions.ndfilter.dropdown[self.ndfilterIndex];
 					if (ndfilter) {
 						ndfilterValue = ndfilter.label;
 					}
 				}
 				else {
-					index = c.CHOICES_NDFILTER_OTHER().findIndex((NDFILTER) => NDFILTER.id == this.data.ndfilterValue);
-					this.ndfilterIndex = index;
-					let ndfilter = SERIES.actions.ndfilter.dropdown[this.ndfilterIndex];
+					index = c.CHOICES_NDFILTER_OTHER().findIndex((NDFILTER) => NDFILTER.id == self.data.ndfilterValue);
+					self.ndfilterIndex = index;
+					let ndfilter = SERIES.actions.ndfilter.dropdown[self.ndfilterIndex];
 					if (ndfilter) {
 						ndfilterValue = ndfilter.label;
 					}
@@ -388,19 +386,19 @@ module.exports = {
 
 			if (SERIES.variables.pedestalValue == true) {
 				let index;
-				let pedestalValue = this.data.pedestalValue;
+				let pedestalValue = self.data.pedestalValue;
 				if (SERIES.actions.pedestal.dropdown) {
-					index = SERIES.actions.pedestal.dropdown.findIndex((PEDESTAL) => PEDESTAL.id == this.data.pedestalValue);
-					this.pedestalIndex = index;
-					let pedestal = SERIES.actions.pedestal.dropdown[this.pedestalIndex];
+					index = SERIES.actions.pedestal.dropdown.findIndex((PEDESTAL) => PEDESTAL.id == self.data.pedestalValue);
+					self.pedestalIndex = index;
+					let pedestal = SERIES.actions.pedestal.dropdown[self.pedestalIndex];
 					if (pedestal) {
 						pedestalValue = pedestal.label;
 					}
 				}
 				else {
-					index = c.CHOICES_PEDESTAL_OTHER().findIndex((PEDESTAL) => PEDESTAL.id == this.data.pedestalValue);
-					this.pedestalIndex = index;
-					let pedestal = SERIES.actions.pedestal.dropdown[this.pedestalIndex];
+					index = c.CHOICES_PEDESTAL_OTHER().findIndex((PEDESTAL) => PEDESTAL.id == self.data.pedestalValue);
+					self.pedestalIndex = index;
+					let pedestal = SERIES.actions.pedestal.dropdown[self.pedestalIndex];
 					if (pedestal) {
 						pedestalValue = pedestal.label;
 					}
@@ -410,7 +408,7 @@ module.exports = {
 	
 			//White Balance
 			if (SERIES.variables.whitebalanceMode == true) {
-				let wbmode = SERIES.actions.whitebalanceMode.dropdown.find((WBMODE) => WBMODE.id == this.data.whitebalanceMode);
+				let wbmode = SERIES.actions.whitebalanceMode.dropdown.find((WBMODE) => WBMODE.id == self.data.whitebalanceMode);
 				if (wbmode) {
 					let value = wbmode.label;
 					variableValues.whitebalanceMode = value;
@@ -418,7 +416,7 @@ module.exports = {
 			}
 
 			if (SERIES.variables.kelvinValue == true) {
-				let kelvin = SERIES.actions.kelvin.dropdown.find((KELVIN) => KELVIN.id == this.data.kelvinValue);
+				let kelvin = SERIES.actions.kelvin.dropdown.find((KELVIN) => KELVIN.id == self.data.kelvinValue);
 				if (kelvin) {
 					let value = kelvin.label;
 					variableValues.kelvinValue = value;
@@ -426,7 +424,7 @@ module.exports = {
 			}
 
 			if (SERIES.variables.rGainValue == true) {
-				let rGain = SERIES.actions.rGain.dropdown.find((RGAIN) => RGAIN.id == this.data.rGainValue);
+				let rGain = SERIES.actions.rGain.dropdown.find((RGAIN) => RGAIN.id == self.data.rGainValue);
 				if (rGain) {
 					let value = rGain.label;
 					variableValues.rGainValue = value;
@@ -434,7 +432,7 @@ module.exports = {
 			}
 
 			if (SERIES.variables.bGainValue == true) {
-				let bGain = SERIES.actions.bGain.dropdown.find((BGAIN) => BGAIN.id == this.data.bGainValue);
+				let bGain = SERIES.actions.bGain.dropdown.find((BGAIN) => BGAIN.id == self.data.bGainValue);
 				if (bGain) {
 					let value = bGain.label;
 					variableValues.bGainValue = value;
@@ -444,34 +442,43 @@ module.exports = {
 			//Recall Preset
 			if (SERIES.variables.presetNames == true) {
 				for (let i = 1; i <= 100; i++) {
-					variableValues[`presetname${i}`] = this.data[`presetname${i}`];
+					variableValues[`presetname${i}`] = self.data[`presetname${i}`];
 				}
 			}
 
 			if (SERIES.variables.presetLastUsed == true) {
-				let indexLastUsed = c.CHOICES_PRESETS().findIndex((PRESETLASTUSED) => PRESETLASTUSED.id == this.data.presetLastUsed);
-				this.presetLastUsedIndex = indexLastUsed;
+				let indexLastUsed = c.CHOICES_PRESETS().findIndex((PRESETLASTUSED) => PRESETLASTUSED.id == self.data.presetLastUsed);
+				if (indexLastUsed == -1) {
+					indexLastUsed = 0;
+				}
+				self.presetLastUsedIndex = indexLastUsed;
 				variableValues.presetLastUsed = c.CHOICES_PRESETS()[indexLastUsed].label;
 			}
 
 			if (SERIES.variables.presetRecallMode == true) {
-				let index = c.CHOICES_PRESETRECALLMODES.findIndex((PRESETRECALLMODE) => PRESETRECALLMODE.id == this.data.presetRecallMode);
-				this.presetRecallModeIndex = index;
+				let index = c.CHOICES_PRESETRECALLMODES.findIndex((PRESETRECALLMODE) => PRESETRECALLMODE.id == self.data.presetRecallMode);
+				if (index == -1) {
+					index = 0;
+				}
+				self.presetRecallModeIndex = index;
 				variableValues.presetRecallMode = c.CHOICES_PRESETRECALLMODES[index].label;
 			}	
 
 			if (SERIES.variables.presetTimeValue == true) {
-				let value = c.CHOICES_PSTIME().find((PRESETTIMEVALUE) => PRESETTIMEVALUE.id == this.data.presetTimeValue).varLabel;
+				let value = c.CHOICES_PSTIME().find((PRESETTIMEVALUE) => PRESETTIMEVALUE.id == self.data.presetTimeValue).varLabel;
 				variableValues.presetTimeValue = value;
 			}
 
 			if (SERIES.variables.presetSpeedValue == true) {
-				let value = c.CHOICES_PSSPEED().find((PRESETSPEEDVALUE) => PRESETSPEEDVALUE.id == this.data.presetSpeedValue).varLabel;
+				let value = c.CHOICES_PSSPEED().find((PRESETSPEEDVALUE) => PRESETSPEEDVALUE.id == self.data.presetSpeedValue).varLabel;
 				variableValues.presetSpeedValue = value;
 			}
+
+			self.setVariableValues(variableValues);
 		}
 		catch(error) {
-			this.log('error', 'Error parsing Variables from PTZ: ' + String(error))
+			self.log('error', 'Error parsing Variables from PTZ: ' + String(error))
+			console.log(error);
 		}
 	}
 }

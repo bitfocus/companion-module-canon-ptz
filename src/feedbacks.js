@@ -4,9 +4,6 @@ const { MODELS, SERIES_SPECS } = require('./models.js')
 const c = require('./choices.js')
 
 module.exports = {
-	// ##########################
-	// #### Define Feedbacks ####
-	// ##########################
 	initFeedbacks: function () {
 		let self = this;
 

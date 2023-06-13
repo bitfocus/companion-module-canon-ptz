@@ -2,25 +2,24 @@ const axios = require('axios');
 
 class API {
 	constructor(config) {
+		let self = this;
+
 		const apiHost = config.host
 		const apiPort = config.httpPort
 
-		this.baseUrl = `http://${apiHost}:${apiPort}/-wvhttp-01-/`
+		self.baseUrl = `http://${apiHost}:${apiPort}/-wvhttp-01-/`
 	}
 
 	async sendRequest(cmd) {
-		let requestUrl = this.baseUrl + cmd;
+		let self = this;
+		
+		let requestUrl = self.baseUrl + cmd;
 		
 		try {
 			const response = await axios.get(requestUrl)
-			if (!response.ok) {
-				return {
-					status: 'failed',
-				}
-			}
 			return {
-				status: 'success',
-				response: await response,
+				status: 'ok',
+				response: response
 			}
 		} catch (err) {
 			console.log(err)
