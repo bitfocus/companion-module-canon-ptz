@@ -1860,7 +1860,7 @@ module.exports = {
 							break;
 					}
 
-					self.data.presetLastUsed = action.options.val;
+					self.data.presetLastUsed = parseInt(action.options.val);
 
 					self.sendPTZ(self.ptzCommand, cmd);
 				}

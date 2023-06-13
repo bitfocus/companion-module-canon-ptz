@@ -562,7 +562,7 @@ module.exports = {
 				imageStabilization: true, //Supports Image Stabilization
 				panTilt: false, // Has Pan/Tilt Support
 				ptSpeed: true, // Internal Speed Options
-				zoom: false, // Has Zoom Support
+				zoom: true, // Has Zoom Support
 				zoomValue: true, //for XF605, etc.
 				zoomSpeed: true, // Internal Speed Options
 				focus: true, // Has Focus Support

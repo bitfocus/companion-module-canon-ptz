@@ -41,7 +41,7 @@ module.exports = {
 		if (SERIES.feedbacks.powerState == true) {
 			feedbacks.powerState = {
 				type: 'boolean',
-				label: 'System - Power State',
+				name: 'System - Power State',
 				description: 'Indicate if PTZ is Idle or Standby',
 				defaultStyle: {
 					color: foregroundColor,
@@ -83,7 +83,7 @@ module.exports = {
 		if (SERIES.feedbacks.tallyProgram == true) {
 			feedbacks.tallyProgram = {
 				type: 'boolean',
-				label: 'System - Program Tally State',
+				name: 'System - Program Tally State',
 				description: 'Indicate if Program Tally is ON or OFF',
 				defaultStyle: {
 					color: foregroundColor,
@@ -125,7 +125,7 @@ module.exports = {
 		if (SERIES.feedbacks.tallyPreview == true) {
 			feedbacks.tallyPreview = {
 				type: 'boolean',
-				label: 'System - Preview Tally State',
+				name: 'System - Preview Tally State',
 				description: 'Indicate if Preview Tally is ON or OFF',
 				defaultStyle: {
 					color: foregroundColor,
@@ -167,7 +167,7 @@ module.exports = {
 		if (SERIES.feedbacks.digitalZoom == true) {
 			feedbacks.digitalZoom = {
 				type: 'boolean',
-				label: 'System - Digital Zoom State',
+				name: 'System - Digital Zoom State',
 				description: 'Indicate if Digital Zoom is ON or OFF',
 				defaultStyle: {
 					color: foregroundColor,
@@ -209,7 +209,7 @@ module.exports = {
 		if (SERIES.feedbacks.imageStabilization == true) {
 			feedbacks.imageStabilization = {
 				type: 'boolean',
-				label: 'System - Image Stabilization State',
+				name: 'System - Image Stabilization State',
 				description: 'Indicate if Image Stabilization is ON or OFF',
 				defaultStyle: {
 					color: foregroundColor,
@@ -251,7 +251,7 @@ module.exports = {
 		if (SERIES.feedbacks.autoFocusMode == true) {
 			feedbacks.autoFocus = {
 				type: 'boolean',
-				label: 'Lens - Auto Focus State',
+				name: 'Lens - Auto Focus State',
 				description: 'Indicate if Auto focus is ON or OFF',
 				defaultStyle: {
 					color: foregroundColor,
@@ -293,7 +293,7 @@ module.exports = {
 		if (SERIES.feedbacks.exposureShootingMode == true) {
 			feedbacks.exposureShootingMode = {
 				type: 'boolean',
-				label: 'Exposure - Shooting Mode',
+				name: 'Exposure - Shooting Mode',
 				description: 'Indicate if in the selected Exposure Shooting Mode',
 				defaultStyle: {
 					color: foregroundColor,
@@ -322,7 +322,7 @@ module.exports = {
 		if (SERIES.feedbacks.exposureMode == true) {
 			feedbacks.exposureMode = {
 				type: 'boolean',
-				label: 'Exposure - Mode',
+				name: 'Exposure - Mode',
 				description: 'Indicate if in the selected Exposure Mode',
 				defaultStyle: {
 					color: foregroundColor,
@@ -351,7 +351,7 @@ module.exports = {
 		if (SERIES.feedbacks.autoShutterMode == true) {
 			feedbacks.autoShutter = {
 				type: 'boolean',
-				label: 'Lens - Auto Shutter State',
+				name: 'Lens - Auto Shutter State',
 				description: 'Indicate if Auto Shutter is ON or OFF',
 				defaultStyle: {
 					color: foregroundColor,
@@ -393,7 +393,7 @@ module.exports = {
 		if (SERIES.feedbacks.autoIrisMode == true) {
 			feedbacks.autoIris = {
 				type: 'boolean',
-				label: 'Lens - Auto Iris State',
+				name: 'Lens - Auto Iris State',
 				description: 'Indicate if Auto iris is ON or OFF',
 				defaultStyle: {
 					color: foregroundColor,
@@ -435,7 +435,7 @@ module.exports = {
 		if (SERIES.feedbacks.autoGainMode == true) {
 			feedbacks.autoGain = {
 				type: 'boolean',
-				label: 'Exposure - Auto Gain State',
+				name: 'Exposure - Auto Gain State',
 				description: 'Indicate if Auto Gain is ON or OFF',
 				defaultStyle: {
 					color: foregroundColor,
@@ -477,7 +477,7 @@ module.exports = {
 		if (SERIES.feedbacks.whitebalanceMode == true) {
 			feedbacks.whitebalanceMode = {
 				type: 'boolean',
-				label: 'White Balance - Mode',
+				name: 'White Balance - Mode',
 				description: 'Indicate if in the selected White Balance Mode',
 				defaultStyle: {
 					color: foregroundColor,
@@ -506,7 +506,7 @@ module.exports = {
 		if (SERIES.feedbacks.presetLastUsed == true) {
 			feedbacks.lastUsedPset = {
 				type: 'boolean',
-				label: 'Preset - Last Used',
+				name: 'Preset - Last Used',
 				description: 'Indicate what preset was last recalled on the camera',
 				defaultStyle: {
 					color: foregroundColor,
@@ -535,7 +535,7 @@ module.exports = {
 		if (SERIES.feedbacks.presetRecallMode == true) {
 			feedbacks.recallModePset = {
 				type: 'boolean',
-				label: 'Preset - Recall Mode',
+				name: 'Preset - Recall Mode',
 				description: 'Indicate what preset mode is curently selected on the camera',
 				defaultStyle: {
 					color: foregroundColor,
