@@ -68,6 +68,14 @@ module.exports = {
 				default: 5000,
 			},
 			{
+				type: 'checkbox',
+				id: 'continuePolling',
+				label: 'Continue Polling even in error state',
+				width: 3,
+				default: false,
+				isVisible: (configValues) => configValues.interval > 0,
+			},
+			{
 				type: 'static-text',
 				id: 'dummy2',
 				width: 12,

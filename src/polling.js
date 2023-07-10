@@ -87,7 +87,10 @@ module.exports = {
 				}
 				
 				// Cleanup polling
-				self.stopPolling()
+				if (self.config.continuePolling !== true) {
+					self.stopPolling()
+				}
+				
 	
 				self.errorCount++;
 			}	
@@ -98,7 +101,9 @@ module.exports = {
 			}
 			self.updateStatus(InstanceStatus.Error)
 			// Cleanup polling
-			self.stopPolling()
+			if (self.config.continuePolling !== true) {
+				self.stopPolling()
+			}
 		}
 	},
 
@@ -332,6 +337,8 @@ module.exports = {
 					break;
 				case 'p':
 					self.data.presetLastUsed = parseInt(str[1]);
+					self.checkVariables()
+					self.checkFeedbacks()
 					break;
 				default:
 					break;
@@ -345,6 +352,7 @@ module.exports = {
 		}
 		catch(error) {
 			self.log('error', 'Error parsing response from PTZ: ' + String(error))
+			console.log(error);
 		}
 	},
 

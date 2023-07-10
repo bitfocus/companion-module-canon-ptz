@@ -111,6 +111,35 @@ module.exports = {
 		// #### System Actions ####
 		// ########################
 
+		actions.changeModuleIP = {
+			name: 'System - Change Module IP',
+			options: [
+				{
+					type: 'textinput',
+					label: 'Module IP',
+					id: 'host',
+					default: self.config.host,
+				},
+				{
+					type: 'dropdown',
+					label: 'Model',
+					id: 'model',
+					default: self.config.model,
+					choices: MODELS,
+				}
+			],
+			callback: async (action) => {
+				let host = self.parseVariablesInString(action.options.host);
+				let model = action.options.model;
+
+				self.config.host = host;
+				self.config.model = model;
+				self.log('info', 'Restarting module with new host: ' + host + ' and model: ' + model);
+				self.saveConfig(self.config);
+				self.configUpdated(self.config);
+			}
+		};
+
 		if (s.powerState == true) {
 			actions.powerOff = {
 				name: 'System - Power Off',
@@ -119,6 +148,8 @@ module.exports = {
 					cmd = 'cmd=standby'
 					self.sendPTZ(self.powerCommand, cmd);
 					self.data.powerState = 'standby';
+					self.checkVariables();
+					self.checkFeedbacks();
 					self.getCameraInformation_Delayed();
 				}
 			}
@@ -130,6 +161,8 @@ module.exports = {
 					cmd = 'cmd=idle'
 					self.sendPTZ(self.powerCommand, cmd);
 					self.data.powerState = 'idle';
+					self.checkVariables();
+					self.checkFeedbacks();
 					self.getCameraInformation_Delayed();
 				}
 			}
@@ -147,6 +180,8 @@ module.exports = {
 						self.data.powerState = 'idle';
 					}
 					self.sendPTZ(self.powerCommand, cmd);
+					self.checkVariables();
+					self.checkFeedbacks();
 					self.getCameraInformation_Delayed();
 				}
 			}
@@ -165,7 +200,8 @@ module.exports = {
 					}
 				],
 				callback: async (action) => {
-					cmd = 'c.1.name.utf8=' + action.options.name;
+					let cameraName = await self.parseVariablesInString(action.options.name);
+					cmd = 'c.1.name.utf8=' + cameraName;
 					if (cmd !== '') {
 						self.sendPTZ(self.ptzCommand, cmd)
 					}
@@ -321,7 +357,7 @@ module.exports = {
 					}
 				],
 				callback: async (action) => {
-					cmd = action.options.command
+					cmd = await self.parseVariablesInString(action.options.command);
 					if (cmd !== '') {
 						self.sendPTZ(self.ptzCommand, cmd)
 						self.getCameraInformation_Delayed();
@@ -412,6 +448,24 @@ module.exports = {
 				options: [],
 				callback: async (action) => {
 					cmd = 'pan=stop&tilt=stop'
+					self.sendPTZ(self.ptzCommand, cmd)
+				}
+			}
+
+			actions.stopPan = {
+				name: 'Pan - Stop',
+				options: [],
+				callback: async (action) => {
+					cmd = 'pan=stop'
+					self.sendPTZ(self.ptzCommand, cmd)
+				}
+			}
+
+			actions.stopTilt = {
+				name: 'Tilt - Stop',
+				options: [],
+				callback: async (action) => {
+					cmd = 'tilt=stop'
 					self.sendPTZ(self.ptzCommand, cmd)
 				}
 			}
@@ -533,7 +587,8 @@ module.exports = {
 					}
 				],
 				callback: async (action) => {
-					cmd = 'zoom=' + action.options.value;
+					let zoomValue = await self.parseVariablesInString(action.options.value);
+					cmd = 'zoom=' + zoomValue;
 					self.sendPTZ(self.ptzCommand, cmd)
 				}
 			}
@@ -1785,7 +1840,8 @@ module.exports = {
 					}
 				],
 				callback: async (action) => {
-					cmd = 'p=' + action.options.val + '&name=' + action.options.name;
+					let presetName = await self.parseVariablesInString(action.options.name);
+					cmd = 'p=' + action.options.val + '&name=' + presetName;
 					if ((action.options.save_ptz) && (action.options.save_focus) && (action.options.save_exposure) && (action.options.save_whitebalance) && (action.options.save_is) && (action.options.save_cp)) {
 						cmd += '&all=enabled';
 					}
@@ -1863,6 +1919,8 @@ module.exports = {
 					self.data.presetLastUsed = parseInt(action.options.val);
 
 					self.sendPTZ(self.ptzCommand, cmd);
+					self.checkVariables();
+					self.checkFeedbacks();
 				}
 			}
 		}
@@ -1886,6 +1944,8 @@ module.exports = {
 					self.presetRecallMode = c.CHOICES_PRESETRECALLMODES[self.presetRecallModeIndex].id
 					self.data.presetRecallMode = self.presetRecallMode;
 					self.checkVariables();
+					self.checkVariables()
+					self.checkFeedbacks()
 				}
 			}
 
@@ -1904,6 +1964,8 @@ module.exports = {
 					self.presetRecallMode = action.options.val;
 					self.data.presetRecallMode = action.options.val;
 					self.checkVariables();
+					self.checkVariables()
+					self.checkFeedbacks()
 				}
 			}
 		}
@@ -2006,6 +2068,7 @@ module.exports = {
 						id: 'speed',
 						default: 100,
 						choices: c.CHOICES_PSSPEED(),
+
 					},
 				],
 				callback: async (action) => {

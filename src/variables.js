@@ -188,7 +188,7 @@ module.exports = {
 
 			variableValues = {};
 
-			variableValues.seris = self.data.series;
+			variableValues.series = self.data.series;
 			variableValues.model = self.data.model;
 	
 			//System
@@ -442,7 +442,7 @@ module.exports = {
 			//Recall Preset
 			if (SERIES.variables.presetNames == true) {
 				for (let i = 1; i <= 100; i++) {
-					variableValues[`presetname${i}`] = self.data[`presetname${i}`];
+					variableValues[`presetname_${i}`] = self.data[`presetname${i}`];
 				}
 			}
 

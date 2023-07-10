@@ -416,7 +416,7 @@ module.exports = {
 						],
 						up: [
 							{
-								actionId: 'stop',
+								actionId: 'stopTilt',
 								options: {}
 							}
 						]
@@ -448,7 +448,7 @@ module.exports = {
 						],
 						up: [
 							{
-								actionId: 'stop',
+								actionId: 'stopTilt',
 								options: {}
 							}
 						]
@@ -480,7 +480,7 @@ module.exports = {
 						],
 						up: [
 							{
-								actionId: 'stop',
+								actionId: 'stopPan',
 								options: {}
 							}
 						]
@@ -512,7 +512,7 @@ module.exports = {
 						],
 						up: [
 							{
-								actionId: 'stop',
+								actionId: 'stopPan',
 								options: {}
 							}
 						]

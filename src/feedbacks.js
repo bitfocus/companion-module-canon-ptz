@@ -63,12 +63,12 @@ module.exports = {
 					let opt = feedback.options
 					switch (opt.option) {
 						case '0':
-							if (self.data.powerState === 'idle') {
+							if ((self.data.powerState === 'idle') || (self.data.powerState === 'switch-idle')) {
 								return true
 							}
 							break
 						case '1':
-							if (self.data.powerState === 'standby') {
+							if ((self.data.powerState === 'standby') || (self.data.powerState === 'switch-standby')) {
 								return true
 							}
 							break
