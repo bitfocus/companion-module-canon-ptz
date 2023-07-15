@@ -129,7 +129,7 @@ module.exports = {
 				}
 			],
 			callback: async (action) => {
-				let host = self.parseVariablesInString(action.options.host);
+				let host = await self.parseVariablesInString(action.options.host);
 				let model = action.options.model;
 
 				self.config.host = host;
@@ -453,7 +453,7 @@ module.exports = {
 			}
 
 			actions.stopPan = {
-				name: 'Pan - Stop',
+				name: 'Pan/Tilt - Stop Pan Only',
 				options: [],
 				callback: async (action) => {
 					cmd = 'pan=stop'
@@ -462,7 +462,7 @@ module.exports = {
 			}
 
 			actions.stopTilt = {
-				name: 'Tilt - Stop',
+				name: 'Pan/Tilt - Stop Tilt Only',
 				options: [],
 				callback: async (action) => {
 					cmd = 'tilt=stop'
@@ -2022,6 +2022,33 @@ module.exports = {
 					self.checkVariables();
 				}
 			}
+
+			actions.timePsetVariable = {
+				name: 'Preset - Set Drive Time (with variable)',
+				options: [
+					{
+						type: 'textinput',
+						label: 'Time Seconds (between 2-99)',
+						id: 'time',
+						default: '2',
+						useVariables: true
+					},
+				],
+				callback: async (action) => {
+					let recallTime = await self.parseVariablesInString(action.options.time);
+					//make sure it is in a valid range and is an integer
+					recallTime = parseInt(recallTime);
+					if (!isNaN(recallTime) && recallTime > 1 && recallTime <= 99) {
+						recallTime = recallTime * 1000;
+						self.presetRecallTime = recallTime;
+						self.data.presetTimeValue = recallTime;
+						self.checkVariables();
+					}
+					else {
+						self.log('info', 'Time value must be between 2 and 99. Value entered: ' + (recallTime / 1000));
+					}
+				}
+			}
 		}
 
 		if (s.speedPset == true) {
@@ -2075,6 +2102,32 @@ module.exports = {
 					self.presetRecallSpeed = action.options.speed;
 					self.data.presetSpeedValue = action.options.speed;
 					self.checkVariables();
+				}
+			}
+
+			actions.speedPsetVariable = {
+				name: 'Preset - Set Drive Speed (with variable)',
+				options: [
+					{
+						type: 'textinput',
+						label: 'Speed Setting (between 1-100)',
+						id: 'speed',
+						default: '100',
+						useVariables: true
+					},
+				],
+				callback: async (action) => {
+					let recallSpeed = await self.parseVariablesInString(action.options.speed);
+					//make sure it is in a valid range and is an integer
+					recallSpeed = parseInt(recallSpeed);
+					if (!isNaN(recallSpeed) && recallSpeed > 0 && recallSpeed <= 100) {
+						self.presetRecallSpeed = recallSpeed;
+						self.data.presetSpeedValue = recallSpeed;
+						self.checkVariables();
+					}
+					else {
+						self.log('info', 'Speed value must be between 1 and 100. Value entered: ' + recallSpeed);
+					}
 				}
 			}
 		}
