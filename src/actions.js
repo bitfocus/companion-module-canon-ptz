@@ -1177,12 +1177,29 @@ module.exports = {
 
 			actions.irisU = {
 				name: 'Exposure - Iris Up',
-				options: [],
+				options: [
+					{
+						type: 'number',
+						label: 'Steps',
+						id: 'steps',
+						default: 1
+					}
+				],
 				callback: async (action) => {
 					if (self.irisIndex == s.iris.dropdown.length) {
 						self.irisIndex = s.iris.dropdown.length
-					} else if (self.irisIndex < s.iris.dropdown.length) {
-						self.irisIndex++
+					}
+					else if (self.irisIndex < s.iris.dropdown.length) {
+						if (action.options.steps > 1) {
+							self.irisIndex = self.irisIndex + action.options.steps
+							//make sure we didn't exceed the bounds of the array
+							if (self.irisIndex > s.iris.dropdown.length) {
+								self.irisIndex = s.iris.dropdown.length;
+							}
+						}
+						else {
+							self.irisIndex++
+						}
 					}
 					self.irisValue = s.iris.dropdown[self.irisIndex].id
 					self.data.irisValue = self.irisValue;
@@ -1203,12 +1220,29 @@ module.exports = {
 
 			actions.irisD = {
 				name: 'Exposure - Iris Down',
-				options: [],
+				options: [
+					{
+						type: 'number',
+						label: 'Steps',
+						id: 'steps',
+						default: 1
+					}
+				],
 				callback: async (action) => {
 					if (self.irisIndex == 0) {
 						self.irisIndex = 0
-					} else if (self.irisIndex > 0) {
-						self.irisIndex--
+					}
+					else if (self.irisIndex > 0) {
+						if (action.options.steps > 1) {
+							self.irisIndex = self.irisIndex - action.options.steps
+							//make sure we didn't exceed the bounds of the array
+							if (self.irisIndex < 0) {
+								self.irisIndex = 0;
+							}
+						}
+						else {
+							self.irisIndex--;
+						}
 					}
 					self.irisValue = s.iris.dropdown[self.irisIndex].id
 					self.data.irisValue = self.irisValue;

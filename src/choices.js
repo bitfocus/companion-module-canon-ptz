@@ -339,6 +339,20 @@ module.exports = {
 		return p
 	},
 
+	CHOICES_GAIN_XF605: [
+		//-60, -30, 0, 30, 60, 90, 120, 150, 180, 210.
+		{ id: '-60',    label: '-6dB' },
+		{ id: '-30',    label: '-3dB' },
+		{ id: '0',    label: '0dB' },
+		{ id: '30',   label: '3dB' },
+		{ id: '60',   label: '6dB' },
+		{ id: '90',   label: '9dB' },
+		{ id: '120',  label: '12dB' },
+		{ id: '150',  label: '15dB' },
+		{ id: '180',  label: '18dB' },
+		{ id: '210',  label: '21dB' },
+	],
+
 	CHOICES_GAIN_OTHER: function () {
 		var p = []
 
