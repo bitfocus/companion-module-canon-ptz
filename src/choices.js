@@ -415,7 +415,7 @@ module.exports = {
 		for (var i = -50; i <= 50; ++i) {
 			p.push({
 				id: i + '',
-				label: 'Pedestal ' + i,
+				label: i,
 			})
 		}
 		return p
@@ -426,7 +426,7 @@ module.exports = {
 		for (var i = -50; i <= 50; ++i) {
 			p.push({
 				id: i + '',
-				label: 'Pedestal ' + i,
+				label: i,
 			})
 		}
 		return p
