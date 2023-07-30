@@ -10,6 +10,7 @@ const variables = require('./variables')
 const presets = require('./presets')
 
 const polling = require('./polling')
+const utils = require('./utils')
 
 class canonptzInstance extends InstanceBase {
 	constructor(internal) {
@@ -22,7 +23,8 @@ class canonptzInstance extends InstanceBase {
 			...feedbacks,
 			...variables,
 			...presets,
-			...polling
+			...polling,
+			...utils,
 		})
 
 		//global vars here

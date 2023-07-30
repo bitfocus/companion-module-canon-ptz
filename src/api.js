@@ -25,7 +25,7 @@ class API {
 				response: response
 			}
 		} catch (err) {
-			console.log(err)
+			//console.log(err)
 			return {
 				status: 'failed',
 			}

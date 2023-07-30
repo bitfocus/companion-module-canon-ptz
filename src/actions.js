@@ -2048,8 +2048,7 @@ module.exports = {
 					self.presetRecallMode = action.options.val;
 					self.data.presetRecallMode = action.options.val;
 					self.checkVariables();
-					self.checkVariables()
-					self.checkFeedbacks()
+					self.checkFeedbacks();
 				}
 			}
 		}
@@ -2217,6 +2216,102 @@ module.exports = {
 		}
 
 		if (s.traces == true) {
+			actions.customTraceAction = {
+				name: 'Trace - Custom Trace Loop through Presets',
+				options: [
+					{
+						type: 'static-text',
+						label: 'This action will put the PTZ in Drive Mode: Normal, execute the Home position preset, then switch to Drive Mode: Time, and then execute the Transition Preset.',
+						id: 'description',
+					},
+					{
+						type: 'textinput',
+						label: 'Home Position Preset',
+						id: 'home',
+						default: '1',
+						useVariables: true
+					},
+					{
+						type: 'textinput',
+						label: 'Time Needed to Reach Home Preset (seconds)',
+						id: 'hometime',
+						default: '1',
+						useVariables: true
+					},
+					{
+						type: 'textinput',
+						label: 'Transition to Preset',
+						id: 'transition',
+						default: '2',
+						useVariables: true
+					},
+					{
+						type: 'textinput',
+						label: 'Drive Time (seconds)',
+						id: 'time',
+						default: '30',
+						useVariables: true
+					},
+					{
+						type: 'checkbox',
+						label: 'Loop Indefinitely',
+						id: 'loop',
+						default: true
+					},
+					{
+						type: 'textinput',
+						label: 'Loop Count',
+						id: 'loopcount',
+						default: '1',
+						useVariables: true,
+						isVisible: (options) => options.loop == false
+					}
+				],
+				callback: async (action) => {
+					let home = parseInt(await self.parseVariablesInString(action.options.home));
+					let homeTime = parseInt(await self.parseVariablesInString(action.options.hometime));
+
+					let transition = parseInt(await self.parseVariablesInString(action.options.transition));
+
+					let recallTime = await self.parseVariablesInString(action.options.time);
+					//make sure it is in a valid range and is an integer
+					recallTime = parseInt(recallTime);
+					if (!isNaN(recallTime) && recallTime > 1 && recallTime <= 99) {
+						recallTime = recallTime * 1000;
+						self.presetRecallTime = recallTime;
+						self.data.presetTimeValue = recallTime;
+						self.checkVariables();
+					}
+					else {
+						self.log('info', 'Time value must be between 2 and 99. Value entered: ' + (recallTime / 1000));
+						return;
+					}
+
+					let loop = action.options.loop;
+					let loopCount = parseInt(await self.parseVariablesInString(action.options.loopcount));
+
+					if (loop) {
+						self.customTraceLoop = true;
+						loopCount = -1;
+					}
+					else {
+						self.customTraceLoop = true;
+						self.customTraceLoopCount = 1;
+					}
+
+					self.runCustomTrace(home, homeTime, transition, recallTime, loop, loopCount);
+				}
+			};
+
+			actions.stopCustomTrace = {
+				name: 'Trace - Stop Custom Trace Loop',
+				options: [],
+				callback: async (action) => {
+					clearInterval(self.customTraceLoopInterval);
+					self.customTraceLoop = false;
+				}
+			};
+
 			actions.tracePrepare = {
 				name: 'Trace - Prepare',
 				options: [
