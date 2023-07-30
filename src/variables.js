@@ -34,6 +34,9 @@ module.exports = {
 		variables.push({ variableId: 'series', name: 'Camera Series' })
 		variables.push({ variableId: 'model', name: 'Model of Camera' })
 
+		variables.push({ variableId: 'cameraIP', name: 'Camera IP' })
+		variables.push({ variableId: 'cameraIPLastOctet', name: 'Camera IP Last Octet' })
+
 		//System
 		if (SERIES.variables.powerState == true) {
 			variables.push({ variableId: 'powerState', name: 'Power State Idle/Standby' })
@@ -143,6 +146,7 @@ module.exports = {
 		}
 		if (SERIES.variables.presetLastUsed == true) {
 			variables.push({ variableId: 'presetLastUsed', name: 'Preset Last Used' })
+			variables.push({ variableId: 'presetLastUsedNumber', name: 'Preset Last Used Number' })
 		}
 		if (SERIES.variables.presetRecallMode == true) {
 			variables.push({ variableId: 'presetRecallMode', name: 'Preset Recall Mode' })
@@ -453,6 +457,7 @@ module.exports = {
 				}
 				self.presetLastUsedIndex = indexLastUsed;
 				variableValues.presetLastUsed = c.CHOICES_PRESETS()[indexLastUsed].label;
+				variableValues.presetLastUsedNumber = self.data.presetLastUsed;
 			}
 
 			if (SERIES.variables.presetRecallMode == true) {
