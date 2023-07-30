@@ -1,3 +1,5 @@
+const { InstanceStatus } = require('@companion-module/base')
+
 const axios = require('axios');
 
 class API {
@@ -17,6 +19,7 @@ class API {
 		
 		try {
 			const response = await axios.get(requestUrl)
+			self.updateStatus(InstanceStatus.Ok);
 			return {
 				status: 'ok',
 				response: response
