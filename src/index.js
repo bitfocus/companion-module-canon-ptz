@@ -136,7 +136,7 @@ class canonptzInstance extends InstanceBase {
 	
 		//preset names
 		for (let i = 1; i <= 100; i++) {
-			this.data['presetname' + i] = 'preset' + i;
+			this.data['presetname' + i] = i;
 		}
 	
 		this.ptSpeed = 625
@@ -183,7 +183,15 @@ class canonptzInstance extends InstanceBase {
 			this.updateStatus('Connecting')
 			this.getCameraInformation()
 			this.initPolling()
+
+			this.setVariableValues({
+				cameraIP: this.config.host,
+				cameraIPLastOctet: this.config.host.split('.').pop(),
+			})
 		}
+
+		this.checkVariables();
+		this.checkFeedbacks();
 	}
 }
 
