@@ -91,7 +91,6 @@ module.exports = {
 					self.stopPolling()
 				}
 				
-	
 				self.errorCount++;
 			}	
 		}
@@ -151,7 +150,7 @@ module.exports = {
 					self.data.digitalZoom = str[1];
 					break;
 				case 'c.1.zoom':
-					self.data.zoomValue = str[1]; //XF605 zoom value
+					self.data.zoomValue = str[1];
 					break;
 				case 'c.1.is':
 					self.data.imageStabilization = str[1];
