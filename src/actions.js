@@ -1957,6 +1957,56 @@ module.exports = {
 					self.checkFeedbacks();
 				}
 			}
+
+			actions.recallPset = {
+				name: 'Preset - Recall (by number)',
+				options: [
+					{
+						type: 'textinput',
+						label: 'Preset Number',
+						id: 'val',
+						default: 1,
+						useVariables: true
+					},
+				],
+				callback: async (action) => {
+					//need to determine drive mode first (normal, time, speed) and then recall with appropriate command
+					if (!self.presetRecallMode) {
+						self.presetRecallMode = 'normal';
+						self.data.presetRecallMode = 'normal';
+					}
+
+					let val = parseInt(await self.parseVariablesInString(action.options.val));
+
+					//make sure its a number and is between 1 and 100
+					if (isNaN(val)) {
+						val = 1;
+					}
+					else if (val < 1) {
+						val = 1;
+					}
+					else if (val > 100) {
+						val = 100;
+					}
+
+					cmd = 'p=' + val;
+
+					switch(self.presetRecallMode) {
+						case 'time':
+							cmd += '&p.ptztime=' + self.data.presetTimeValue;
+							break;
+						case 'speed':
+							cmd += '&p.ptzspeed=' + self.data.presetSpeedValue;
+							break;
+					}
+
+					self.data.presetLastUsed = val;
+
+					self.sendPTZ(self.ptzCommand, cmd);
+					self.checkVariables();
+					self.checkFeedbacks();
+				}
+			}
 		}
 		if (s.presets == true) {
 			actions.recallModePsetToggle = {
