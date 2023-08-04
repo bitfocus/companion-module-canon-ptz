@@ -2299,7 +2299,8 @@ module.exports = {
 						self.customTraceLoopCount = 1;
 					}
 
-					self.runCustomTrace(home, homeTime, transition, recallTime, loop, loopCount);
+					self.log('debug', 'Custom Trace Loop Started');
+					self.runCustomTrace(home, homeTime, 'normal', transition, recallTime, loop, loopCount);
 				}
 			};
 
@@ -2309,6 +2310,7 @@ module.exports = {
 				callback: async (action) => {
 					clearInterval(self.customTraceLoopInterval);
 					self.customTraceLoop = false;
+					self.log('debug', 'Custom Trace Loop Stopped');
 				}
 			};
 
