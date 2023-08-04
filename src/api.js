@@ -19,7 +19,7 @@ class API {
 		
 		try {
 			const response = await axios.get(requestUrl)
-			self.updateStatus(InstanceStatus.Ok);
+			//self.updateStatus(InstanceStatus.Ok);
 			return {
 				status: 'ok',
 				response: response
