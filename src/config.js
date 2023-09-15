@@ -96,21 +96,6 @@ module.exports = {
 				width: 1,
 				label: 'Verbose Mode',
 				default: true,
-			},
-			{
-				type: 'checkbox',
-				id: 'debug',
-				width: 1,
-				label: 'Enable',
-				default: false,
-			},
-			{
-				type: 'static-text',
-				id: 'debugInfo',
-				width: 11,
-				label: 'Enable Debug To Log Window',
-				value:
-					'Requires Companion to be restarted. But this will allow you the see what is being sent from the module and what is being received from the camera.',
 			}
 		]
 	}

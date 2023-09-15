@@ -524,7 +524,7 @@ module.exports = {
 				callback: function (feedback, bank) {
 					let opt = feedback.options
 
-					if (self.data.presetLastUsed === opt.preset) {
+					if (self.data.presetLastUsed == opt.preset) {
 						return true
 					}
 					return false
@@ -562,6 +562,25 @@ module.exports = {
 					}
 					return false
 				}
+			}
+		}
+
+		feedbacks.customTraceLoop = {
+			type: 'boolean',
+			name: 'Custom Trace is Running',
+			description: 'Indicate that a custom trace loop is currently running',
+			defaultStyle: {
+				color: foregroundColor,
+				bgcolor: backgroundColorRed,
+			},
+			options: [],
+			callback: function (feedback, bank) {
+				let opt = feedback.options
+
+				if (self.customTraceLoop == true) {
+					return true
+				}
+				return false
 			}
 		}
 

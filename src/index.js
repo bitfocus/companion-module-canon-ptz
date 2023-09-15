@@ -43,6 +43,10 @@ class canonptzInstance extends InstanceBase {
 			clearInterval(this.pollTimer);
 			this.pollTimer = null;
 		}
+
+		if (this.pollTimerOnlineStatus) {
+			clearInterval(this.pollTimerOnlineStatus);
+		}
 	}
 
 	async init(config) {

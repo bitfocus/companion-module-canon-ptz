@@ -10,9 +10,11 @@ module.exports = {
 		let self = this;
 
 		// Cleanup old interval
-		if (self.pollingInterval) {
-			clearInterval(self.pollingInterval)
+		if (self.pollTimer) {
+			clearInterval(self.pollTimer);
 		}
+
+		clearInterval(self.pollTimerOnlineStatus); //this one just runs every 5 minutes to see if the camera has come back online after being unplugged without having to restart the module instance
 
 		// Setup polling if enabled
 		if (self.pollTimer === undefined && self.config.poll_interval > 0) {
@@ -20,6 +22,11 @@ module.exports = {
 				self.getCameraInformation.bind(self)()
 			}, self.config.poll_interval)
 		}
+
+		// Setup online status polling
+		self.pollTimerOnlineStatus = setInterval(() => {
+			self.getCameraInformation.bind(self)()
+		}, 300000) //every 5 minutes
 	},
 
 	stopPolling() {
@@ -57,8 +64,8 @@ module.exports = {
 						str = str.split('=') // Split Commands and data
 						if ((str_raw[i].indexOf('p.') === -1) && (str_raw[i].indexOf('t.') === -1)) {
 							
-							if (self.config.debug == true) {
-								self.log('info', 'Received CMD: ' + String(str_raw[i]))
+							if (self.config.verbose == true) {
+								self.log('debug', 'Received CMD: ' + String(str_raw[i]))
 							}
 						}
 						// Store Data
@@ -339,15 +346,21 @@ module.exports = {
 					self.checkVariables()
 					self.checkFeedbacks()
 					break;
+				case 'p.count':
+					let presetCount = parseInt(str[1]) || 100;
+					for (let i = 1; i <= presetCount; i++) {
+						if (str[0] === ('p.' + i + '.name.utf8')) {
+							self.data['presetname' + i] = str[1];
+							if ((self.data['presetname' + i] === '') || (self.data['presetname' + i] === ('preset' + i))) {
+								self.data['presetname' + i] = i;
+							}
+						}
+					}
+					break;
 				default:
 					break;
 			}
-	
-			for (let i = 1; i <= 100; i++) {
-				if (str[0] === ('p.' + i + '.name.utf8')) {
-					self.data['presetname' + i] = str[1];
-				}
-			}
+			
 		}
 		catch(error) {
 			self.log('error', 'Error parsing response from PTZ: ' + String(error))

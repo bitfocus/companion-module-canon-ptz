@@ -375,8 +375,11 @@ module.exports = {
 				name: 'Pan/Tilt - Pan Left',
 				options: [],
 				callback: async (action) => {
-					cmd = 'pan=left&pan.speed.dir=' + self.ptSpeed
-					self.sendPTZ(self.ptzCommand, cmd)
+					cmd = 'pan=left&pan.speed.dir=' + self.ptSpeed;
+					self.stopCustomTrace();
+					self.checkVariables();
+					self.checkFeedbacks();
+					self.sendPTZ(self.ptzCommand, cmd);
 				}
 			}
 
@@ -384,7 +387,10 @@ module.exports = {
 				name: 'Pan/Tilt - Pan Right',
 				options: [],
 				callback: async (action) => {
-					cmd = 'pan=right&pan.speed.dir=' + self.ptSpeed
+					cmd = 'pan=right&pan.speed.dir=' + self.ptSpeed;
+					self.stopCustomTrace();
+					self.checkVariables();
+					self.checkFeedbacks();
 					self.sendPTZ(self.ptzCommand, cmd)
 				}
 			}
@@ -393,7 +399,10 @@ module.exports = {
 				name: 'Pan/Tilt - Tilt Up',
 				options: [],
 				callback: async (action) => {
-					cmd = 'tilt=up&tilt.speed.dir=' + self.ptSpeed
+					cmd = 'tilt=up&tilt.speed.dir=' + self.ptSpeed;
+					self.stopCustomTrace();
+					self.checkVariables();
+					self.checkFeedbacks();
 					self.sendPTZ(self.ptzCommand, cmd)
 				}
 			}
@@ -402,7 +411,10 @@ module.exports = {
 				name: 'Pan/Tilt - Tilt Down',
 				options: [],
 				callback: async (action) => {
-					cmd = 'tilt=down&tilt.speed.dir=' + self.ptSpeed
+					cmd = 'tilt=down&tilt.speed.dir=' + self.ptSpeed;
+					self.stopCustomTrace();
+					self.checkVariables();
+					self.checkFeedbacks();
 					self.sendPTZ(self.ptzCommand, cmd)
 				}
 			}
@@ -411,7 +423,10 @@ module.exports = {
 				name: 'Pan/Tilt - Up Left',
 				options: [],
 				callback: async (action) => {
-					cmd = 'pan=left&pan.speed.dir=' + self.ptSpeed + '&tilt=up&tilt.speed.dir=' + self.ptSpeed
+					cmd = 'pan=left&pan.speed.dir=' + self.ptSpeed + '&tilt=up&tilt.speed.dir=' + self.ptSpeed;
+					self.stopCustomTrace();
+					self.checkVariables();
+					self.checkFeedbacks();
 					self.sendPTZ(self.ptzCommand, cmd)
 				}
 			}
@@ -420,7 +435,10 @@ module.exports = {
 				name: 'Pan/Tilt - Up Right',
 				options: [],
 				callback: async (action) => {
-					cmd = 'pan=right&pan.speed.dir=' + self.ptSpeed + '&tilt=up&tilt.speed.dir=' + self.ptSpeed
+					cmd = 'pan=right&pan.speed.dir=' + self.ptSpeed + '&tilt=up&tilt.speed.dir=' + self.ptSpeed;
+					self.stopCustomTrace();
+					self.checkVariables();
+					self.checkFeedbacks();
 					self.sendPTZ(self.ptzCommand, cmd)
 				}
 			}
@@ -429,7 +447,10 @@ module.exports = {
 				name: 'Pan/Tilt - Down Left',
 				options: [],
 				callback: async (action) => {
-					cmd = 'pan=left&pan.speed.dir=' + self.ptSpeed + '&tilt=down&tilt.speed.dir=' + self.ptSpeed
+					cmd = 'pan=left&pan.speed.dir=' + self.ptSpeed + '&tilt=down&tilt.speed.dir=' + self.ptSpeed;
+					self.stopCustomTrace();
+					self.checkVariables();
+					self.checkFeedbacks();
 					self.sendPTZ(self.ptzCommand, cmd)
 				}
 			}
@@ -438,7 +459,10 @@ module.exports = {
 				name: 'Pan/Tilt - Down Right',
 				options: [],
 				callback: async (action) => {
-					cmd = 'pan=right&pan.speed.dir=' + self.ptSpeed + '&tilt=down&tilt.speed.dir=' + self.ptSpeed
+					cmd = 'pan=right&pan.speed.dir=' + self.ptSpeed + '&tilt=down&tilt.speed.dir=' + self.ptSpeed;
+					self.stopCustomTrace();
+					self.checkVariables();
+					self.checkFeedbacks();
 					self.sendPTZ(self.ptzCommand, cmd)
 				}
 			}
@@ -447,7 +471,10 @@ module.exports = {
 				name: 'Pan/Tilt - Stop',
 				options: [],
 				callback: async (action) => {
-					cmd = 'pan=stop&tilt=stop'
+					cmd = 'pan=stop&tilt=stop';
+					self.stopCustomTrace();
+					self.checkVariables();
+					self.checkFeedbacks();
 					self.sendPTZ(self.ptzCommand, cmd)
 				}
 			}
@@ -456,7 +483,10 @@ module.exports = {
 				name: 'Pan/Tilt - Stop Pan Only',
 				options: [],
 				callback: async (action) => {
-					cmd = 'pan=stop'
+					cmd = 'pan=stop';
+					self.stopCustomTrace();
+					self.checkVariables();
+					self.checkFeedbacks();
 					self.sendPTZ(self.ptzCommand, cmd)
 				}
 			}
@@ -465,7 +495,10 @@ module.exports = {
 				name: 'Pan/Tilt - Stop Tilt Only',
 				options: [],
 				callback: async (action) => {
-					cmd = 'tilt=stop'
+					cmd = 'tilt=stop';
+					self.stopCustomTrace();
+					self.checkVariables();
+					self.checkFeedbacks();
 					self.sendPTZ(self.ptzCommand, cmd)
 				}
 			}
@@ -474,7 +507,10 @@ module.exports = {
 				name: 'Pan/Tilt - Home',
 				options: [],
 				callback: async (action) => {
-					cmd = 'pan=0&tilt=0'
+					cmd = 'pan=0&tilt=0';
+					self.stopCustomTrace();
+					self.checkVariables();
+					self.checkFeedbacks();
 					self.sendPTZ(self.ptzCommand, cmd)
 				}
 			}
@@ -1834,7 +1870,8 @@ module.exports = {
 						label: 'Preset Name',
 						id: 'name',
 						default: 'preset',
-						tooltip: 'Set the name of the preset.'
+						tooltip: 'Set the name of the preset.',
+						useVariables: true
 					},
 					{
 						type: 'checkbox',
@@ -1917,8 +1954,44 @@ module.exports = {
 							cmd += '&cp=disabled';
 						}
 					}
+
+					self.stopCustomTrace();
+					
+					self.checkVariables();
+					self.checkFeedbacks();
+
 					self.sendPTZ(self.savePresetCommand, cmd);
 				}
+			}
+
+			actions.setMultiplePresetNames = {
+				name: 'Preset - Set Multiple Preset Names',
+				options: [],
+				callback: async (action) => {
+					let opt = action.options;
+
+					for (let i = 1; i <= 30; i++) {
+						let presetName = await self.parseVariablesInString(opt[`preset${i}_name`]);
+						cmd = `p=${i}&name=${presetName}`;
+						self.sendPTZ(self.savePresetCommand, cmd);
+					}
+
+					self.checkVariables();
+					self.checkFeedbacks();					
+				}
+			}
+
+			for (let i = 1; i <= 30; i++) {
+				let optionObj = {
+					type: 'dropdown',
+					label: `Preset ${i} Name`,
+					id: `preset${i}_name`,
+					default: `${i}`,
+					tooltip: `Set the name of Preset ${i}.`,
+					useVariables: true
+				};
+
+				actions.setMultiplePresetNames.options.push(optionObj);
 			}
 		
 			actions.recallPset = {
@@ -1952,6 +2025,7 @@ module.exports = {
 
 					self.data.presetLastUsed = parseInt(action.options.val);
 
+					self.stopCustomTrace();
 					self.sendPTZ(self.ptzCommand, cmd);
 					self.checkVariables();
 					self.checkFeedbacks();
@@ -2002,12 +2076,37 @@ module.exports = {
 
 					self.data.presetLastUsed = val;
 
+					self.stopCustomTrace();
 					self.sendPTZ(self.ptzCommand, cmd);
 					self.checkVariables();
 					self.checkFeedbacks();
 				}
 			}
+
+			actions.deletePset = {
+				name: 'Preset - Delete (by number)',
+				options: [
+					{
+						type: 'textinput',
+						label: 'Preset Number',
+						id: 'val',
+						default: 1,
+						useVariables: true
+					},
+				],
+				callback: async (action) => {
+					let val = parseInt(await self.parseVariablesInString(action.options.val));
+
+					cmd = `p=${val}&all=disabled`;
+					
+					self.checkVariables();
+					self.checkFeedbacks();
+
+					self.sendPTZ(self.savePresetCommand, cmd);
+				}
+			}
 		}
+
 		if (s.presets == true) {
 			actions.recallModePsetToggle = {
 				name: 'Preset - Toggle Recall Mode',
@@ -2027,9 +2126,10 @@ module.exports = {
 
 					self.presetRecallMode = c.CHOICES_PRESETRECALLMODES[self.presetRecallModeIndex].id
 					self.data.presetRecallMode = self.presetRecallMode;
+
+					self.stopCustomTrace();
 					self.checkVariables();
-					self.checkVariables()
-					self.checkFeedbacks()
+					self.checkFeedbacks();
 				}
 			}
 
@@ -2047,6 +2147,8 @@ module.exports = {
 				callback: async (action) => {
 					self.presetRecallMode = action.options.val;
 					self.data.presetRecallMode = action.options.val;
+
+					self.stopCustomTrace();
 					self.checkVariables();
 					self.checkFeedbacks();
 				}
@@ -2067,7 +2169,10 @@ module.exports = {
 					}
 					self.presetTimeValue = choices_pstime[self.presetDriveTimeIndex].id
 					self.data.presetTimeValue = self.presetTimeValue;
+
+					self.stopCustomTrace();
 					self.checkVariables();
+					self.checkFeedbacks();
 				}				
 			}
 
@@ -2084,7 +2189,10 @@ module.exports = {
 					}
 					self.presetTimeValue = choices_pstime[self.presetDriveTimeIndex].id
 					self.data.presetTimeValue = self.presetTimeValue;
+
+					self.stopCustomTrace();
 					self.checkVariables();
+					self.checkFeedbacks();
 				}
 			}
 
@@ -2102,7 +2210,10 @@ module.exports = {
 				callback: async (action) => {
 					self.presetRecallTime = action.options.time;
 					self.data.presetTimeValue = action.options.time;
+
+					self.stopCustomTrace();
 					self.checkVariables();
+					self.checkFeedbacks();
 				}
 			}
 
@@ -2125,7 +2236,10 @@ module.exports = {
 						recallTime = recallTime * 1000;
 						self.presetRecallTime = recallTime;
 						self.data.presetTimeValue = recallTime;
+
+						self.stopCustomTrace();
 						self.checkVariables();
+						self.checkFeedbacks();
 					}
 					else {
 						self.log('info', 'Time value must be between 2 and 99. Value entered: ' + (recallTime / 1000));
@@ -2148,7 +2262,10 @@ module.exports = {
 					}
 					self.presetSpeedValue = choices_psspeed[self.presetDriveSpeedIndex].id
 					self.data.presetSpeedValue = self.presetSpeedValue;
+
+					self.stopCustomTrace();
 					self.checkVariables();
+					self.checkFeedbacks();
 				}				
 			}
 
@@ -2165,7 +2282,10 @@ module.exports = {
 					}
 					self.presetSpeedValue = choices_psspeed[self.presetDriveSpeedIndex].id
 					self.data.presetSpeedValue = self.presetSpeedValue;
+
+					self.stopCustomTrace();
 					self.checkVariables();
+					self.checkFeedbacks();
 				}
 			}
 
@@ -2184,7 +2304,10 @@ module.exports = {
 				callback: async (action) => {
 					self.presetRecallSpeed = action.options.speed;
 					self.data.presetSpeedValue = action.options.speed;
+
+					self.stopCustomTrace();
 					self.checkVariables();
+					self.checkFeedbacks();
 				}
 			}
 
@@ -2206,7 +2329,10 @@ module.exports = {
 					if (!isNaN(recallSpeed) && recallSpeed > 0 && recallSpeed <= 100) {
 						self.presetRecallSpeed = recallSpeed;
 						self.data.presetSpeedValue = recallSpeed;
+						
+						self.stopCustomTrace();
 						self.checkVariables();
+						self.checkFeedbacks();
 					}
 					else {
 						self.log('info', 'Speed value must be between 1 and 100. Value entered: ' + recallSpeed);
@@ -2216,91 +2342,235 @@ module.exports = {
 		}
 
 		if (s.traces == true) {
-			actions.customTraceAction = {
-				name: 'Trace - Custom Trace Loop through Presets',
+			actions.customTrace = {
+				name: 'Trace - Custom Trace',
 				options: [
 					{
 						type: 'static-text',
-						label: 'This action will put the PTZ in Drive Mode: Normal, execute the Home position preset, then switch to Drive Mode: Time, and then execute the Transition Preset.',
+						label: 'This action will put the PTZ into a custom trace loop depending on how it is configured below.',
 						id: 'description',
 					},
 					{
+						type: 'dropdown',
+						label: 'Number of Presets',
+						id: 'presetCount',
+						default: 2,
+						choices: [
+							{ id: 2, label: '2'},
+							{ id: 3, label: '3'},
+							{ id: 4, label: '4'},
+							{ id: 5, label: '5'},
+						]
+					},
+					{
 						type: 'textinput',
-						label: 'Home Position Preset',
-						id: 'home',
+						label: 'Preset 1',
+						id: 'preset1',
 						default: '1',
-						useVariables: true
+						useVariables: true,
+						isVisible: (options) => options.presetCount >= 1
 					},
 					{
 						type: 'textinput',
-						label: 'Time Needed to Reach Home Preset (seconds)',
-						id: 'hometime',
-						default: '1',
-						useVariables: true
-					},
-					{
-						type: 'textinput',
-						label: 'Transition to Preset',
-						id: 'transition',
-						default: '2',
-						useVariables: true
-					},
-					{
-						type: 'textinput',
-						label: 'Drive Time (seconds)',
-						id: 'time',
+						label: 'Preset 1 Drive Time (seconds)',
+						id: 'preset1_time',
 						default: '30',
-						useVariables: true
+						useVariables: true,
+						isVisible: (options) => options.presetCount >= 1
+					},
+					{
+						type: 'textinput',
+						label: 'Preset 2',
+						id: 'preset2',
+						default: '2',
+						useVariables: true,
+						isVisible: (options) => options.presetCount >= 2
+					},
+					{
+						type: 'textinput',
+						label: 'Preset 2 Drive Time (seconds)',
+						id: 'preset2_time',
+						default: '30',
+						useVariables: true,
+						isVisible: (options) => options.presetCount >= 2
+					},
+					{
+						type: 'textinput',
+						label: 'Preset 3',
+						id: 'preset3',
+						default: '3',
+						useVariables: true,
+						isVisible: (options) => options.presetCount >= 3
+					},
+					{
+						type: 'textinput',
+						label: 'Preset 3 Drive Time (seconds)',
+						id: 'preset3_time',
+						default: '30',
+						useVariables: true,
+						isVisible: (options) => options.presetCount >= 3
+					},
+					{
+						type: 'textinput',
+						label: 'Preset 4',
+						id: 'preset4',
+						default: '4',
+						useVariables: true,
+						isVisible: (options) => options.presetCount >= 4
+					},
+					{
+						type: 'textinput',
+						label: 'Preset 4 Drive Time (seconds)',
+						id: 'preset4_time',
+						default: '30',
+						useVariables: true,
+						isVisible: (options) => options.presetCount >= 4
+					},
+					{
+						type: 'textinput',
+						label: 'Preset51',
+						id: 'preset5',
+						default: '5',
+						useVariables: true,
+						isVisible: (options) => options.presetCount >= 5
+					},
+					{
+						type: 'textinput',
+						label: 'Preset 5 Drive Time (seconds)',
+						id: 'preset5_time',
+						default: '30',
+						useVariables: true,
+						isVisible: (options) => options.presetCount >= 5
+					},
+					{
+						type: 'dropdown',
+						label: 'Start Position',
+						id: 'start_position',
+						default: 1,
+						choices: [
+							{ id: 'first', label: 'First Preset'},
+							{ id: 'last', label: 'Last Preset'},
+						]
 					},
 					{
 						type: 'checkbox',
-						label: 'Loop Indefinitely',
-						id: 'loop',
+						label: 'Move to Start Position at Max Speed before beginning sequence',
+						id: 'move_to_start_max',
 						default: true
 					},
 					{
 						type: 'textinput',
-						label: 'Loop Count',
-						id: 'loopcount',
+						label: 'Delay before starting trace (seconds)',
+						id: 'trace_delay',
+						default: '2',
+						useVariables: true,
+						isVisible: (options) => options.move_to_start_max == true
+					},
+					{
+						type: 'checkbox',
+						label: 'Loop Until Stopped Manually',
+						id: 'loop',
+						default: true
+					},
+					{
+						type: 'dropdown',
+						label: 'Loop Mode',
+						id: 'loopmode',
+						default: 'normal',
+						choices: [
+							{ id: 'normal', label: 'Normal'},
+							{ id: 'pendulum', label: 'Pendulum'},
+						],
+						isVisible: (options) => options.loop == true
+					},
+					{
+						type: 'textinput',
+						label: 'Repeat Count',
+						id: 'repeat_count',
 						default: '1',
 						useVariables: true,
 						isVisible: (options) => options.loop == false
 					}
 				],
 				callback: async (action) => {
-					let home = parseInt(await self.parseVariablesInString(action.options.home));
-					let homeTime = parseInt(await self.parseVariablesInString(action.options.hometime));
+					let opt = action.options;
 
-					let transition = parseInt(await self.parseVariablesInString(action.options.transition));
+					let presetCount = parseInt(opt.presetCount);
 
-					let recallTime = await self.parseVariablesInString(action.options.time);
-					//make sure it is in a valid range and is an integer
-					recallTime = parseInt(recallTime);
-					if (!isNaN(recallTime) && recallTime > 1 && recallTime <= 99) {
-						recallTime = recallTime * 1000;
-						self.presetRecallTime = recallTime;
-						self.data.presetTimeValue = recallTime;
-						self.checkVariables();
+					self.customTracePresetArray = [];
+
+					for (let i = 1; i <= presetCount; i++) {
+						let presetNumber = parseInt(await self.parseVariablesInString(opt['preset' + (i + 1)]));
+
+						if (isNaN(presetNumber) || presetNumber < 1 || presetNumber > 100) {
+							self.log('info', `Preset ${i} must be a number between 1 and 100. Value entered: ${presetNumber}`);
+							return;
+						}
+
+						let presetTime = parseInt(await self.parseVariablesInString(opt['preset' + (i + 1) + '_time']));
+
+						if (!isNaN(presetTime) && presetTime > 1 && presetTime <= 99) {
+							presetTime = presetTime * 1000;
+						}
+						else {
+							self.log('info', `Time value must be between 2 and 99. Value entered: ${presetTime}`);
+							return;
+						}
+
+						self.customTracePresetArray.push({preset: presetNumber, time: presetTime});
+					}
+
+					let loop = opt.loop;
+					let loopMode = opt.loopmode;
+
+					let repeatCount = parseInt(await self.parseVariablesInString(opt.repeat_count));
+
+					if (!loop) {
+						self.customTraceLoopCount = repeatCount;
 					}
 					else {
-						self.log('info', 'Time value must be between 2 and 99. Value entered: ' + (recallTime / 1000));
-						return;
+						self.customTraceLoopCount = -1;
 					}
 
-					let loop = action.options.loop;
-					let loopCount = parseInt(await self.parseVariablesInString(action.options.loopcount));
+					self.presetRecallMode = 'time';
+					self.data.presetRecallMode = 'time';
 
-					if (loop) {
-						self.customTraceLoop = true;
-						loopCount = -1;
-					}
-					else {
-						self.customTraceLoop = true;
-						self.customTraceLoopCount = 1;
-					}
-
+					self.stopCustomTrace();
+					
 					self.log('debug', 'Custom Trace Loop Started');
-					self.runCustomTrace(home, homeTime, 'normal', transition, recallTime, loop, loopCount);
+					self.customTraceLoop = true;
+
+					let position = 0; //start at the first preset by default
+					let direction = 'forward'; //start at the position of the array and go forward
+
+					if (opt.start_position = 'last') {
+						position = self.customTracePresetArray.length - 1;
+						direction = 'backward';
+					}
+
+					delay = 0; //amount of time after action is pressed before starting trace
+
+					if (opt.move_to_start_max) {
+						//go ahead and move to the start position without setting the drive time, then advance the position to the next preset in the array before beginning trace
+						self.sendPTZ(self.ptzCommand, 'p=' + self.customTracePresetArray[position].preset);
+						
+						delay = parseInt(await self.parseVariablesInString(opt.trace_delay)); //give it time to get there before starting trace
+						if (isNaN(delay)) {
+							delay = 2;
+						}
+						delay = delay * 1000; //convert to ms
+
+						if (direction == 'forward') {
+							position++;
+						}
+						else {
+							position--;
+						}
+					}
+
+					self.customTraceLoopInterval = setTimeout(self.runCustomTrace, delay, loop, loopMode, repeatCount, position, direction); //position is the index of the preset array
+
+					self.checkFeedbacks();
 				}
 			};
 
@@ -2308,8 +2578,8 @@ module.exports = {
 				name: 'Trace - Stop Custom Trace Loop',
 				options: [],
 				callback: async (action) => {
-					clearInterval(self.customTraceLoopInterval);
-					self.customTraceLoop = false;
+					self.stopCustomTrace();
+					self.checkFeedbacks();
 					self.log('debug', 'Custom Trace Loop Stopped');
 				}
 			};
@@ -2339,7 +2609,12 @@ module.exports = {
 				callback: async (action) => {
 					let trace = action.options.trace;
 
-					cmd = 'control?t=' + trace + '&cmd=prepare'
+					cmd = 'control?t=' + trace + '&cmd=prepare';
+
+					self.stopCustomTrace();
+					self.checkVariables();
+					self.checkFeedbacks();
+
 					self.sendPTZ(self.traceCommand, cmd);
 				}
 			}
@@ -2369,7 +2644,12 @@ module.exports = {
 				callback: async (action) => {
 					let trace = action.options.trace;
 
-					cmd = 'control?t=' + trace + '&cmd=start'
+					cmd = 'control?t=' + trace + '&cmd=start';
+
+					self.stopCustomTrace();
+					self.checkVariables();
+					self.checkFeedbacks();
+
 					self.sendPTZ(self.traceCommand, cmd);
 				}
 			}
@@ -2399,12 +2679,17 @@ module.exports = {
 				callback: async (action) => {
 					let trace = action.options.trace;
 
-					cmd = 'control?t=' + trace + '&cmd=stop'
+					cmd = 'control?t=' + trace + '&cmd=stop';
+
+					self.stopCustomTrace();
+					self.checkVariables();
+					self.checkFeedbacks();
+
 					self.sendPTZ(self.traceCommand, cmd);
 				}
 			}
 		}
 
-		self.setActionDefinitions(actions)
+		self.setActionDefinitions(actions);
 	}
 }
