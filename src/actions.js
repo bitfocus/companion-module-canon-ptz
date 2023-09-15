@@ -2500,14 +2500,14 @@ module.exports = {
 					self.customTracePresetArray = [];
 
 					for (let i = 1; i <= presetCount; i++) {
-						let presetNumber = parseInt(await self.parseVariablesInString(opt['preset' + (i + 1)]));
+						let presetNumber = parseInt(await self.parseVariablesInString(opt['preset' + i]));
 
 						if (isNaN(presetNumber) || presetNumber < 1 || presetNumber > 100) {
 							self.log('info', `Preset ${i} must be a number between 1 and 100. Value entered: ${presetNumber}`);
 							return;
 						}
 
-						let presetTime = parseInt(await self.parseVariablesInString(opt['preset' + (i + 1) + '_time']));
+						let presetTime = parseInt(await self.parseVariablesInString(opt['preset' + i + '_time']));
 
 						if (!isNaN(presetTime) && presetTime > 1 && presetTime <= 99) {
 							presetTime = presetTime * 1000;
@@ -2543,12 +2543,17 @@ module.exports = {
 					let position = 0; //start at the first preset by default
 					let direction = 'forward'; //start at the position of the array and go forward
 
-					if (opt.start_position = 'last') {
+					if (opt.start_position == 'last') {
 						position = self.customTracePresetArray.length - 1;
-						direction = 'backward';
-					}
+
+						if (opt.loopmode == 'pendulum') {
+							direction = 'backward';
+						}
+					}					
 
 					delay = 0; //amount of time after action is pressed before starting trace
+
+					self.log('info', `Starting Custom Trace with ${self.customTracePresetArray.length} presets.`);
 
 					if (opt.move_to_start_max) {
 						//go ahead and move to the start position without setting the drive time, then advance the position to the next preset in the array before beginning trace
@@ -2568,7 +2573,7 @@ module.exports = {
 						}
 					}
 
-					self.customTraceLoopInterval = setTimeout(self.runCustomTrace, delay, loop, loopMode, repeatCount, position, direction); //position is the index of the preset array
+					self.customTraceLoopInterval = setTimeout(self.runCustomTrace.bind(self), delay, loop, loopMode, repeatCount, position, direction); //position is the index of the preset array
 
 					self.checkFeedbacks();
 				}

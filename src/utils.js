@@ -2,8 +2,6 @@ module.exports = {
 	runCustomTrace: function(loop, loopMode, repeatCount, position, direction) {
 		let self = this;
 
-		//console.log('loop mode: ' + loopMode);
-
 		//check that the position is still within the bounds of the array
 		if (position > self.customTracePresetArray.length - 1 || position < 0) {
 			//we've reached the bounds of the array, so check the loop mode to know what to do next
@@ -23,26 +21,20 @@ module.exports = {
 				}
 				else if (position < 0) {
 					direction = 'forward';
-					position = 0;
-				}
-				else if (position == 0 && direction == 'backward') {
-					direction = 'forward';
 					position = 1;
 				}
 			}
 		}
-
-		console.log('position: ' + position);
-		console.log('direction: ' + direction);
 
 		let presetObj = self.customTracePresetArray[position];
 
 		if (presetObj) {
 			let cmd = 'p=' + presetObj.preset; //preset
 			cmd += '&p.ptztime=' + presetObj.time;
-			console.log(presetObj.preset + ' ' + presetObj.time);
 			self.sendPTZ(self.ptzCommand, cmd);
+
 			self.data.presetLastUsed = presetObj.preset;
+
 			self.checkVariables();
 			self.checkFeedbacks();
 
@@ -77,6 +69,12 @@ module.exports = {
 	stopCustomTrace: function() {
 		let self = this;
 
+		if (self.customTraceLoop == true) {
+			//this is really just for the log
+			self.log('info', 'Stopping Custom Trace.');
+		}
+
+		//clear the interval anyway
 		self.customTraceLoop = false;
 		self.customTraceLoopCount = 0;
 		clearTimeout(self.customTraceLoopInterval);
