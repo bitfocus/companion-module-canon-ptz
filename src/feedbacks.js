@@ -42,7 +42,7 @@ module.exports = {
 			feedbacks.powerState = {
 				type: 'boolean',
 				name: 'System - Power State',
-				description: 'Indicate if PTZ is Idle or Standby',
+				description: 'Indicate if Camera is in Idle Mode or in Standby Mode',
 				defaultStyle: {
 					color: foregroundColor,
 					bgcolor: backgroundColorRed,
@@ -52,29 +52,22 @@ module.exports = {
 						type: 'dropdown',
 						label: 'Indicate in X State',
 						id: 'option',
-						default: '1',
+						default: 'idle',
 						choices: [
-							{ id: '0', label: 'Idle' },
-							{ id: '1', label: 'Standby' },
+							{ id: 'idle', label: 'Idle' },
+							{ id: 'switch_idle', label: 'Switch Idle' },
+							{ id: 'standby', label: 'Standby' },
+							{ id: 'switch_standby', label: 'Switch Standby' },
 						],
 					},
 				],
 				callback: function (feedback, bank) {
 					let opt = feedback.options
-					switch (opt.option) {
-						case '0':
-							if ((self.data.powerState === 'idle') || (self.data.powerState === 'switch-idle')) {
-								return true
-							}
-							break
-						case '1':
-							if ((self.data.powerState === 'standby') || (self.data.powerState === 'switch-standby')) {
-								return true
-							}
-							break
-						default:
-							break
+					
+					if (self.data.powerState === opt.option) {
+						return true
 					}
+
 					return false
 				},
 			}
