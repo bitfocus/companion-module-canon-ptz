@@ -158,6 +158,45 @@ module.exports = {
 			variables.push({ variableId: 'presetSpeedValue', name: 'Preset Speed Value' })
 		}
 
+		if (self.config.enableTracking) {
+			//build the auto tracking add on variables if enabled
+			variables.push({ variableId: 'tracking_autotracking', name: 'Auto Tracking - On/Off' })
+			variables.push({ variableId: 'tracking_autozoom', name: 'Auto Tracking - Auto Zoom On/Off' })
+			variables.push({ variableId: 'tracking_sensitivity', name: 'Auto Tracking - Sensitivity' })
+			variables.push({ variableId: 'tracking_fixtilt', name: 'Auto Tracking - Fix Tilt On/Off' })
+			variables.push({ variableId: 'tracking_recoverycontrol', name: 'Auto Tracking - Recovery Control On/Off' })
+			variables.push({ variableId: 'tracking_recoverycontrol_time', name: 'Auto Tracking - Recovery Control Time' })
+			variables.push({ variableId: 'tracking_restartTracking', name: 'Auto Tracking - Restart Tracking after Manual Operation On/Off' })
+			variables.push({ variableId: 'tracking_starttime', name: 'Auto Tracking - Tracking Start Time' })
+			
+			variables.push({ variableId: 'tracking_targetautoselect', name: 'Auto Tracking - Tracking Target Auto Select On/Off' })
+			variables.push({ variableId: 'tracking_silhouette', name: 'Auto Tracking - Silhouette On/Off' })
+			variables.push({ variableId: 'tracking_silhouette_x', name: 'Auto Tracking - Silhouette Position X' })
+			variables.push({ variableId: 'tracking_silhouette_y', name: 'Auto Tracking - Silhouette Position Y' })
+			variables.push({ variableId: 'tracking_silhouette_size', name: 'Auto Tracking - Silhouette Size' })
+
+			variables.push({ variableId: 'tracking_pantilthaltarea', name: 'Auto Tracking - Pan/Tilt Halting Area On/Off' })
+
+			//visibility upper/left/right/lower
+			variables.push({ variableId: 'tracking_visibility_upper_x', name: 'Auto Tracking - Visibility Upper X' })
+			variables.push({ variableId: 'tracking_visibility_upper_y', name: 'Auto Tracking - Visibility Upper Y' })
+			variables.push({ variableId: 'tracking_visibility_upper_z', name: 'Auto Tracking - Visibility Upper Z' })
+			variables.push({ variableId: 'tracking_visibility_left_x', name: 'Auto Tracking - Visibility Left X' })
+			variables.push({ variableId: 'tracking_visibility_left_y', name: 'Auto Tracking - Visibility Left Y' })
+			variables.push({ variableId: 'tracking_visibility_left_z', name: 'Auto Tracking - Visibility Left Z' })
+			variables.push({ variableId: 'tracking_visibility_right_x', name: 'Auto Tracking - Visibility Right X' })
+			variables.push({ variableId: 'tracking_visibility_right_y', name: 'Auto Tracking - Visibility Right Y' })
+			variables.push({ variableId: 'tracking_visibility_right_z', name: 'Auto Tracking - Visibility Right Z' })
+			variables.push({ variableId: 'tracking_visibility_lower_x', name: 'Auto Tracking - Visibility Lower X' })
+			variables.push({ variableId: 'tracking_visibility_lower_y', name: 'Auto Tracking - Visibility Lower Y' })
+			variables.push({ variableId: 'tracking_visibility_lower_z', name: 'Auto Tracking - Visibility Lower Z' })
+
+			//current camera position
+			variables.push({ variableId: 'tracking_current_x', name: 'Auto Tracking - Current X' })
+			variables.push({ variableId: 'tracking_current_y', name: 'Auto Tracking - Current Y' })
+			variables.push({ variableId: 'tracking_current_z', name: 'Auto Tracking - Current Z' })
+		}
+
 		self.setVariableDefinitions(variables);
 	},
 
@@ -477,6 +516,71 @@ module.exports = {
 			if (SERIES.variables.presetSpeedValue == true) {
 				let value = c.CHOICES_PSSPEED().find((PRESETSPEEDVALUE) => PRESETSPEEDVALUE.id == self.data.presetSpeedValue).varLabel;
 				variableValues.presetSpeedValue = value;
+			}
+
+			if (self.config.enableTracking) {
+				//build the auto tracking add on variables if enabled
+				if (self.data.trackingConfig) {
+					variableValues.tracking_autotracking = self.data.trackingConfig.trackingEnable == '1' ? 'On' : 'Off';
+					variableValues.tracking_autozoom = self.data.trackingConfig.autoZoomEnable == '1' ? 'On' : 'Off';
+					variableValues.tracking_sensitivity = self.data.trackingConfig.sensitivity;
+					variableValues.tracking_fixtilt = self.data.trackingConfig.tiltFixed == '1' ? 'On' : 'Off';
+					variableValues.tracking_recoverycontrol = self.data.trackingConfig.recoveryControl == '1' ? 'On' : 'Off';
+					variableValues.tracking_recoverycontrol_time = self.data.trackingConfig.recoveryControlTime;
+					variableValues.tracking_restartTracking = self.data.trackingConfig.trackingRestartEnable == '1' ? 'On' : 'Off';
+					variableValues.tracking_starttime = self.data.trackingConfig.trackingStartTime;
+
+					variableValues.tracking_targetautoselect = self.data.trackingConfig.targetSelection == '1' ? 'On' : 'Off';
+					variableValues.tracking_silhouette = self.data.trackingConfig.zoomControlEnable == '1' ? 'On' : 'Off';
+
+					if (self.data.trackingConfig.targetPosition) {
+						let silhouettePosition = self.data.trackingConfig.targetPosition.split(':');
+						variableValues.tracking_silhouette_x = silhouettePosition[0];
+						variableValues.tracking_silhouette_y = silhouettePosition[1];
+					}
+					variableValues.tracking_silhouette_size = self.data.trackingConfig.targetSizeLevel;
+
+					variableValues.tracking_pantilthaltarea = self.data.trackingConfig.trackingDisableAreaEnable == '1' ? 'On' : 'Off';
+	
+					//visibility upper/left/right/lower
+					if (self.data.trackingConfig.visibilityLimitUpper) {
+						let visibilityLimitUpper = self.data.trackingConfig.visibilityLimitUpper.split(':');
+						variableValues.tracking_visibility_upper_x = visibilityLimitUpper[0];
+						variableValues.tracking_visibility_upper_y = visibilityLimitUpper[1];
+						variableValues.tracking_visibility_upper_z = visibilityLimitUpper[2];
+					}
+
+					if (self.data.trackingConfig.visibilityLimitLeft) {
+						let visibilityLimitLeft = self.data.trackingConfig.visibilityLimitLeft.split(':');
+						variableValues.tracking_visibility_left_x = visibilityLimitLeft[0];
+						variableValues.tracking_visibility_left_y = visibilityLimitLeft[1];
+						variableValues.tracking_visibility_left_z = visibilityLimitLeft[2];
+					}
+
+					if (self.data.trackingConfig.visibilityLimitRight) {
+						let visibilityLimitRight = self.data.trackingConfig.visibilityLimitRight.split(':');
+						variableValues.tracking_visibility_right_x = visibilityLimitRight[0];
+						variableValues.tracking_visibility_right_y = visibilityLimitRight[1];
+						variableValues.tracking_visibility_right_z = visibilityLimitRight[2];
+					}
+
+					if (self.data.trackingConfig.visibilityLimitLower) {
+						let visibilityLimitLower = self.data.trackingConfig.visibilityLimitLower.split(':');
+						variableValues.tracking_visibility_lower_x = visibilityLimitLower[0];
+						variableValues.tracking_visibility_lower_y = visibilityLimitLower[1];
+						variableValues.tracking_visibility_lower_z = visibilityLimitLower[2];
+					}
+				}
+				
+				if (self.data.trackingInformation) {
+					//current camera position
+					if (self.data.trackingInformation.camera_ptz_info !== undefined) {
+						let currentPosition = self.data.trackingInformation.camera_ptz_info;
+						variableValues.tracking_current_x = currentPosition.pan_pos.slice(0, -1);
+						variableValues.tracking_current_y = currentPosition.tilt_pos.slice(0, -1);
+						variableValues.tracking_current_z = currentPosition.zoom_pos.slice(0, -1);
+					}
+				}
 			}
 
 			self.setVariableValues(variableValues);

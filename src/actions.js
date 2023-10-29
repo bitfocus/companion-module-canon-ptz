@@ -2695,6 +2695,1258 @@ module.exports = {
 			}
 		}
 
+		if (self.config.enableTracking) {
+			//build the auto tracking add on actions if enabled
+
+			actions.tracking_autotracking_on = {
+				name: 'Auto Tracking - Turn On',
+				options: [],
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let cmd = 'trackingEnable=1'
+					self.sendTrackingCommand(base, cmd);
+				}
+			}
+
+			actions.tracking_autotracking_off = {
+				name: 'Auto Tracking - Turn Off',
+				options: [],
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let cmd = 'trackingEnable=0'
+					self.sendTrackingCommand(base, cmd);
+				}
+			}
+
+			actions.tracking_autotracking_toggle = {
+				name: 'Auto Tracking - Toggle On/Off',
+				options: [],
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let cmd = 'trackingEnable='
+					if (self.data.trackingConfig && self.data.trackingConfig.trackingEnable) {
+						if (self.data.trackingConfig.trackingEnable == '1') {
+							cmd += '0'
+						}
+						else {
+							cmd += '1'
+						}
+						self.sendTrackingCommand(base, cmd);
+					}
+				}
+			}
+
+			actions.tracking_autozoom_on = {
+				name: 'Auto Tracking - Auto Zoom - Turn On',
+				options: [],
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let cmd = 'autoZoomEnable=1'
+					self.sendTrackingCommand(base, cmd);
+				}
+			}
+
+			actions.tracking_autozoom_off = {
+				name: 'Auto Tracking - Auto Zoom - Turn Off',
+				options: [],
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let cmd = 'autoZoomEnable=0'
+					self.sendTrackingCommand(base, cmd);
+				}
+			}
+
+			actions.tracking_autoZoom_toggle = {
+				name: 'Auto Tracking - Auto Zoom - Toggle On/Off',
+				options: [],
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let cmd = 'autoZoomEnable='
+					if (self.data.trackingConfig && self.data.trackingConfig.autoZoomEnable) {
+						if (self.data.trackingConfig.autoZoomEnable == '1') {
+							cmd += '0'
+						}
+						else {
+							cmd += '1'
+						}
+						self.sendTrackingCommand(base, cmd);
+					}
+				}
+			}
+
+			actions.tracking_setTrackingSensitivity = {
+				name: 'Auto Tracking - Set Tracking Sensitivity',
+				options: [
+					{
+						type: 'textinput',
+						id: 'sensitivity',
+						label: 'Sensitivity (1-10)',
+						default: 5,
+						useVariables: true
+					}
+				],
+				learn: (action) => {
+					let sensitivity = self.data.trackingConfig.sensitivity;
+	
+					if (sensitivity) {
+
+						return {
+							...action.options,
+							sensitivity: sensitivity
+						}
+					}
+					else {
+						return undefined
+					}
+				},
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let sensitivity = parseInt(await self.parseVariablesInString(action.options.sensitivity));
+					//make sure it is a number and not nan
+					if (isNaN(sensitivity) || sensitivity < 1 || sensitivity > 10) {
+						self.log('error', 'Tracking Sensitivity must be a number from 1-10.')
+						return;
+					}
+
+					let cmd = `sensitivity=${sensitivity}`
+					self.sendTrackingCommand(base, cmd);
+				}
+			}
+
+			actions.tracking_setTrackingSensitivity_increase = {
+				name: 'Auto Tracking - Increase Tracking Sensitivity',
+				options: [],
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let sensitivity = parseInt(self.data.trackingConfig.sensitivity);
+					//make sure it is a number and not nan
+					if (isNaN(sensitivity)) {
+						sensitivity = 10;
+					}
+					else {
+						sensitivity++;
+						if (sensitivity > 10) {
+							sensitivity = 10;
+						}
+					}
+
+					let cmd = `sensitivity=${sensitivity}`
+					self.sendTrackingCommand(base, cmd);
+				}
+			}
+
+			actions.tracking_setTrackingSensitivity_decrease = {
+				name: 'Auto Tracking - Decrease Tracking Sensitivity',
+				options: [],
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let sensitivity = parseInt(self.data.trackingConfig.sensitivity);
+					//make sure it is a number and not nan
+					if (isNaN(sensitivity)) {
+						sensitivity = 1;
+					}
+					else {
+						sensitivity--;
+						if (sensitivity < 1) {
+							sensitivity = 1;
+						}
+					}
+
+					let cmd = `sensitivity=${sensitivity}`
+					self.sendTrackingCommand(base, cmd);
+				}
+			}
+
+			actions.tracking_fixTilt_on = {
+				name: 'Auto Tracking - Fix Tilt - Turn On',
+				options: [],
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let cmd = 'tiltFixed=1'
+					self.sendTrackingCommand(base, cmd);
+				}
+			}
+
+			actions.tracking_fixTilt_off = {
+				name: 'Auto Tracking - Fix Tilt - Turn Off',
+				options: [],
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let cmd = 'tiltFixed=0'
+					self.sendTrackingCommand(base, cmd);
+				}
+			}
+
+			actions.tracking_fixTilt_toggle = {
+				name: 'Auto Tracking - Fix Tilt - Toggle On/Off',
+				options: [],
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let cmd = 'tiltFixed='
+					if (self.data.trackingConfig && self.data.trackingConfig.tiltFixed) {
+						if (self.data.trackingConfig.tiltFixed == '1') {
+							cmd += '0'
+						}
+						else {
+							cmd += '1'
+						}
+						self.sendTrackingCommand(base, cmd);
+					}
+				}
+			}
+
+			actions.tracking_maintainPositionSetting = {
+				name: 'Auto Tracking - Recovery Control',
+				options: [
+					{
+						type: 'dropdown',
+						id: 'recoveryControl',
+						label: 'Recovery Control Setting',
+						default: '0',
+						choices: [
+							{ id: '0', label: 'Maintain Position if Tracking is Lost' },
+							{ id: '1', label: 'Return to Initial/Home Position' }
+						]
+					},
+					{
+						type: 'textinput',
+						id: 'recoveryControlTime',
+						label: 'Recovery Control Time (1 - 30 seconds)',
+						default: 5,
+						useVariables: true,
+						isVisible: (options) => options.recoveryControl == '1'
+					}
+				],
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let cmd = `recoveryControl=${action.options.recoveryControl}`
+					self.sendTrackingCommand(base, cmd);
+
+					if (action.options.recoveryControl == '1') {
+						let recoveryControlTime = parseInt(await self.parseVariablesInString(action.options.recoveryControlTime));
+
+						if (isNaN(recoveryControlTime) || recoveryControlTime < 1 || recoveryControlTime > 30) {
+							self.log('error', 'Recovery Control Time must be a number from 1-30.')
+							return;
+						}
+
+						cmd = `recoveryControlTime=${recoveryControlTime}`;
+						self.sendTrackingCommand(base, cmd);
+					}
+				}
+			}
+
+			actions.tracking_recoveryControlTime_increase = {
+				name: 'Auto Tracking - Increase Recovery Control Time',
+				options: [],
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let recoveryControlTime = parseInt(self.data.trackingConfig.recoveryControlTime);
+					//make sure it is a number and not nan
+					if (isNaN(recoveryControlTime)) {
+						recoveryControlTime = 30;
+					}
+					else {
+						recoveryControlTime++;
+						if (recoveryControlTime > 30) {
+							recoveryControlTime = 30;
+						}
+					}
+
+					let cmd = `recoveryControlTime=${recoveryControlTime}`
+					self.sendTrackingCommand(base, cmd);
+				}
+			}
+
+			actions.tracking_recoveryControlTime_decrease = {
+				name: 'Auto Tracking - Decrease Recovery Control Time',
+				options: [],
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let recoveryControlTime = parseInt(self.data.trackingConfig.recoveryControlTime);
+					//make sure it is a number and not nan
+					if (isNaN(recoveryControlTime)) {
+						recoveryControlTime = 1;
+					}
+					else {
+						recoveryControlTime--;
+						if (recoveryControlTime < 1) {
+							recoveryControlTime = 1;
+						}
+					}
+
+					let cmd = `recoveryControlTime=${recoveryControlTime}`
+					self.sendTrackingCommand(base, cmd);
+				}
+			}
+
+			actions.tracking_recoveryControl_toggle = {
+				name: 'Auto Tracking - Recovery Control - Toggle On/Off',
+				options: [],
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let cmd = 'recoveryControl='
+					if (self.data.trackingConfig && self.data.trackingConfig.recoveryControl) {
+						if (self.data.trackingConfig.recoveryControl == '1') {
+							cmd += '0'
+						}
+						else {
+							cmd += '1'
+						}
+						self.sendTrackingCommand(base, cmd);
+					}
+				}
+			}
+
+			actions.tracking_restarttracking_on = {
+				name: 'Auto Tracking - Restart Tracking After Manual Operation - On',
+				options: [],
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let cmd = 'trackingRestartEnable=1'
+					self.sendTrackingCommand(base, cmd);
+				}
+			}
+
+			actions.tracking_restarttracking_off = {
+				name: 'Auto Tracking - Restart Tracking After Manual Operation - Off',
+				options: [],
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let cmd = 'trackingRestartEnable=0'
+					self.sendTrackingCommand(base, cmd);
+				}
+			}
+
+			actions.tracking_restartTracking_toggle = {
+				name: 'Auto Tracking - Restart Tracking After Manual Operation - Toggle On/Off',
+				options: [],
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let cmd = 'trackingRestartEnable='
+					if (self.data.trackingConfig && self.data.trackingConfig.trackingRestartEnable) {
+						if (self.data.trackingConfig.trackingRestartEnable == '1') {
+							cmd += '0'
+						}
+						else {
+							cmd += '1'
+						}
+						self.sendTrackingCommand(base, cmd);
+					}
+				}
+			}
+
+			actions.tracking_setTrackingStartTime = {
+				name: 'Auto Tracking - Set Tracking Start Time',
+				options: [
+					{
+						type: 'textinput',
+						id: 'trackingStartTime',
+						label: 'Tracking Start Time (1-10)',
+						default: 5,
+						useVariables: true
+					}
+				],
+				learn: (action) => {
+					let trackingStartTime = self.data.trackingConfig.trackingStartTime;
+	
+					if (trackingStartTime) {
+
+						return {
+							...action.options,
+							trackingStartTime: trackingStartTime
+						}
+					}
+					else {
+						return undefined
+					}
+				},
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let trackingStartTime = parseInt(await self.parseVariablesInString(action.options.trackingStartTime));
+					//make sure it is a number and not nan
+					if (isNaN(trackingStartTime) || trackingStartTime < 1 || trackingStartTime > 10) {
+						self.log('error', 'Tracking Start Time must be a number from 1-10.')
+						return;
+					}
+
+					let cmd = `trackingStartTime=${trackingStartTime}`
+					self.sendTrackingCommand(base, cmd);
+				}
+			}
+
+			actions.tracking_trackingStartTime_increase = {
+				name: 'Auto Tracking - Increase Tracking Start Time',
+				options: [],
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let trackingStartTime = parseInt(self.data.trackingConfig.trackingStartTime);
+					//make sure it is a number and not nan
+					if (isNaN(trackingStartTime)) {
+						trackingStartTime = 10;
+					}
+					else {
+						trackingStartTime++;
+						if (trackingStartTime > 10) {
+							trackingStartTime = 10;
+						}
+					}
+
+					let cmd = `trackingStartTime=${trackingStartTime}`
+					self.sendTrackingCommand(base, cmd);
+				}
+			}
+
+			actions.tracking_trackingStartTime_decrease = {
+				name: 'Auto Tracking - Decrease Tracking Start Time',
+				options: [],
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let trackingStartTime = parseInt(self.data.trackingConfig.trackingStartTime);
+					//make sure it is a number and not nan
+					if (isNaN(trackingStartTime)) {
+						trackingStartTime = 1;
+					}
+					else {
+						trackingStartTime--;
+						if (trackingStartTime < 1) {
+							trackingStartTime = 1;
+						}
+					}
+
+					let cmd = `trackingStartTime=${trackingStartTime}`
+					self.sendTrackingCommand(base, cmd);
+				}
+			}
+
+			actions.tracking_trackingRange_on = {
+				name: 'Auto Tracking - Tracking Range (Visibility Limit) - On',
+				options: [],
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let cmd = 'visibilityLimitEnable=1'
+					self.sendTrackingCommand(base, cmd);
+				}
+			}
+
+			actions.tracking_trackingRange_off = {
+				name: 'Auto Tracking - Tracking Range (Visibility Limit) - Off',
+				options: [],
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let cmd = 'visibilityLimitEnable=0'
+					self.sendTrackingCommand(base, cmd);
+				}
+			}
+
+			actions.tracking_trackingRange_toggle = {
+				name: 'Auto Tracking - Tracking Range (Visibility Limit) - Toggle On/Off',
+				options: [],
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let cmd = 'visibilityLimitEnable='
+					if (self.data.trackingConfig && self.data.trackingConfig.visibilityLimitEnable) {
+						if (self.data.trackingConfig.visibilityLimitEnable == '1') {
+							cmd += '0'
+						}
+						else {
+							cmd += '1'
+						}
+						self.sendTrackingCommand(base, cmd);
+					}
+				}
+			}
+
+			actions.tracking_trackingRange = {
+				name: 'Auto Tracking - Specify Tracking Range (Visibility Limit)',
+				options: [
+					{
+						type: 'textinput',
+						id: 'upper_x',
+						label: 'Upper Limit X',
+						default: 5,
+						useVariables: true
+					},
+					{
+						type: 'textinput',
+						id: 'upper_y',
+						label: 'Upper Limit Y',
+						default: 5,
+						useVariables: true
+					},
+					{
+						type: 'textinput',
+						id: 'upper_z',
+						label: 'Upper Limit Z',
+						default: 5,
+						useVariables: true
+					},
+					{
+						type: 'textinput',
+						id: 'left_x',
+						label: 'Left Limit X',
+						default: 5,
+						useVariables: true
+					},
+					{
+						type: 'textinput',
+						id: 'left_y',
+						label: 'Left Limit Y',
+						default: 5,
+						useVariables: true
+					},
+					{
+						type: 'textinput',
+						id: 'left_z',
+						label: 'Left Limit Z',
+						default: 5,
+						useVariables: true
+					},
+					{
+						type: 'textinput',
+						id: 'right_x',
+						label: 'Right Limit X',
+						default: 5,
+						useVariables: true
+					},
+					{
+						type: 'textinput',
+						id: 'right_y',
+						label: 'Right Limit Y',
+						default: 5,
+						useVariables: true
+					},
+					{
+						type: 'textinput',
+						id: 'right_z',
+						label: 'Right Limit Z',
+						default: 5,
+						useVariables: true
+					},
+					{
+						type: 'textinput',
+						id: 'lower_x',
+						label: 'Lower Limit X',
+						default: 5,
+						useVariables: true
+					},
+					{
+						type: 'textinput',
+						id: 'lower_y',
+						label: 'Lower Limit Y',
+						default: 5,
+						useVariables: true
+					},
+					{
+						type: 'textinput',
+						id: 'lower_z',
+						label: 'Lower Limit Z',
+						default: 5,
+						useVariables: true
+					}
+				],
+				learn: (action) => {
+					let limitUpper = self.data.trackingConfig.visibilityLimitLower;
+					let limitLeft = self.data.trackingConfig.visibilityLimitLeft;
+					let limitRight = self.data.trackingConfig.visibilityLimitRight;
+					let limitLower = self.data.trackingConfig.visibilityLimitLower;
+	
+					if (limitUpper && limitLeft && limitRight && limitLower) {
+						limitUpper = limitUpper.split(':');
+						limitLeft = limitLeft.split(':');
+						limitRight = limitRight.split(':');
+						limitLower = limitLower.split(':');
+
+						return {
+							...action.options,
+							upper_x: limitUpper[0],
+							upper_y: limitUpper[1],
+							upper_z: limitUpper[2],
+							left_x: limitLeft[0],
+							left_y: limitLeft[1],
+							left_z: limitLeft[2],
+							right_x: limitRight[0],
+							right_y: limitRight[1],
+							right_z: limitRight[2],
+							lower_x: limitLower[0],
+							lower_y: limitLower[1],
+							lower_z: limitLower[2]
+						}
+					}
+					else {
+						return undefined
+					}
+				},
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+
+					let upper_x = parseInt(await self.parseVariablesInString(action.options.upper_x));
+					let upper_y = parseInt(await self.parseVariablesInString(action.options.upper_y));
+					let upper_z = parseInt(await self.parseVariablesInString(action.options.upper_z));
+
+					let left_x = parseInt(await self.parseVariablesInString(action.options.left_x));
+					let left_y = parseInt(await self.parseVariablesInString(action.options.left_y));
+					let left_z = parseInt(await self.parseVariablesInString(action.options.left_z));
+
+					let right_x = parseInt(await self.parseVariablesInString(action.options.right_x));
+					let right_y = parseInt(await self.parseVariablesInString(action.options.right_y));
+					let right_z = parseInt(await self.parseVariablesInString(action.options.right_z));
+
+					let lower_x = parseInt(await self.parseVariablesInString(action.options.lower_x));
+					let lower_y = parseInt(await self.parseVariablesInString(action.options.lower_y));
+					let lower_z = parseInt(await self.parseVariablesInString(action.options.lower_z));
+
+					//make sure it is a number and not nan
+					if (isNaN(upper_x) || isNaN(upper_y) || isNaN(upper_z) || isNaN(left_x) || isNaN(left_y) || isNaN(left_z) || isNaN(right_x) || isNaN(right_y) || isNaN(right_z) || isNaN(lower_x) || isNaN(lower_y) || isNaN(lower_z)) {
+						self.log('error', 'All values must be numbers.')
+						return;
+					}
+					
+					let cmd = `visibilityLimitUpper=${upper_x}:${upper_y}:${upper_z}&visibilityLimitLeft=${left_x}:${left_y}:${left_z}&visibilityLimitRight=${right_x}:${right_y}:${right_z}&visibilityLimitLower=${lower_x}:${lower_y}:${lower_z}`
+					self.sendTrackingCommand(base, cmd);
+				}
+			}
+
+			actions.tracking_visibilityLimit_upper = {
+				name: 'Auto Tracking - Specify Tracking Range (Visibility Limit) Upper',
+				options: [
+					{
+						type: 'textinput',
+						id: 'x',
+						label: 'Limit X',
+						default: 5,
+						useVariables: true
+					},
+					{
+						type: 'textinput',
+						id: 'y',
+						label: 'Limit Y',
+						default: 5,
+						useVariables: true
+					},
+					{
+						type: 'textinput',
+						id: 'z',
+						label: 'Limit Z',
+						default: 5,
+						useVariables: true
+					}
+				],
+				learn: (action) => {
+					let limit = self.data.trackingConfig.visibilityLimitUpper;
+	
+					if (limit) {
+						limit = limit.split(':');
+						return {
+							...action.options,
+							x: limit[0],
+							y: limit[1],
+							z: limit[2]
+						}
+					}
+					else {
+						return undefined
+					}
+				},
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+
+					let x = parseInt(await self.parseVariablesInString(action.options.x));
+					let y = parseInt(await self.parseVariablesInString(action.options.y));
+					let z = parseInt(await self.parseVariablesInString(action.options.z));
+
+					//make sure it is a number and not nan
+					if (isNaN(x) || isNaN(y) || isNaN(z)) {
+						self.log('error', 'All values must be numbers.')
+						return;
+					}
+					
+					let cmd = `visibilityLimitUpper=${x}:${y}:${z}`
+					self.sendTrackingCommand(base, cmd);
+				}
+			}
+
+			actions.tracking_visibilityLimit_left = {
+				name: 'Auto Tracking - Specify Tracking Range (Visibility Limit) Left',
+				options: [
+					{
+						type: 'textinput',
+						id: 'x',
+						label: 'Limit X',
+						default: 5,
+						useVariables: true
+					},
+					{
+						type: 'textinput',
+						id: 'y',
+						label: 'Limit Y',
+						default: 5,
+						useVariables: true
+					},
+					{
+						type: 'textinput',
+						id: 'z',
+						label: 'Limit Z',
+						default: 5,
+						useVariables: true
+					}
+				],
+				learn: (action) => {
+					let limit = self.data.trackingConfig.visibilityLimitLeft;
+	
+					if (limit) {
+						limit = limit.split(':');
+						return {
+							...action.options,
+							x: limit[0],
+							y: limit[1],
+							z: limit[2]
+						}
+					}
+					else {
+						return undefined
+					}
+				},
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+
+					let x = parseInt(await self.parseVariablesInString(action.options.x));
+					let y = parseInt(await self.parseVariablesInString(action.options.y));
+					let z = parseInt(await self.parseVariablesInString(action.options.z));
+
+					//make sure it is a number and not nan
+					if (isNaN(x) || isNaN(y) || isNaN(z)) {
+						self.log('error', 'All values must be numbers.')
+						return;
+					}
+					
+					let cmd = `visibilityLimitLeft=${x}:${y}:${z}`
+					self.sendTrackingCommand(base, cmd);
+				}
+			}
+
+			actions.tracking_visibilityLimit_right = {
+				name: 'Auto Tracking - Specify Tracking Range (Visibility Limit) Right',
+				options: [
+					{
+						type: 'textinput',
+						id: 'x',
+						label: 'Limit X',
+						default: 5,
+						useVariables: true
+					},
+					{
+						type: 'textinput',
+						id: 'y',
+						label: 'Limit Y',
+						default: 5,
+						useVariables: true
+					},
+					{
+						type: 'textinput',
+						id: 'z',
+						label: 'Limit Z',
+						default: 5,
+						useVariables: true
+					}
+				],
+				learn: (action) => {
+					let limit = self.data.trackingConfig.visibilityLimitRight;
+	
+					if (limit) {
+						limit = limit.split(':');
+						return {
+							...action.options,
+							x: limit[0],
+							y: limit[1],
+							z: limit[2]
+						}
+					}
+					else {
+						return undefined
+					}
+				},
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+
+					let x = parseInt(await self.parseVariablesInString(action.options.x));
+					let y = parseInt(await self.parseVariablesInString(action.options.y));
+					let z = parseInt(await self.parseVariablesInString(action.options.z));
+
+					//make sure it is a number and not nan
+					if (isNaN(x) || isNaN(y) || isNaN(z)) {
+						self.log('error', 'All values must be numbers.')
+						return;
+					}
+					
+					let cmd = `visibilityLimitRight=${x}:${y}:${z}`
+					self.sendTrackingCommand(base, cmd);
+				}
+			}
+
+			actions.tracking_visibilityLimit_lower = {
+				name: 'Auto Tracking - Specify Tracking Range (Visibility Limit) Lower',
+				options: [
+					{
+						type: 'textinput',
+						id: 'x',
+						label: 'Limit X',
+						default: 5,
+						useVariables: true
+					},
+					{
+						type: 'textinput',
+						id: 'y',
+						label: 'Limit Y',
+						default: 5,
+						useVariables: true
+					},
+					{
+						type: 'textinput',
+						id: 'z',
+						label: 'Limit Z',
+						default: 5,
+						useVariables: true
+					}
+				],
+				learn: (action) => {
+					let limit = self.data.trackingConfig.visibilityLimitLower;
+	
+					if (limit) {
+						limit = limit.split(':');
+						return {
+							...action.options,
+							x: limit[0],
+							y: limit[1],
+							z: limit[2]
+						}
+					}
+					else {
+						return undefined
+					}
+				},
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+
+					let x = parseInt(await self.parseVariablesInString(action.options.x));
+					let y = parseInt(await self.parseVariablesInString(action.options.y));
+					let z = parseInt(await self.parseVariablesInString(action.options.z));
+
+					//make sure it is a number and not nan
+					if (isNaN(x) || isNaN(y) || isNaN(z)) {
+						self.log('error', 'All values must be numbers.')
+						return;
+					}
+					
+					let cmd = `visibilityLimitLower=${x}:${y}:${z}`
+					self.sendTrackingCommand(base, cmd);
+				}
+			}
+
+			actions.tracking_visibilityLimit_upper_view = {
+				name: 'Auto Tracking - View Tracking Range (Visibility Limit) Upper',
+				options: [],
+				callback: async (action) => {
+					let base = 'control.cgi'
+
+					let limit = self.data.trackingConfig.visibilityLimitUpper;
+					if (limit) {
+						limit = limit.split(':');
+
+						let x = limit[0];
+						let y = limit[1];
+						let z = limit[2];
+					
+						let cmd = `pan=${x}&tilt=${y}&zoom=${z}`
+						self.sendPTZ(self.ptzCommand, cmd);
+					}
+				}
+			}
+
+			actions.tracking_visibilityLimit_left_view = {
+				name: 'Auto Tracking - View Tracking Range (Visibility Limit) Left',
+				options: [],
+				callback: async (action) => {
+					let base = 'control.cgi'
+
+					let limit = self.data.trackingConfig.visibilityLimitLeft;
+					if (limit) {
+						limit = limit.split(':');
+
+						let x = limit[0];
+						let y = limit[1];
+						let z = limit[2];
+					
+						let cmd = `pan=${x}&tilt=${y}&zoom=${z}`
+						self.sendPTZ(self.ptzCommand, cmd);
+					}
+				}
+			}
+
+			actions.tracking_visibilityLimit_right_view = {
+				name: 'Auto Tracking - View Tracking Range (Visibility Limit) Right',
+				options: [],
+				callback: async (action) => {
+					let base = 'control.cgi'
+
+					let limit = self.data.trackingConfig.visibilityLimitRight;
+					if (limit) {
+						limit = limit.split(':');
+
+						let x = limit[0];
+						let y = limit[1];
+						let z = limit[2];
+					
+						let cmd = `pan=${x}&tilt=${y}&zoom=${z}`
+						self.sendPTZ(self.ptzCommand, cmd);
+					}
+				}
+			}
+
+			actions.tracking_visibilityLimit_lower_view = {
+				name: 'Auto Tracking - View Tracking Range (Visibility Limit) Lower',
+				options: [],
+				callback: async (action) => {
+					let base = 'control.cgi'
+
+					let limit = self.data.trackingConfig.visibilityLimitLower;
+					if (limit) {
+						limit = limit.split(':');
+
+						let x = limit[0];
+						let y = limit[1];
+						let z = limit[2];
+					
+						let cmd = `pan=${x}&tilt=${y}&zoom=${z}`
+						self.sendPTZ(self.ptzCommand, cmd);
+					}
+				}
+			}
+
+			actions.tracking_setinitialtracking_current = {
+				name: 'Auto Tracking - Set Initial Tracking Position to Current Camera Position',
+				options: [],
+				callback: async (action) => {
+					let base = 'update_config.cgi';
+					if (self.data.trackingInformation && self.data.trackingInformation.camera_ptz_info !== undefined) {
+						let currentPosition = self.data.trackingInformation.camera_ptz_info;
+						let homePosition = currentPosition.pan_pos.slice(0, -1) + ':' + currentPosition.tilt_pos.slice(0, -1) + ':' + currentPosition.zoom_pos.slice(0, -1);
+						let cmd = `homePosition=${homePosition}`
+						self.sendTrackingCommand(base, cmd);
+					}
+				}
+			}
+
+			actions.tracking_setinitialtracking_set = {
+				name: 'Auto Tracking - Set Initial Tracking Position to X, Y, Z',
+				options: [
+					{
+						type: 'textinput',
+						id: 'x',
+						label: 'X',
+						default: 0,
+						useVariables: true
+					},
+					{
+						type: 'textinput',
+						id: 'y',
+						label: 'Y',
+						default: 0,
+						useVariables: true
+					},
+					{
+						type: 'textinput',
+						id: 'z',
+						label: 'Z',
+						default: 0,
+						useVariables: true
+					}
+				],
+				learn: (action) => {
+					let currentPosition = self.data.trackingInformation.camera_ptz_info;
+	
+					if (currentPosition) {
+						return {
+							...action.options,
+							x: currentPosition.pan_pos.slice(0, -1),
+							y: currentPosition.tilt_pos.slice(0, -1),
+							z: currentPosition.zoom_pos.slice(0, -1)
+						}
+					}
+					else {
+						return undefined
+					}
+				},
+				callback: async (action) => {
+					let base = 'update_config.cgi';
+					let currentPosition = {};
+					currentPosition.x = parseInt(await self.parseVariablesInString(action.options.x));
+					currentPosition.y = parseInt(await self.parseVariablesInString(action.options.y));
+					currentPosition.z = parseInt(await self.parseVariablesInString(action.options.z));
+
+					//make sure it is a number and not nan
+					if (isNaN(currentPosition.x) || isNaN(currentPosition.y) || isNaN(currentPosition.z)) {
+						self.log('error', 'X, Y, and Z must be numbers.')
+						return;
+					}
+
+					let homePosition = currentPosition.x + ':' + currentPosition.y + ':' + currentPosition.z;
+					let cmd = `homePosition=${homePosition}`
+					self.sendTrackingCommand(base, cmd);
+				}
+			}
+
+			actions.tracking_trackingTargetAutoSelect_on = {
+				name: 'Auto Tracking - Tracking Target Auto Select - On',
+				options: [],
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let cmd = 'targetSelection=1'
+					self.sendTrackingCommand(base, cmd);
+				}
+			}
+
+			actions.tracking_trackingTargetAutoSelect_off = {
+				name: 'Auto Tracking - Tracking Target Auto Select - Off',
+				options: [],
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let cmd = 'targetSelection=0'
+					self.sendTrackingCommand(base, cmd);
+				}
+			}
+
+			actions.tracking_trackingTargetAutoSelect_toggle = {
+				name: 'Auto Tracking - Tracking Target Auto Select - Toggle On/Off',
+				options: [],
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let cmd = 'targetSelection='
+					if (self.data.trackingConfig && self.data.trackingConfig.targetSelection) {
+						if (self.data.trackingConfig.targetSelection == '1') {
+							cmd += '0'
+						}
+						else {
+							cmd += '1'
+						}
+						self.sendTrackingCommand(base, cmd);
+					}
+				}
+			}
+
+			actions.tracking_silhouette_on = {
+				name: 'Auto Tracking - Silhouette - On',
+				options: [],
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let cmd = 'zoomControlEnable=1'
+					self.sendTrackingCommand(base, cmd);
+				}
+			}
+
+			actions.tracking_silhouette_off = {
+				name: 'Auto Tracking - Silhouette - Off',
+				options: [],
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let cmd = 'zoomControlEnable=0'
+					self.sendTrackingCommand(base, cmd);
+				}
+			}
+
+			actions.tracking_silhouette_toggle = {
+				name: 'Auto Tracking - Silhouette - Toggle On/Off',
+				options: [],
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let cmd = 'zoomControlEnable='
+					if (self.data.trackingConfig && self.data.trackingConfig.zoomControlEnable) {
+						if (self.data.trackingConfig.zoomControlEnable == '1') {
+							cmd += '0'
+						}
+						else {
+							cmd += '1'
+						}
+						self.sendTrackingCommand(base, cmd);
+					}
+				}
+			}
+
+			actions.tracking_silhouettePosition = {
+				name: 'Auto Tracking - Set Display Position (Silhouette Position)',
+				options: [
+					{
+						type: 'textinput',
+						id: 'x',
+						label: 'X',
+						default: 0,
+						useVariables: true
+					},
+					{
+						type: 'textinput',
+						id: 'y',
+						label: 'Y',
+						default: 0,
+						useVariables: true
+					}
+				],
+				learn: (action) => {
+					let targetPosition = self.data.trackingConfig.targetPosition;
+	
+					if (targetPosition) {
+						targetPosition =  targetPosition.split(':');
+						return {
+							...action.options,
+							x: targetPosition[0],
+							y: targetPosition[1]
+						}
+					}
+					else {
+						return undefined
+					}
+				},
+				callback: async (action) => {
+					let base = 'update_config.cgi';
+
+					let x = parseInt(await self.parseVariablesInString(action.options.x));
+					let y = parseInt(await self.parseVariablesInString(action.options.y));
+
+					//make sure it is a number and not nan
+					if (isNaN(x) || isNaN(y)) {
+						self.log('error', 'X and Y must be numbers.')
+						return;
+					}
+
+					let targetPosition = x + ':' + y;
+					let cmd = `targetPosition=${targetPosition}`
+					self.sendTrackingCommand(base, cmd);
+				}
+			}
+
+			actions.tracking_silhouetteSize = {
+				name: 'Auto Tracking - Set Display Size (Silhouette Size)',
+				options: [
+					{
+						type: 'textinput',
+						id: 'value',
+						label: 'Value (1-5)',
+						default: 1,
+						useVariables: true
+					}
+				],
+				learn: (action) => {
+					let targetSizeLevel = self.data.trackingConfig.targetSizeLevel;
+	
+					if (targetSizeLevel) {
+						return {
+							...action.options,
+							value: targetSizeLevel
+						}
+					}
+					else {
+						return undefined
+					}
+				},
+				callback: async (action) => {
+					let base = 'update_config.cgi';
+
+					let value = parseInt(await self.parseVariablesInString(action.options.value));
+
+					//make sure it is a number and not nan, and 1-5
+					if (isNaN(value) || value < 1 || value > 5) {
+						self.log('error', 'Value must be a number between 1-5.')
+						return;
+					}
+
+					let cmd = `targetSizeLevel=${value}`
+					self.sendTrackingCommand(base, cmd);
+				}
+			}
+
+			actions.tracking_silhouetteSize_increase = {
+				name: 'Auto Tracking - Increase Display Size (Silhouette Size)',
+				options: [],
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let targetSizeLevel = parseInt(self.data.trackingConfig.targetSizeLevel);
+					//make sure it is a number and not nan
+					if (isNaN(targetSizeLevel)) {
+						targetSizeLevel = 5;
+					}
+					else {
+						targetSizeLevel++;
+						if (targetSizeLevel > 5) {
+							targetSizeLevel = 5;
+						}
+					}
+
+					let cmd = `targetSizeLevel=${targetSizeLevel}`
+					self.sendTrackingCommand(base, cmd);
+				}
+			}
+
+			actions.tracking_silhouetteSize_decrease = {
+				name: 'Auto Tracking - Decrease Display Size (Silhouette Size)',
+				options: [],
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let targetSizeLevel = parseInt(self.data.trackingConfig.targetSizeLevel);
+					//make sure it is a number and not nan
+					if (isNaN(targetSizeLevel)) {
+						targetSizeLevel = 1;
+					}
+					else {
+						targetSizeLevel--;
+						if (targetSizeLevel < 1) {
+							targetSizeLevel = 1;
+						}
+					}
+
+					let cmd = `targetSizeLevel=${targetSizeLevel}`
+					self.sendTrackingCommand(base, cmd);
+				}
+			}
+
+			actions.tracking_panTiltHalting_on = {
+				name: 'Auto Tracking - Pan/Tilt Halting Area - On',
+				options: [],
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let cmd = 'trackingDisableAreaEnable=1'
+					self.sendTrackingCommand(base, cmd);
+				}
+			}
+
+			actions.tracking_panTiltHalting_off = {
+				name: 'Auto Tracking - Pan/Tilt Halting Area - Off',
+				options: [],
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let cmd = 'trackingDisableAreaEnable=0'
+					self.sendTrackingCommand(base, cmd);
+				}
+			}
+
+			actions.tracking_panTiltHalting_toggle = {
+				name: 'Auto Tracking - Pan/Tilt Halting Area - Toggle On/Off',
+				options: [],
+				callback: async (action) => {
+					let base = 'update_config.cgi'
+					let cmd = 'trackingDisableAreaEnable='
+					if (self.data.trackingConfig && self.data.trackingConfig.trackingDisableAreaEnable) {
+						if (self.data.trackingConfig.trackingDisableAreaEnable == '1') {
+							cmd += '0'
+						}
+						else {
+							cmd += '1'
+						}
+						self.sendTrackingCommand(base, cmd);
+					}
+				}
+			}
+
+		}
+
 		self.setActionDefinitions(actions);
 	}
 }

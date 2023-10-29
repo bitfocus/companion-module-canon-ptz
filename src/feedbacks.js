@@ -577,6 +577,306 @@ module.exports = {
 			}
 		}
 
+		if (self.config.enableTracking) {
+			//build the auto tracking add on feedbacks if enabled
+			feedbacks.tracking_autotracking = {
+				type: 'boolean',
+				name: 'Auto Tracking - Auto Tracking is in X State',
+				description: 'Indicate if Auto Tracking is in X State',
+				defaultStyle: {
+					color: foregroundColor,
+					bgcolor: backgroundColorOrange,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Indicate in X State',
+						id: 'option',
+						default: '1',
+						choices: [
+							{ id: '0', label: 'Off' },
+							{ id: '1', label: 'On' },
+						],
+					},
+				],
+				callback: function (feedback, bank) {
+					let opt = feedback.options;
+
+					if (self.data.trackingConfig && self.data.trackingConfig.trackingEnable) {
+						if (self.data.trackingConfig.trackingEnable == opt.option) {
+							return true
+						}
+					}					
+
+					return false
+				},
+			}
+
+			feedbacks.tracking_autoZoom = {
+				type: 'boolean',
+				name: 'Auto Tracking - Auto Zoom is in X State',
+				description: 'Indicate if Auto Zoom is in X State',
+				defaultStyle: {
+					color: foregroundColor,
+					bgcolor: backgroundColorOrange,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Indicate in X State',
+						id: 'option',
+						default: '1',
+						choices: [
+							{ id: '0', label: 'Off' },
+							{ id: '1', label: 'On' },
+						],
+					},
+				],
+				callback: function (feedback, bank) {
+					let opt = feedback.options;
+
+					if (self.data.trackingConfig && self.data.trackingConfig.autoZoomEnable) {
+						if (self.data.trackingConfig.autoZoomEnable == opt.option) {
+							return true
+						}
+					}
+					
+					return false
+				},
+			}
+
+			feedbacks.tracking_fixTilt = {
+				type: 'boolean',
+				name: 'Auto Tracking - Fix Tilt is in X State',
+				description: 'Indicate if Fix Tilt is in X State',
+				defaultStyle: {
+					color: foregroundColor,
+					bgcolor: backgroundColorOrange,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Indicate in X State',
+						id: 'option',
+						default: '1',
+						choices: [
+							{ id: '0', label: 'Off' },
+							{ id: '1', label: 'On' },
+						],
+					},
+				],
+				callback: function (feedback, bank) {
+					let opt = feedback.options;
+
+					if (self.data.trackingConfig && self.data.trackingConfig.tiltFixed) {
+						if (self.data.trackingConfig.tiltFixed == opt.option) {
+							return true
+						}
+					}
+					
+					return false
+				},
+			}
+
+			feedbacks.tracking_maintainPosition = {
+				type: 'boolean',
+				name: 'Auto Tracking - Maintain Position is in X State',
+				description: 'Indicate if Maintain Position is in X State',
+				defaultStyle: {
+					color: foregroundColor,
+					bgcolor: backgroundColorOrange,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Indicate in X State',
+						id: 'option',
+						default: '1',
+						choices: [
+							{ id: '0', label: 'Maintain Position if Tracking is Lost' },
+							{ id: '1', label: 'Return to Initial/Home Position' },
+						],
+					},
+				],
+				callback: function (feedback, bank) {
+					let opt = feedback.options;
+
+					if (self.data.trackingConfig && self.data.trackingConfig.recoveryControl) {
+						if (self.data.trackingConfig.recoveryControl == opt.option) {
+							return true
+						}
+					}
+					
+					return false
+				},
+			}
+
+			feedbacks.tracking_restartTracking = {
+				type: 'boolean',
+				name: 'Auto Tracking - Restart Tracking is in X State',
+				description: 'Indicate if Restart Tracking is in X State',
+				defaultStyle: {
+					color: foregroundColor,
+					bgcolor: backgroundColorOrange,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Indicate in X State',
+						id: 'option',
+						default: '1',
+						choices: [
+							{ id: '0', label: 'Off' },
+							{ id: '1', label: 'On' },
+						],
+					},
+				],
+				callback: function (feedback, bank) {
+					let opt = feedback.options;
+
+					if (self.data.trackingConfig && self.data.trackingConfig.trackingRestartEnable) {
+						if (self.data.trackingConfig.trackingRestartEnable == opt.option) {
+							return true
+						}
+					}
+					
+					return false
+				},
+			}
+
+			feedbacks.tracking_targetAutoSelect = {
+				type: 'boolean',
+				name: 'Auto Tracking - Target Auto Select is in X State',
+				description: 'Indicate if Target Auto Select (Visibility Limit) is in X State',
+				defaultStyle: {
+					color: foregroundColor,
+					bgcolor: backgroundColorOrange,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Indicate in X State',
+						id: 'option',
+						default: '1',
+						choices: [
+							{ id: '0', label: 'Off' },
+							{ id: '1', label: 'On' },
+						],
+					},
+				],
+				callback: function (feedback, bank) {
+					let opt = feedback.options;
+
+					if (self.data.trackingConfig && self.data.trackingConfig.targetSelection) {
+						if (self.data.trackingConfig.targetSelection == opt.option) {
+							return true
+						}
+					}
+					
+					return false
+				},
+			}
+
+			feedbacks.tracking_silhouette = {
+				type: 'boolean',
+				name: 'Auto Tracking - Silhouette is in X State',
+				description: 'Indicate if Silhouette (Visibility Limit) is in X State',
+				defaultStyle: {
+					color: foregroundColor,
+					bgcolor: backgroundColorOrange,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Indicate in X State',
+						id: 'option',
+						default: '1',
+						choices: [
+							{ id: '0', label: 'Off' },
+							{ id: '1', label: 'On' },
+						],
+					},
+				],
+				callback: function (feedback, bank) {
+					let opt = feedback.options;
+
+					if (self.data.trackingConfig && self.data.trackingConfig.zoomControlEnable) {
+						if (self.data.trackingConfig.zoomControlEnable == opt.option) {
+							return true
+						}
+					}
+					
+					return false
+				},
+			}
+
+			feedbacks.tracking_visibilityLimit = {
+				type: 'boolean',
+				name: 'Auto Tracking - Tracking Range (Visibility Limit) is in X State',
+				description: 'Indicate if Tracking Range (Visibility Limit) is in X State',
+				defaultStyle: {
+					color: foregroundColor,
+					bgcolor: backgroundColorOrange,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Indicate in X State',
+						id: 'option',
+						default: '1',
+						choices: [
+							{ id: '0', label: 'Off' },
+							{ id: '1', label: 'On' },
+						],
+					},
+				],
+				callback: function (feedback, bank) {
+					let opt = feedback.options;
+
+					if (self.data.trackingConfig && self.data.trackingConfig.visibilityLimitEnable) {
+						if (self.data.trackingConfig.visibilityLimitEnable == opt.option) {
+							return true
+						}
+					}
+					
+					return false
+				},
+			}
+
+			feedbacks.tracking_panTiltHaltArea = {
+				type: 'boolean',
+				name: 'Auto Tracking - Pan/Tilt Halting Area is in X State',
+				description: 'Indicate if Pan/Tilt Halting Area (Visibility Limit) is in X State',
+				defaultStyle: {
+					color: foregroundColor,
+					bgcolor: backgroundColorOrange,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Indicate in X State',
+						id: 'option',
+						default: '1',
+						choices: [
+							{ id: '0', label: 'Off' },
+							{ id: '1', label: 'On' },
+						],
+					},
+				],
+				callback: function (feedback, bank) {
+					let opt = feedback.options;
+
+					if (self.data.trackingConfig && self.data.trackingConfig.trackingDisableAreaEnable) {
+						if (self.data.trackingConfig.trackingDisableAreaEnable == opt.option) {
+							return true
+						}
+					}
+					
+					return false
+				},
+			}
+		}
+
 		self.setFeedbackDefinitions(feedbacks);
 	}
 }

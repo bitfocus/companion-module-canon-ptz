@@ -1,5 +1,4 @@
 const { InstanceStatus } = require('@companion-module/base')
-const UpgradeScripts = require('./upgrades')
 const API = require('./api')
 
 module.exports = {
@@ -35,6 +34,9 @@ module.exports = {
 	
 		clearInterval(self.pollTimer);
 		delete self.pollTimer
+
+		clearInterval(self.pollTrackingTimer);
+		delete self.pollTrackingTimer;
 	},
 
 	async getCameraInformation() {

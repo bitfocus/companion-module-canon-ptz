@@ -12,6 +12,8 @@ const presets = require('./presets')
 const polling = require('./polling')
 const utils = require('./utils')
 
+const tracking = require('./tracking')
+
 class canonptzInstance extends InstanceBase {
 	constructor(internal) {
 		super(internal)
@@ -25,6 +27,7 @@ class canonptzInstance extends InstanceBase {
 			...presets,
 			...polling,
 			...utils,
+			...tracking,
 		})
 
 		//global vars here
@@ -46,6 +49,10 @@ class canonptzInstance extends InstanceBase {
 
 		if (this.pollTimerOnlineStatus) {
 			clearInterval(this.pollTimerOnlineStatus);
+		}
+
+		if (this.pollTrackingTimer) {
+			clearInterval(this.pollTrackingTimer);
 		}
 	}
 
@@ -137,7 +144,10 @@ class canonptzInstance extends InstanceBase {
 			presetLastUsed: 1,
 			presetRecallMode: 'normal',
 			presetTimeValue: 2000,
-			presetSpeedValue: 1
+			presetSpeedValue: 1,
+
+			trackingConfig: {},
+			trackingInformation: {},
 		}
 	
 		//preset names
@@ -189,6 +199,7 @@ class canonptzInstance extends InstanceBase {
 			this.updateStatus('Connecting')
 			this.getCameraInformation()
 			this.initPolling()
+			this.initTrackingPolling();
 
 			this.setVariableValues({
 				cameraIP: this.config.host,

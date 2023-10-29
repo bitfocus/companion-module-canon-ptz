@@ -83,6 +83,27 @@ module.exports = {
 				value: ' ',
 			},
 			{
+				type: 'checkbox',
+				id: 'enableTracking',
+				label: 'Enable Auto Tracking Add-On Features',
+				width: 3,
+				default: false,
+			},
+			{
+				type: 'textinput',
+				id: 'trackingAddonUrl',
+				label: 'Auto Tracking CGI Add-on URL',
+				default: '/cgi-addon/Auto_Tracking_RA-AT001/app_ctrl/',
+				isVisible: (configValues) => configValues.enableTracking == true
+			},
+			{
+				type: 'textinput',
+				id: 'trackingInterval',
+				label: 'Tracking Update Interval (how often to request latest tracking data)',
+				default: 250,
+				isVisible: (configValues) => configValues.enableTracking == true
+			},
+			{
 				type: 'static-text',
 				id: 'Info',
 				width: 12,
