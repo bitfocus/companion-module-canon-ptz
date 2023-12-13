@@ -2,6 +2,7 @@ const { combineRgb } = require('@companion-module/base')
 
 let { MODELS, SERIES_SPECS } = require('./models.js')
 const c = require('./choices.js')
+const ICONS = require('./icons.js')
 
 module.exports = {
 	initPresets: function () {
@@ -400,7 +401,7 @@ module.exports = {
 				style: {
 					style: 'png',
 					text: '',
-					png64: self.ICON_UP,
+					png64: ICONS.UP,
 					pngalignment: 'center:center',
 					size: '18',
 					color: '16777215',
@@ -432,7 +433,7 @@ module.exports = {
 				style: {
 					style: 'png',
 					text: '',
-					png64: self.ICON_DOWN,
+					png64: ICONS.DOWN,
 					pngalignment: 'center:center',
 					size: '18',
 					color: '16777215',
@@ -464,7 +465,7 @@ module.exports = {
 				style: {
 					style: 'png',
 					text: '',
-					png64: self.ICON_LEFT,
+					png64: ICONS.LEFT,
 					pngalignment: 'center:center',
 					size: '18',
 					color: '16777215',
@@ -496,7 +497,7 @@ module.exports = {
 				style: {
 					style: 'png',
 					text: '',
-					png64: self.ICON_RIGHT,
+					png64: ICONS.RIGHT,
 					pngalignment: 'center:center',
 					size: '18',
 					color: '16777215',
@@ -528,7 +529,7 @@ module.exports = {
 				style: {
 					style: 'png',
 					text: '',
-					png64: self.ICON_UP_RIGHT,
+					png64: ICONS.UP_RIGHT,
 					pngalignment: 'center:center',
 					size: '18',
 					color: '16777215',
@@ -560,7 +561,7 @@ module.exports = {
 				style: {
 					style: 'png',
 					text: '',
-					png64: self.ICON_UP_LEFT,
+					png64: ICONS.UP_LEFT,
 					pngalignment: 'center:center',
 					size: '18',
 					color: '16777215',
@@ -592,7 +593,7 @@ module.exports = {
 				style: {
 					style: 'png',
 					text: '',
-					png64: self.ICON_DOWN_LEFT,
+					png64: ICONS.DOWN_LEFT,
 					pngalignment: 'center:center',
 					size: '18',
 					color: '16777215',
@@ -624,7 +625,7 @@ module.exports = {
 				style: {
 					style: 'png',
 					text: '',
-					png64: self.ICON_DOWN_RIGHT,
+					png64: ICONS.DOWN_RIGHT,
 					pngalignment: 'center:center',
 					size: '18',
 					color: '16777215',
