@@ -571,7 +571,7 @@ module.exports = {
 					{
 						down: [
 							{
-								actionId: 'UpLeft',
+								actionId: 'upLeft',
 								options: {}
 							}
 						],
