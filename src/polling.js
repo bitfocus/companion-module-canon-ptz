@@ -343,6 +343,9 @@ module.exports = {
 				case 'c.1.wb.shift.bgain':
 					self.data.bGainValue = str[1];
 					break;
+				case 'c.1.platform.status':
+					self.data.platformStatus = str[1];
+					break;
 				case 'p':
 					self.data.presetLastUsed = parseInt(str[1]);
 					self.checkVariables()

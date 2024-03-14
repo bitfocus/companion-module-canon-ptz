@@ -85,6 +85,7 @@ class canonptzInstance extends InstanceBase {
 			imageStabilization: '',
 			firmwareVersion: '',
 			protocolVersion: '',
+			platformStatus: '',
 	
 			//Zoom/Focus
 			zoomSpeed: 8,

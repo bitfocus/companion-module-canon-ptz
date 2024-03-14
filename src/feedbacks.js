@@ -875,6 +875,39 @@ module.exports = {
 					return false
 				},
 			}
+
+			feedbacks.platformStatus = {
+				type: 'boolean',
+				name: 'Platform Status is in X State',
+				description: 'Indicate if Platform Status is in X State',
+				defaultStyle: {
+					color: foregroundColor,
+					bgcolor: backgroundColorOrange,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Indicate in X State',
+						id: 'option',
+						default: 'initialized',
+						choices: [
+							{ id: 'unitialize', label: 'Uninitialized' },
+							{ id: 'initialized', label: 'Initialized' },
+						],
+					},
+				],
+				callback: function (feedback, bank) {
+					let opt = feedback.options;
+
+					if (self.data.platformStatus) {
+						if (self.data.platformStatus == opt.option) {
+							return true
+						}
+					}
+					
+					return false
+				},
+			}
 		}
 
 		self.setFeedbackDefinitions(feedbacks);
