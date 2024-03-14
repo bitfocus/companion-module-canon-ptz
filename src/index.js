@@ -39,6 +39,7 @@ class canonptzInstance extends InstanceBase {
 		this.powerCommand = 'standby.cgi?'
 		this.savePresetCommand = 'preset/set?'
 		this.traceCommand = 'trace/'
+		this.maintainCommand = 'maintain?'
 	}
 
 	async destroy() {

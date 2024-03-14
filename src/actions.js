@@ -514,6 +514,15 @@ module.exports = {
 					self.sendPTZ(self.ptzCommand, cmd)
 				}
 			}
+
+			actions.ptInitialization = {
+				name: 'Pan/Tilt - Initialize',
+				options: [],
+				callback: async (action) => {
+					cmd = 'cmd=platform_reset'
+					self.sendPTZ(self.maintainCommand, cmd)
+				}
+			}
 		}
 
 		if (s.ptSpeed == true) {
