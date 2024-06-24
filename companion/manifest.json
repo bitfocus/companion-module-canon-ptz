@@ -1,4 +1,5 @@
 {
+	"$schema": "../node_modules/@companion-module/base/assets/manifest.schema.json",
 	"id": "canon-ptz",
 	"name": "canon-ptz",
 	"shortname": "canon-ptz",
@@ -35,5 +36,16 @@
 	"keywords": [
 		"ptz",
 		"camera"
-	]
+	],
+	"bonjourQueries": {
+		"bonjourHost": {
+			"type": "http",
+			"protocol": "tcp",
+			"txt": {
+				"type": "ptz",
+				"device": "camera",
+				"vender": "canon"
+			}
+		}
+	}
 }
