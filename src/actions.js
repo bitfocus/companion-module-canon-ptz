@@ -648,14 +648,14 @@ module.exports = {
 						label: 'Zoom Speed Setting',
 						id: 'speed',
 						default: 8,
-						choices: c.CHOICES_ZOOM_SPEED,
+						choices: c.CHOICES_ZOOM_SPEED(),
 					},
 				],
 				callback: async (action) => {
 					self.zSpeed = action.options.speed
 					var idx = -1
-					for (var i = 0; i < c.CHOICES_ZOOM_SPEED.length; ++i) {
-						if (c.CHOICES_ZOOM_SPEED[i].id == self.zSpeed) {
+					for (var i = 0; i < c.CHOICES_ZOOM_SPEED().length; ++i) {
+						if (c.CHOICES_ZOOM_SPEED()[i].id == self.zSpeed) {
 							idx = i
 							break
 						}
@@ -663,7 +663,7 @@ module.exports = {
 					if (idx > -1) {
 						self.zSpeedIndex = idx
 					}
-					self.zSpeed = c.CHOICES_ZOOM_SPEED[self.zSpeedIndex].id
+					self.zSpeed = c.CHOICES_ZOOM_SPEED()[self.zSpeedIndex].id
 					self.data.zoomSpeed = self.zSpeed;
 					self.getCameraInformation_Delayed();
 				}
@@ -678,7 +678,7 @@ module.exports = {
 					} else if (self.zSpeedIndex > 0) {
 						self.zSpeedIndex--
 					}
-					self.zSpeed = c.CHOICES_ZOOM_SPEED[self.zSpeedIndex].id
+					self.zSpeed = c.CHOICES_ZOOM_SPEED()[self.zSpeedIndex].id
 					self.data.zoomSpeed = self.zSpeed;
 					self.getCameraInformation_Delayed();
 				}
@@ -688,12 +688,12 @@ module.exports = {
 				name: 'Lens - Zoom Speed Down',
 				options: [],
 				callback: async (action) => {
-					if (self.zSpeedIndex == c.CHOICES_ZOOM_SPEED.length) {
-						self.zSpeedIndex = c.CHOICES_ZOOM_SPEED.length
-					} else if (self.zSpeedIndex < c.CHOICES_ZOOM_SPEED.length) {
+					if (self.zSpeedIndex == c.CHOICES_ZOOM_SPEED().length) {
+						self.zSpeedIndex = c.CHOICES_ZOOM_SPEED().length
+					} else if (self.zSpeedIndex < c.CHOICES_ZOOM_SPEED().length) {
 						self.zSpeedIndex++
 					}
-					self.zSpeed = c.CHOICES_ZOOM_SPEED[self.zSpeedIndex].id
+					self.zSpeed = c.CHOICES_ZOOM_SPEED()[self.zSpeedIndex].id
 					self.data.zoomSpeed = self.zSpeed;
 					self.getCameraInformation_Delayed();
 				}

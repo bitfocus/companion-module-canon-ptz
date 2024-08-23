@@ -17,7 +17,7 @@ module.exports = {
 
 	CHOICES_ZOOM_SPEED: function () {
 		var p = []
-		for (var i = 0; i <= 127; ++i) {
+		for (var i = 0; i <= 127; i++) {
 			p.push({ id: i, label: 'Speed ' + i })
 		}
 		return p
