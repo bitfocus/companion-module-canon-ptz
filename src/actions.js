@@ -1868,17 +1868,33 @@ module.exports = {
 				name: 'Preset - Save',
 				options: [
 					{
+						type: 'checkbox',
+						label: 'Use variables as Preset Number',
+						id: 'use_variables',
+						default: false
+					},
+					{
 						type: 'dropdown',
 						label: 'Preset Number',
 						id: 'val',
 						default: c.CHOICES_PRESETS()[0].id,
 						choices: c.CHOICES_PRESETS(),
+						isVisible: (options) => !options['use_variables'],
+					},
+					{
+						type: 'textinput',
+						label: 'Preset Number',
+						id: 'val_v',
+						default: '$(canon-ptz:presetLastUsedNumber)',
+						tooltip: 'Use variable to select preset.',
+						useVariables: true,
+						isVisible: (options) => !!options['use_variables'],
 					},
 					{
 						type: 'textinput',
 						label: 'Preset Name',
 						id: 'name',
-						default: 'preset',
+						default: '$(canon-ptz:presetLastUsed)',
 						tooltip: 'Set the name of the preset.',
 						useVariables: true
 					},
@@ -1921,7 +1937,18 @@ module.exports = {
 				],
 				callback: async (action) => {
 					let presetName = await self.parseVariablesInString(action.options.name);
-					cmd = 'p=' + action.options.val + '&name=' + presetName;
+					let presetNumber = action.options.val;
+					
+					if (action.options.use_variables) {
+						presetNumber = await self.parseVariablesInString(action.options.val_v);
+					}
+
+					if (isNaN(presetNumber) || presetNumber < 1 || presetNumber > 100) {
+						self.log('info', `Preset must be a number between 1 and 100. Value entered: ${presetNumber}`);
+						return;
+					}
+
+					cmd = 'p=' + presetNumber + '&name=' + presetName;
 					if ((action.options.save_ptz) && (action.options.save_focus) && (action.options.save_exposure) && (action.options.save_whitebalance) && (action.options.save_is) && (action.options.save_cp)) {
 						cmd += '&all=enabled';
 					}
