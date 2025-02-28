@@ -4,7 +4,7 @@ const c = require('./choices.js')
 module.exports = {
 	initVariables: function () {
 		let self = this;
-		
+
 		let variables = []
 		let SERIES = {}
 
@@ -55,7 +55,7 @@ module.exports = {
 		}
 		if (SERIES.variables.imageStabilization == true) {
 			variables.push({ variableId: 'imageStabilization', name: 'Image Stabilization ON/OFF' })
-		}		
+		}
 		if (SERIES.variables.firmwareVersion == true) {
 			variables.push({ variableId: 'firmwareVersion', name: 'Firmware Version' })
 		}
@@ -168,7 +168,7 @@ module.exports = {
 			variables.push({ variableId: 'tracking_recoverycontrol_time', name: 'Auto Tracking - Recovery Control Time' })
 			variables.push({ variableId: 'tracking_restartTracking', name: 'Auto Tracking - Restart Tracking after Manual Operation On/Off' })
 			variables.push({ variableId: 'tracking_starttime', name: 'Auto Tracking - Tracking Start Time' })
-			
+
 			variables.push({ variableId: 'tracking_targetautoselect', name: 'Auto Tracking - Tracking Target Auto Select On/Off' })
 			variables.push({ variableId: 'tracking_silhouette', name: 'Auto Tracking - Silhouette On/Off' })
 			variables.push({ variableId: 'tracking_silhouette_x', name: 'Auto Tracking - Silhouette Position X' })
@@ -195,6 +195,14 @@ module.exports = {
 			variables.push({ variableId: 'tracking_current_x', name: 'Auto Tracking - Current X' })
 			variables.push({ variableId: 'tracking_current_y', name: 'Auto Tracking - Current Y' })
 			variables.push({ variableId: 'tracking_current_z', name: 'Auto Tracking - Current Z' })
+
+			//status of subject detection and target lock
+			variables.push({ variableId: 'tracking_target_lock', name: 'Auto Tracking - Target Lock' })
+			variables.push({ variableId: 'tracking_targets_detected', name: 'Auto Tracking - Targets Detected' })
+			variables.push({ variableId: 'tracking_target_x', name: 'Auto Tracking - Target X' })
+			variables.push({ variableId: 'tracking_target_y', name: 'Auto Tracking - Target Y' })
+			variables.push({ variableId: 'tracking_target_width', name: 'Auto Tracking - Target Width' })
+			variables.push({ variableId: 'tracking_target_height', name: 'Auto Tracking - Target Height' })
 		}
 
 		self.setVariableDefinitions(variables);
@@ -233,7 +241,7 @@ module.exports = {
 
 			variableValues.series = self.data.series;
 			variableValues.model = self.data.model;
-	
+
 			//System
 			variableValues.cameraName = self.data.cameraName;
 			variableValues.powerState = self.data.powerState;
@@ -243,17 +251,17 @@ module.exports = {
 			variableValues.imageStabilization = self.data.imageStabilization;
 			variableValues.firmwareVersion = self.data.firmwareVersion;
 			variableValues.protocolVersion = self.data.protocolVersion;
-	
+
 			//Zoom/Focus
 			variableValues.zoomSpeed = self.data.zoomSpeed;
 			variableValues.zoomValue = self.data.zoomValue;
 			variableValues.focusSpeed = c.CHOICES_FOCUS_SPEED[self.fSpeedIndex].label;
 			variableValues.focusValue = self.data.focusValue;
 			variableValues.autoFocusMode = self.data.autoFocusMode;
-	
+
 			//Pan/Tilt
 			variableValues.panTiltSpeedValue = c.CHOICES_PT_SPEED[self.ptSpeedIndex].label;
-	
+
 			//Exposure
 			if (SERIES.variables.exposureShootingMode == true) {
 				let index;
@@ -448,7 +456,7 @@ module.exports = {
 				}
 				variableValues.pedestalValue = pedestalValue;
 			}
-	
+
 			//White Balance
 			if (SERIES.variables.whitebalanceMode == true) {
 				let wbmode = SERIES.actions.whitebalanceMode.dropdown.find((WBMODE) => WBMODE.id == self.data.whitebalanceMode);
@@ -481,7 +489,7 @@ module.exports = {
 					variableValues.bGainValue = value;
 				}
 			}
-			
+
 			//Recall Preset
 			if (SERIES.variables.presetNames == true) {
 				for (let i = 1; i <= 100; i++) {
@@ -506,7 +514,7 @@ module.exports = {
 				}
 				self.presetRecallModeIndex = index;
 				variableValues.presetRecallMode = c.CHOICES_PRESETRECALLMODES[index].label;
-			}	
+			}
 
 			if (SERIES.variables.presetTimeValue == true) {
 				let value = c.CHOICES_PSTIME().find((PRESETTIMEVALUE) => PRESETTIMEVALUE.id == self.data.presetTimeValue).varLabel;
@@ -541,7 +549,7 @@ module.exports = {
 					variableValues.tracking_silhouette_size = self.data.trackingConfig.targetSizeLevel;
 
 					variableValues.tracking_pantilthaltarea = self.data.trackingConfig.trackingDisableAreaEnable == '1' ? 'On' : 'Off';
-	
+
 					//visibility upper/left/right/lower
 					if (self.data.trackingConfig.visibilityLimitUpper) {
 						let visibilityLimitUpper = self.data.trackingConfig.visibilityLimitUpper.split(':');
@@ -571,7 +579,7 @@ module.exports = {
 						variableValues.tracking_visibility_lower_z = visibilityLimitLower[2];
 					}
 				}
-				
+
 				if (self.data.trackingInformation) {
 					//current camera position
 					if (self.data.trackingInformation.camera_ptz_info !== undefined) {
@@ -580,12 +588,34 @@ module.exports = {
 						variableValues.tracking_current_y = currentPosition.tilt_pos.slice(0, -1);
 						variableValues.tracking_current_z = currentPosition.zoom_pos.slice(0, -1);
 					}
+
+					/* Target Detection and Lock */
+					if (self.data.trackingInformation.tracking_info) {
+						let trackingInfo = self.data.trackingInformation.tracking_info;
+						variableValues.tracking_target_lock = trackingInfo.track_result == '0' ? 'On' : 'Off'
+						if (trackingInfo.target_info !== undefined) {
+							if (trackingInfo.target_info.pos) {
+								variableValues.tracking_target_x = trackingInfo.target_info.pos.x;
+								variableValues.tracking_target_y = trackingInfo.target_info.pos.y;
+								variableValues.tracking_target_width = trackingInfo.target_info.pos.w;
+								variableValues.tracking_target_height = trackingInfo.target_info.pos.h;
+							}
+
+						}
+					}
+					/* Number of targets detected */
+					if (self.data.trackingInformation.detection_info) {
+						variableValues.tracking_targets_detected = self.data.trackingInformation.detection_info.detection_num;
+					}
 				}
+
+
+
 			}
 
 			self.setVariableValues(variableValues);
 		}
-		catch(error) {
+		catch (error) {
 			self.log('error', 'Error parsing Variables from PTZ: ' + String(error))
 			console.log(error);
 		}
