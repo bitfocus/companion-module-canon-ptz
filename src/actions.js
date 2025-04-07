@@ -1453,6 +1453,32 @@ module.exports = {
 				}
 			}
 
+			actions.gainMode = {
+				name: 'Exposure - Gain Mode (Auto/Manual Gain)',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Auto / Manual Gain',
+						id: 'bol',
+						default: 0,
+						choices: [
+							{ id: 'auto', label: 'Auto Gain' },
+							{ id: 'manual', label: 'Manual Gain' },
+						],
+					},
+				],
+				callback: async (action) => {
+					if (action.options.bol == 'auto') {
+						cmd = 'c.1.me.gain.mode=auto'
+					}
+					if (action.options.bol == 'manual') {
+						cmd = 'c.1.me.gain.mode=manual'
+					}
+					self.sendPTZ(self.ptzCommand, cmd)
+					self.getCameraInformation_Delayed();
+				}
+			}
+
 			actions.gainS = {
 				name: 'Exposure - Set Gain',
 				options: [
