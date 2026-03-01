@@ -611,7 +611,7 @@ module.exports = {
 				custom: true //allow user to send custom commands
 			}
 		},
-		{	
+		{
 			id: 'CR-X300',
 			variables: {
 				//system
@@ -705,7 +705,7 @@ module.exports = {
 				custom: true //allow user to send custom commands
 			}
 		},
-		{	
+		{
 			id: 'CR-X500',
 			variables: {
 				//system
@@ -799,7 +799,7 @@ module.exports = {
 				custom: true //allow user to send custom commands
 			}
 		},
-		{	
+		{
 			id: 'XF-605',
 			variables: {
 				//system
@@ -893,7 +893,7 @@ module.exports = {
 				custom: true //allow user to send custom commands
 			}
 		},
-		{	
+		{
 			id: 'Other',
 			variables: {
 				//system

@@ -63,7 +63,7 @@ module.exports = {
 				],
 				callback: function (feedback, bank) {
 					let opt = feedback.options
-					
+
 					if (self.data.powerState === opt.option) {
 						return true
 					}
@@ -606,7 +606,7 @@ module.exports = {
 						if (self.data.trackingConfig.trackingEnable == opt.option) {
 							return true
 						}
-					}					
+					}
 
 					return false
 				},
@@ -640,7 +640,7 @@ module.exports = {
 							return true
 						}
 					}
-					
+
 					return false
 				},
 			}
@@ -673,7 +673,7 @@ module.exports = {
 							return true
 						}
 					}
-					
+
 					return false
 				},
 			}
@@ -706,7 +706,7 @@ module.exports = {
 							return true
 						}
 					}
-					
+
 					return false
 				},
 			}
@@ -739,7 +739,7 @@ module.exports = {
 							return true
 						}
 					}
-					
+
 					return false
 				},
 			}
@@ -772,7 +772,7 @@ module.exports = {
 							return true
 						}
 					}
-					
+
 					return false
 				},
 			}
@@ -805,7 +805,7 @@ module.exports = {
 							return true
 						}
 					}
-					
+
 					return false
 				},
 			}
@@ -838,7 +838,7 @@ module.exports = {
 							return true
 						}
 					}
-					
+
 					return false
 				},
 			}
@@ -871,7 +871,7 @@ module.exports = {
 							return true
 						}
 					}
-					
+
 					return false
 				},
 			}
@@ -904,7 +904,7 @@ module.exports = {
 							return true
 						}
 					}
-					
+
 					return false
 				},
 			}
