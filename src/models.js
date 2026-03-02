@@ -617,6 +617,8 @@ module.exports = {
 				//system
 				powerState: true, //camera is on or off (idle or standby)
 				cameraName: true, //name of camera
+				tallyProgram: true, //camera tally program state is on/off
+				tallyPreview: true, //camera tally preview state is on/off
 				firmwareVersion: true, //firmware version
 				protocolVersion: true, //protocol version
 				//zoom/focus
