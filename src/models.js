@@ -621,6 +621,8 @@ module.exports = {
 				tallyPreview: true, //camera tally preview state is on/off
 				firmwareVersion: true, //firmware version
 				protocolVersion: true, //protocol version
+				washerState: true, //washer is on or off
+				wiperState: true, //wiper is on or off
 				//zoom/focus
 				zoomSpeed: true, //zoom speed value
 				zoomValue: true, //current zoom value
@@ -655,6 +657,8 @@ module.exports = {
 				powerState: true, //power is on or off
 				tallyProgram: true, //pgm tally is on or off
 				tallyPreview: true, //pvw tally is on or off
+				washerState: true, //washer is on or off
+				wiperState: true, //wiper is on or off
 				digitalZoom: true, //digital zoom is on or off
 				imageStabilization: true, //image stabilization is on or off
 				autoFocusMode: true, //focus mode is auto or manual
@@ -672,6 +676,8 @@ module.exports = {
 				tallyProgram: true, // Has Red Tally Light Control
 				tallyPreview: true, // Has Green Tally Light Control
 				cameraName: true, //Supports Custom Camera Name
+				washerState: true, // Has Washer Control
+				wiperState: true, // Has Wiper Control
 				digitalZoom: true, //Supports Digital Zoom
 				imageStabilization: true, //Supports Image Stabilization
 				panTilt: true, // Has Pan/Tilt Support

@@ -31,7 +31,7 @@ module.exports = {
 	stopPolling() {
 		let self = this;
 		//self.log('error', 'Stopping Polling due to Server error.');
-	
+
 		clearInterval(self.pollTimer);
 		delete self.pollTimer
 
@@ -154,6 +154,12 @@ module.exports = {
 					else {
 						self.data.tallyProgram = self.data.tallyState;
 					}
+					break;
+				case 'f.washer':
+					self.data.washerState = str[1];
+					break;
+				case 'f.wiper':
+					self.data.wiperState = str[1];
 					break;
 				case 'c.1.zoom.mode':
 					self.data.digitalZoom = str[1];

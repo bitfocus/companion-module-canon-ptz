@@ -284,6 +284,88 @@ module.exports = {
 			}
 		}
 
+		if (s.washerState == true) {
+			actions.washerOff = {
+				name: 'System - Washer Off',
+				options: [],
+				callback: async (action) => {
+					cmd = 'washer=off'
+					self.sendPTZ(self.ptzCommand, cmd)
+					self.data.washerState = 'off';
+					self.getCameraInformation_Delayed();
+				}
+			}
+
+			actions.washerOn = {
+				name: 'System - Washer On',
+				options: [],
+				callback: async (action) => {
+					cmd = 'washer=on'
+					self.sendPTZ(self.ptzCommand, cmd)
+					self.data.washerState = 'on';
+					self.getCameraInformation_Delayed();
+				}
+			}
+
+			actions.washerToggle = {
+				name: 'System - Washer Toggle',
+				options: [],
+				callback: async (action) => {
+					if (self.data.washerState === 'on') {
+						cmd = 'washer=off';
+						self.data.washerState = 'off';
+					}
+					else {
+						cmd = 'washer=on';
+						self.data.washerState = 'on';
+					}
+					self.sendPTZ(self.ptzCommand, cmd)
+					self.getCameraInformation_Delayed();
+				}
+			}
+		}
+
+		if (s.wiperState == true) {
+			actions.wiperOff = {
+				name: 'System - Wiper Off',
+				options: [],
+				callback: async (action) => {
+					cmd = 'wiper=off'
+					self.sendPTZ(self.ptzCommand, cmd)
+					self.data.wiperState = 'off';
+					self.getCameraInformation_Delayed();
+				}
+			}
+
+			actions.wiperOn = {
+				name: 'System - Wiper On',
+				options: [],
+				callback: async (action) => {
+					cmd = 'wiper=on'
+					self.sendPTZ(self.ptzCommand, cmd)
+					self.data.wiperState = 'on';
+					self.getCameraInformation_Delayed();
+				}
+			}
+
+			actions.wiperToggle = {
+				name: 'System - Wiper Toggle',
+				options: [],
+				callback: async (action) => {
+					if (self.data.wiperState === 'on') {
+						cmd = 'wiper=off';
+						self.data.wiperState = 'off';
+					}
+					else {
+						cmd = 'wiper=on';
+						self.data.wiperState = 'on';
+					}
+					self.sendPTZ(self.ptzCommand, cmd)
+					self.getCameraInformation_Delayed();
+				}
+			}
+		}
+
 		if (s.digitalZoom == true) {
 			actions.digitalZoom = {
 				name: 'Digital Zoom On/Off',

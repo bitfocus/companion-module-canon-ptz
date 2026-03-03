@@ -297,6 +297,220 @@ module.exports = {
 			}
 		}
 
+		if (s.washerState == true) {
+			presets.washerOff = {
+				category: 'System',
+				type: 'button',
+				name: 'Washer Off',
+				style: {
+					text: 'Washer\\nOFF',
+					size: '18',
+					color: '16777215',
+					bgcolor: combineRgb(0, 0, 0),
+				},
+				steps: [
+					{
+						down: [
+							{
+								actionId: 'washerOff',
+								options: {}
+							}
+						],
+						up: [],
+					},
+				],
+				feedbacks: [
+					{
+						feedbackId: 'washerState',
+						options: {
+							option: '0',
+						},
+						style: {
+							color: foregroundColor,
+							bgcolor: backgroundColorRed,
+						}
+					}
+				]
+			}
+
+			presets.washerOn = {
+				category: 'System',
+				type: 'button',
+				name: 'Washer On',
+				style: {
+					text: 'Washer\\nON',
+					size: '18',
+					color: '16777215',
+					bgcolor: combineRgb(0, 0, 0),
+				},
+				steps: [
+					{
+						down: [
+							{
+								actionId: 'washerOn',
+								options: {}
+							}
+						],
+						up: [],
+					},
+				],
+				feedbacks: [
+					{
+						feedbackId: 'washerState',
+						options: {
+							option: '1',
+						},
+						style: {
+							color: foregroundColor,
+							bgcolor: backgroundColorRed,
+						}
+					}
+				]
+			}
+
+			presets.washerToggle = {
+				category: 'System',
+				type: 'button',
+				name: 'Washer Toggle',
+				style: {
+					text: 'Washer\\nTOGGLE',
+					size: '18',
+					color: '16777215',
+					bgcolor: combineRgb(0, 0, 0),
+				},
+				steps: [
+					{
+						down: [
+							{
+								actionId: 'washerToggle',
+								options: {}
+							}
+						],
+						up: [],
+					},
+				],
+				feedbacks: [
+					{
+						feedbackId: 'washerState',
+						options: {
+							option: '1',
+						},
+						style: {
+							color: foregroundColor,
+							bgcolor: backgroundColorRed,
+						}
+					}
+				]
+			}
+		}
+
+		if (s.wiperState == true) {
+			presets.wiperOff = {
+				category: 'System',
+				type: 'button',
+				name: 'Wiper Off',
+				style: {
+					text: 'Wiper\\nOFF',
+					size: '18',
+					color: '16777215',
+					bgcolor: combineRgb(0, 0, 0),
+				},
+				steps: [
+					{
+						down: [
+							{
+								actionId: 'wiperOff',
+								options: {}
+							}
+						],
+						up: [],
+					},
+				],
+				feedbacks: [
+					{
+						feedbackId: 'wiperState',
+						options: {
+							option: '0',
+						},
+						style: {
+							color: foregroundColor,
+							bgcolor: backgroundColorRed,
+						}
+					}
+				]
+			}
+
+			presets.wiperOn = {
+				category: 'System',
+				type: 'button',
+				name: 'Wiper On',
+				style: {
+					text: 'Wiper\\nON',
+					size: '18',
+					color: '16777215',
+					bgcolor: combineRgb(0, 0, 0),
+				},
+				steps: [
+					{
+						down: [
+							{
+								actionId: 'wiperOn',
+								options: {}
+							}
+						],
+						up: [],
+					},
+				],
+				feedbacks: [
+					{
+						feedbackId: 'wiperState',
+						options: {
+							option: '1',
+						},
+						style: {
+							color: foregroundColor,
+							bgcolor: backgroundColorRed,
+						}
+					}
+				]
+			}
+
+			presets.wiperToggle = {
+				category: 'System',
+				type: 'button',
+				name: 'Wiper Toggle',
+				style: {
+					text: 'Wiper\\nTOGGLE',
+					size: '18',
+					color: '16777215',
+					bgcolor: combineRgb(0, 0, 0),
+				},
+				steps: [
+					{
+						down: [
+							{
+								actionId: 'wiperToggle',
+								options: {}
+							}
+						],
+						up: [],
+					},
+				],
+				feedbacks: [
+					{
+						feedbackId: 'wiperState',
+						options: {
+							option: '1',
+						},
+						style: {
+							color: foregroundColor,
+							bgcolor: backgroundColorRed,
+						}
+					}
+				]
+			}
+		}
+
 		if (s.digitalZoom == true) {
 			presets.digitalZoomOnOff = {
 				category: 'System',

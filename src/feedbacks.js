@@ -157,6 +157,90 @@ module.exports = {
 			}
 		}
 
+		if (SERIES.feedbacks.washerState == true) {
+			feedbacks.washerState = {
+				type: 'boolean',
+				name: 'System - Washer State',
+				description: 'Indicate if Washer is ON or OFF',
+				defaultStyle: {
+					color: foregroundColor,
+					bgcolor: backgroundColorRed,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Indicate in X State',
+						id: 'option',
+						default: '1',
+						choices: [
+							{ id: '0', label: 'OFF' },
+							{ id: '1', label: 'ON' },
+						],
+					},
+				],
+				callback: function (feedback, bank) {
+					let opt = feedback.options
+					switch (opt.option) {
+						case '0':
+							if (self.data.washerState === 'off') {
+								return true
+							}
+							break
+						case '1':
+							if (self.data.washerState === 'on') {
+								return true
+							}
+							break
+						default:
+							break
+					}
+					return false
+				}
+			}
+		}
+
+		if (SERIES.feedbacks.wiperState == true) {
+			feedbacks.wiperState = {
+				type: 'boolean',
+				name: 'System - Wiper State',
+				description: 'Indicate if Wiper is ON or OFF',
+				defaultStyle: {
+					color: foregroundColor,
+					bgcolor: backgroundColorRed,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Indicate in X State',
+						id: 'option',
+						default: '1',
+						choices: [
+							{ id: '0', label: 'OFF' },
+							{ id: '1', label: 'ON' },
+						],
+					},
+				],
+				callback: function (feedback, bank) {
+					let opt = feedback.options
+					switch (opt.option) {
+						case '0':
+							if (self.data.wiperState === 'off') {
+								return true
+							}
+							break
+						case '1':
+							if (self.data.wiperState === 'on') {
+								return true
+							}
+							break
+						default:
+							break
+					}
+					return false
+				}
+			}
+		}
+
 		if (SERIES.feedbacks.digitalZoom == true) {
 			feedbacks.digitalZoom = {
 				type: 'boolean',
