@@ -31,7 +31,7 @@ module.exports = {
 	stopPolling() {
 		let self = this;
 		//self.log('error', 'Stopping Polling due to Server error.');
-	
+
 		clearInterval(self.pollTimer);
 		delete self.pollTimer
 
@@ -45,14 +45,14 @@ module.exports = {
 		const connection = new API(self.config);
 
 		const cmd = 'info.cgi'
-	
+
 		const result = await connection.sendRequest(cmd);
 
 		//do something with data
 		try {
 			if (result && result.response && result.response.data) {
 				let data = result.response.data;
-				
+
 				try {
 					var str_raw = String(data)
 					var str = {}
@@ -65,7 +65,7 @@ module.exports = {
 						str = str_raw[i].trim() // remove new line, carriage return and so on.
 						str = str.split('=') // Split Commands and data
 						if ((str_raw[i].indexOf('p.') === -1) && (str_raw[i].indexOf('t.') === -1)) {
-							
+
 							if (self.config.verbose == true) {
 								self.log('debug', 'Received CMD: ' + String(str_raw[i]))
 							}
@@ -94,14 +94,14 @@ module.exports = {
 					}
 					self.updateStatus(InstanceStatus.ConnectionFailure)
 				}
-				
+
 				// Cleanup polling
 				if (self.config.continuePolling !== true) {
 					self.stopPolling()
 				}
-				
+
 				self.errorCount++;
-			}	
+			}
 		}
 		catch(error) {
 			if (self.config.verbose) {
@@ -119,7 +119,7 @@ module.exports = {
 		let self = this;
 
 		self.data.info.push(str);
-	
+
 		try {
 			// Store Values from Events
 			switch (str[0]) {
@@ -132,7 +132,7 @@ module.exports = {
 						self.initFeedbacks()
 						self.initVariables()
 						self.initPresets()
-	
+
 						self.checkVariables()
 						self.checkFeedbacks()
 					}
@@ -154,6 +154,12 @@ module.exports = {
 					else {
 						self.data.tallyProgram = self.data.tallyState;
 					}
+					break;
+				case 'f.washer':
+					self.data.washerState = str[1];
+					break;
+				case 'f.wiper':
+					self.data.wiperState = str[1];
 					break;
 				case 'c.1.zoom.mode':
 					self.data.digitalZoom = str[1];
@@ -365,7 +371,7 @@ module.exports = {
 				default:
 					break;
 			}
-			
+
 		}
 		catch(error) {
 			self.log('error', 'Error parsing response from PTZ: ' + String(error))

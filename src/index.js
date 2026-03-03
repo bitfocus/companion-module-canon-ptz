@@ -81,22 +81,24 @@ class canonptzInstance extends InstanceBase {
 			tallyState: '',
 			tallyProgram: '',
 			tallyPreview: '',
+			washerState: '',
+			wiperState: '',
 			digitalZoom: '',
 			imageStabilization: '',
 			firmwareVersion: '',
 			protocolVersion: '',
 			platformStatus: '',
-	
+
 			//Zoom/Focus
 			zoomSpeed: 8,
 			zoomValue: '', //unknown starting value (for XF605 etc)
 			focusSpeed: 1,
 			focusValue: 0,
 			autoFocusMode: '',
-	
+
 			//Pan/Tilt
 			panTiltSpeedValue: 625,
-	
+
 			//Exposure
 			exposureShootingMode: 'auto',
 			exposureShootingModeListString: '',
@@ -131,7 +133,7 @@ class canonptzInstance extends InstanceBase {
 			gainValue: 10,
 			ndfilterValue: '0',
 			pedestalValue: '',
-	
+
 			//White Balance
 			whitebalanceMode: 'auto',
 			whitebalanceModeListString: '',
@@ -141,7 +143,7 @@ class canonptzInstance extends InstanceBase {
 			kelvinList: null,
 			rGainValue: '0',
 			bGainValue: '0',
-	
+
 			//Recall Preset
 			presetLastUsed: 1,
 			presetRecallMode: 'normal',
@@ -151,12 +153,12 @@ class canonptzInstance extends InstanceBase {
 			trackingConfig: {},
 			trackingInformation: {},
 		}
-	
+
 		//preset names
 		for (let i = 1; i <= 100; i++) {
 			this.data['presetname' + i] = i;
 		}
-	
+
 		this.ptSpeed = 625
 		this.ptSpeedIndex = 4
 		this.zSpeed = 8
@@ -185,13 +187,13 @@ class canonptzInstance extends InstanceBase {
 		this.presetLastUsedIndex = 0
 		this.presetDriveTimeIndex = 0
 		this.presetDriveSpeedIndex = 0
-	
+
 		this.config.host = this.config.host || ''
 		this.config.httpPort = this.config.httpPort || 80
 		this.config.model = this.config.model || 'Auto'
 		this.config.debug = this.config.debug || false
 		this.config.interval = this.config.interval || 5000
-			
+
 		this.initActions()
 		this.initFeedbacks()
 		this.initVariables()

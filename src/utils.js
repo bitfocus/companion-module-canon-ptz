@@ -49,7 +49,7 @@ module.exports = {
 					position--;
 				}
 
-				if (loop) {					
+				if (loop) {
 					self.customTraceLoopInterval = setTimeout(self.runCustomTrace.bind(self), (presetObj.time + 100), loop, loopMode, repeatCount, position, direction);
 				}
 				else {

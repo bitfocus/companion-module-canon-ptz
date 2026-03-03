@@ -50,6 +50,12 @@ module.exports = {
 		if (SERIES.variables.tallyPreview == true) {
 			variables.push({ variableId: 'tallyPreview', name: 'Tally Preview ON/OFF' })
 		}
+		if (SERIES.variables.washerState == true) {
+			variables.push({ variableId: 'washerState', name: 'Washer State ON/OFF' })
+		}
+		if (SERIES.variables.wiperState == true) {
+			variables.push({ variableId: 'wiperState', name: 'Wiper State ON/OFF' })
+		}
 		if (SERIES.variables.digitalZoom == true) {
 			variables.push({ variableId: 'digitalZoom', name: 'Digital Zoom ON/OFF' })
 		}
@@ -247,6 +253,8 @@ module.exports = {
 			variableValues.powerState = self.data.powerState;
 			variableValues.tallyProgram = self.data.tallyProgram;
 			variableValues.tallyPreview = self.data.tallyPreview;
+			variableValues.washerState = self.data.washerState;
+			variableValues.wiperState = self.data.wiperState;
 			variableValues.digitalZoom = self.data.digitalZoom;
 			variableValues.imageStabilization = self.data.imageStabilization;
 			variableValues.firmwareVersion = self.data.firmwareVersion;

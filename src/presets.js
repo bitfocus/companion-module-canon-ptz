@@ -7,7 +7,7 @@ const ICONS = require('./icons.js')
 module.exports = {
 	initPresets: function () {
 		let self = this;
-		
+
 		let presets = {}
 		let SERIES = {}
 
@@ -285,6 +285,220 @@ module.exports = {
 					},
 					{
 						feedbackId: 'tallyProgram',
+						options: {
+							option: '1',
+						},
+						style: {
+							color: foregroundColor,
+							bgcolor: backgroundColorRed,
+						}
+					}
+				]
+			}
+		}
+
+		if (s.washerState == true) {
+			presets.washerOff = {
+				category: 'System',
+				type: 'button',
+				name: 'Washer Off',
+				style: {
+					text: 'Washer\\nOFF',
+					size: '18',
+					color: '16777215',
+					bgcolor: combineRgb(0, 0, 0),
+				},
+				steps: [
+					{
+						down: [
+							{
+								actionId: 'washerOff',
+								options: {}
+							}
+						],
+						up: [],
+					},
+				],
+				feedbacks: [
+					{
+						feedbackId: 'washerState',
+						options: {
+							option: '0',
+						},
+						style: {
+							color: foregroundColor,
+							bgcolor: backgroundColorRed,
+						}
+					}
+				]
+			}
+
+			presets.washerOn = {
+				category: 'System',
+				type: 'button',
+				name: 'Washer On',
+				style: {
+					text: 'Washer\\nON',
+					size: '18',
+					color: '16777215',
+					bgcolor: combineRgb(0, 0, 0),
+				},
+				steps: [
+					{
+						down: [
+							{
+								actionId: 'washerOn',
+								options: {}
+							}
+						],
+						up: [],
+					},
+				],
+				feedbacks: [
+					{
+						feedbackId: 'washerState',
+						options: {
+							option: '1',
+						},
+						style: {
+							color: foregroundColor,
+							bgcolor: backgroundColorRed,
+						}
+					}
+				]
+			}
+
+			presets.washerToggle = {
+				category: 'System',
+				type: 'button',
+				name: 'Washer Toggle',
+				style: {
+					text: 'Washer\\nTOGGLE',
+					size: '18',
+					color: '16777215',
+					bgcolor: combineRgb(0, 0, 0),
+				},
+				steps: [
+					{
+						down: [
+							{
+								actionId: 'washerToggle',
+								options: {}
+							}
+						],
+						up: [],
+					},
+				],
+				feedbacks: [
+					{
+						feedbackId: 'washerState',
+						options: {
+							option: '1',
+						},
+						style: {
+							color: foregroundColor,
+							bgcolor: backgroundColorRed,
+						}
+					}
+				]
+			}
+		}
+
+		if (s.wiperState == true) {
+			presets.wiperOff = {
+				category: 'System',
+				type: 'button',
+				name: 'Wiper Off',
+				style: {
+					text: 'Wiper\\nOFF',
+					size: '18',
+					color: '16777215',
+					bgcolor: combineRgb(0, 0, 0),
+				},
+				steps: [
+					{
+						down: [
+							{
+								actionId: 'wiperOff',
+								options: {}
+							}
+						],
+						up: [],
+					},
+				],
+				feedbacks: [
+					{
+						feedbackId: 'wiperState',
+						options: {
+							option: '0',
+						},
+						style: {
+							color: foregroundColor,
+							bgcolor: backgroundColorRed,
+						}
+					}
+				]
+			}
+
+			presets.wiperOn = {
+				category: 'System',
+				type: 'button',
+				name: 'Wiper On',
+				style: {
+					text: 'Wiper\\nON',
+					size: '18',
+					color: '16777215',
+					bgcolor: combineRgb(0, 0, 0),
+				},
+				steps: [
+					{
+						down: [
+							{
+								actionId: 'wiperOn',
+								options: {}
+							}
+						],
+						up: [],
+					},
+				],
+				feedbacks: [
+					{
+						feedbackId: 'wiperState',
+						options: {
+							option: '1',
+						},
+						style: {
+							color: foregroundColor,
+							bgcolor: backgroundColorRed,
+						}
+					}
+				]
+			}
+
+			presets.wiperToggle = {
+				category: 'System',
+				type: 'button',
+				name: 'Wiper Toggle',
+				style: {
+					text: 'Wiper\\nTOGGLE',
+					size: '18',
+					color: '16777215',
+					bgcolor: combineRgb(0, 0, 0),
+				},
+				steps: [
+					{
+						down: [
+							{
+								actionId: 'wiperToggle',
+								options: {}
+							}
+						],
+						up: [],
+					},
+				],
+				feedbacks: [
+					{
+						feedbackId: 'wiperState',
 						options: {
 							option: '1',
 						},
@@ -655,7 +869,6 @@ module.exports = {
 				type: 'button',
 				name: 'Home',
 				style: {
-					
 					text: 'HOME',
 					size: '18',
 					color: '16777215',
@@ -682,7 +895,6 @@ module.exports = {
 				type: 'button',
 				name: 'Speed Up',
 				style: {
-					
 					text: 'SPEED\\nUP\\n$(canon-ptz:panTiltSpeedValue)',
 					size: '14',
 					color: '16777215',
@@ -707,7 +919,6 @@ module.exports = {
 				type: 'button',
 				name: 'Speed Down',
 				style: {
-					
 					text: 'SPEED\\nDOWN\\n$(canon-ptz:panTiltSpeedValue)',
 					size: '14',
 					color: '16777215',
@@ -732,7 +943,6 @@ module.exports = {
 				type: 'button',
 				name: 'Speed Set High',
 				style: {
-					
 					text: 'SET\\nSPEED\\nHIGH',
 					size: '14',
 					color: '16777215',
@@ -759,7 +969,6 @@ module.exports = {
 				type: 'button',
 				name: 'Speed Set Mid',
 				style: {
-					
 					text: 'SET\\nSPEED\\nMID',
 					size: '14',
 					color: '16777215',
@@ -786,7 +995,6 @@ module.exports = {
 				type: 'button',
 				name: 'Speed Set Low',
 				style: {
-					
 					text: 'SET\\nSPEED\\nLOW',
 					size: '14',
 					color: '16777215',
@@ -819,7 +1027,6 @@ module.exports = {
 				type: 'button',
 				name: 'Zoom In',
 				style: {
-					
 					text: 'ZOOM\\nIN',
 					size: '18',
 					color: '16777215',
@@ -849,7 +1056,6 @@ module.exports = {
 				type: 'button',
 				name: 'Zoom Out',
 				style: {
-					
 					text: 'ZOOM\\nOUT',
 					size: '18',
 					color: '16777215',
@@ -881,7 +1087,6 @@ module.exports = {
 				type: 'button',
 				name: 'Zoom Speed Up',
 				style: {
-					
 					text: 'ZOOM\\nSPEED\\nUP\\n$(canon-ptz:zoomSpeed)',
 					size: '7',
 					color: '16777215',
@@ -906,7 +1111,6 @@ module.exports = {
 				type: 'button',
 				name: 'Zoom Speed Down',
 				style: {
-					
 					text: 'ZOOM\\nSPEED\\nDOWN\\n$(canon-ptz:zoomSpeed)',
 					size: '7',
 					color: '16777215',
@@ -931,7 +1135,6 @@ module.exports = {
 				type: 'button',
 				name: 'Zoom Speed High',
 				style: {
-					
 					text: 'ZOOM\\nSPEED\\nHIGH',
 					size: '14',
 					color: '16777215',
@@ -958,7 +1161,6 @@ module.exports = {
 				type: 'button',
 				name: 'Zoom Speed Mid',
 				style: {
-					
 					text: 'ZOOM\\nSPEED\\nMID',
 					size: '14',
 					color: '16777215',
@@ -985,7 +1187,6 @@ module.exports = {
 				type: 'button',
 				name: 'Zoom Speed Low',
 				style: {
-					
 					text: 'ZOOM\\nSPEED\\nLOW',
 					size: '14',
 					color: '16777215',
@@ -1014,7 +1215,6 @@ module.exports = {
 				type: 'button',
 				name: 'Focus Near',
 				style: {
-					
 					text: 'FOCUS\\nNEAR',
 					size: '18',
 					color: '16777215',
@@ -1044,7 +1244,6 @@ module.exports = {
 				type: 'button',
 				name: 'Focus Far',
 				style: {
-					
 					text: 'FOCUS\\nFAR',
 					size: '18',
 					color: '16777215',
@@ -1076,7 +1275,6 @@ module.exports = {
 				type: 'button',
 				name: 'Focus Speed Up',
 				style: {
-					
 					text: 'FOCUS\\nSPEED\\nUP\\n$(canon-ptz:focusSpeed)',
 					size: '7',
 					color: '16777215',
@@ -1101,7 +1299,6 @@ module.exports = {
 				type: 'button',
 				name: 'Focus Speed Down',
 				style: {
-					
 					text: 'FOCUS\\nSPEED\\nDOWN\\n$(canon-ptz:focusSpeed)',
 					size: '7',
 					color: '16777215',
@@ -1126,7 +1323,6 @@ module.exports = {
 				type: 'button',
 				name: 'Focus Speed High',
 				style: {
-					
 					text: 'FOCUS\\nSPEED\\nHIGH',
 					size: '14',
 					color: '16777215',
@@ -1153,7 +1349,6 @@ module.exports = {
 				type: 'button',
 				name: 'Focus Speed Mid',
 				style: {
-					
 					text: 'FOCUS\\nSPEED\\nMID',
 					size: '14',
 					color: '16777215',
@@ -1180,7 +1375,6 @@ module.exports = {
 				type: 'button',
 				name: 'Focus Speed Low',
 				style: {
-					
 					text: 'FOCUS\\nSPEED\\nLOW',
 					size: '14',
 					color: '16777215',
@@ -1207,7 +1401,6 @@ module.exports = {
 				type: 'button',
 				name: 'Focus Speed Toggle',
 				style: {
-					
 					text: 'FOCUS\\nSPEED\\nTOGGLE\\n$(canon-ptz:focusSpeed)',
 					size: '7',
 					color: '16777215',
@@ -1234,7 +1427,6 @@ module.exports = {
 				type: 'button',
 				name: 'Manual Focus',
 				style: {
-					
 					text: 'MANUAL\\nFOCUS',
 					size: '14',
 					color: '16777215',
@@ -1346,7 +1538,6 @@ module.exports = {
 				type: 'button',
 				name: 'One Shot Auto Focus',
 				style: {
-					
 					text: 'One Shot\\nAF',
 					size: '14',
 					color: '16777215',
@@ -1389,7 +1580,6 @@ module.exports = {
 					type: 'button',
 					name: 'Exposure Shooting: ' + s.exposureShootingMode.dropdown[x].label,
 					style: {
-						
 						text: s.exposureShootingMode.dropdown[x].label,
 						size: '18',
 						color: '16777215',
@@ -1430,7 +1620,6 @@ module.exports = {
 				type: 'button',
 				name: 'Toggle Exposure Mode',
 				style: {
-					
 					text: 'TOGGLE\\nEXPOSURE',
 					size: '14',
 					color: '16777215',
@@ -1456,7 +1645,6 @@ module.exports = {
 					type: 'button',
 					name: 'Exposure: ' + s.exposureMode.dropdown[x].label,
 					style: {
-						
 						text: s.exposureMode.dropdown[x].label,
 						size: '18',
 						color: '16777215',
@@ -1672,7 +1860,6 @@ module.exports = {
 				type: 'button',
 				name: 'Iris Up',
 				style: {
-					
 					text: 'IRIS\\nUP',
 					size: '18',
 					color: '16777215',
@@ -1697,7 +1884,6 @@ module.exports = {
 				type: 'button',
 				name: 'Iris Down',
 				style: {
-					
 					text: 'IRIS\\nDOWN',
 					size: '18',
 					color: '16777215',
@@ -1722,7 +1908,6 @@ module.exports = {
 				type: 'button',
 				name: 'Manual Iris',
 				style: {
-					
 					text: 'MANUAL\\nIRIS',
 					size: '14',
 					color: '16777215',
@@ -1760,7 +1945,6 @@ module.exports = {
 				type: 'button',
 				name: 'Auto Iris',
 				style: {
-					
 					text: 'AUTO\\nIRIS',
 					size: '14',
 					color: '16777215',
@@ -1798,7 +1982,6 @@ module.exports = {
 				type: 'button',
 				name: 'Toggle Iris Mode',
 				style: {
-					
 					text: 'TOGGLE\\nIRIS MODE',
 					size: '14',
 					color: '16777215',
@@ -1834,7 +2017,6 @@ module.exports = {
 				type: 'button',
 				name: 'Iris Value',
 				style: {
-					
 					text: '$(canon-ptz:irisValue)',
 					size: '14',
 					color: '16777215',
@@ -1851,7 +2033,6 @@ module.exports = {
 				type: 'button',
 				name: 'Gain Up',
 				style: {
-					
 					text: 'GAIN\\nUP',
 					size: '18',
 					color: '16777215',
@@ -1876,7 +2057,6 @@ module.exports = {
 				type: 'button',
 				name: 'Gain Down',
 				style: {
-					
 					text: 'GAIN\\nDOWN',
 					size: '18',
 					color: '16777215',
@@ -1901,7 +2081,6 @@ module.exports = {
 				type: 'button',
 				name: 'Toggle Gain Mode',
 				style: {
-					
 					text: 'TOGGLE\\nGAIN MODE',
 					size: '14',
 					color: '16777215',
@@ -1977,7 +2156,6 @@ module.exports = {
 				type: 'button',
 				name: 'ND Filter Down',
 				style: {
-					
 					text: 'ND Filter\\nDOWN',
 					size: '14',
 					color: '16777215',
@@ -2030,7 +2208,6 @@ module.exports = {
 				type: 'button',
 				name: 'ND Filter Value',
 				style: {
-					
 					text: '$(canon-ptz:ndfilterValue)',
 					size: '14',
 					color: '16777215',
@@ -2047,7 +2224,6 @@ module.exports = {
 				type: 'button',
 				name: 'Pedestal Up',
 				style: {
-					
 					text: 'Pedestal\\nUP',
 					size: '14',
 					color: '16777215',
@@ -2072,7 +2248,6 @@ module.exports = {
 				type: 'button',
 				name: 'Pedestal Down',
 				style: {
-					
 					text: 'Pedestal\\nDOWN',
 					size: '14',
 					color: '16777215',
@@ -2097,7 +2272,6 @@ module.exports = {
 				type: 'button',
 				name: 'Pedestal Value',
 				style: {
-					
 					text: '$(canon-ptz:pedestalValue)',
 					size: '14',
 					color: '16777215',
@@ -2118,7 +2292,6 @@ module.exports = {
 				type: 'button',
 				name: 'Toggle White Balance Mode',
 				style: {
-					
 					text: 'TOGGLE\\nWB:$(canon-ptz:whitebalanceMode)',
 					size: '14',
 					color: '16777215',
@@ -2143,7 +2316,6 @@ module.exports = {
 				type: 'button',
 				name: 'White Balance Calibration',
 				style: {
-					
 					text: 'WB CALIB A',
 					size: '14',
 					color: '16777215',
@@ -2170,7 +2342,6 @@ module.exports = {
 				type: 'button',
 				name: 'White Balance Calibration',
 				style: {
-					
 					text: 'WB CALIB B',
 					size: '14',
 					color: '16777215',
@@ -2197,7 +2368,6 @@ module.exports = {
 				type: 'button',
 				name: 'Current White Balance Mode',
 				style: {
-					
 					text: '$(canon-ptz:whitebalanceMode)',
 					size: '14',
 					color: '16777215',
@@ -2263,7 +2433,6 @@ module.exports = {
 				type: 'button',
 				name: 'Kelvin Up',
 				style: {
-					
 					text: 'KELVIN\\nUP',
 					size: '14',
 					color: '16777215',
@@ -2288,7 +2457,6 @@ module.exports = {
 				type: 'button',
 				name: 'Kelvin Down',
 				style: {
-					
 					text: 'KELVIN\\nDOWN',
 					size: '14',
 					color: '16777215',
@@ -2313,7 +2481,6 @@ module.exports = {
 				type: 'button',
 				name: 'Kelvin Value',
 				style: {
-					
 					text: '$(canon-ptz:kelvinValue)',
 					size: '14',
 					color: '16777215',
@@ -2330,7 +2497,6 @@ module.exports = {
 				type: 'button',
 				name: 'Red Gain Up',
 				style: {
-					
 					text: 'RED\\nGAIN\\nUP',
 					size: '14',
 					color: '16777215',
@@ -2355,7 +2521,6 @@ module.exports = {
 				type: 'button',
 				name: 'Red Gain Down',
 				style: {
-					
 					text: 'RED\\nGAIN\\nDOWN',
 					size: '14',
 					color: '16777215',
@@ -2380,7 +2545,6 @@ module.exports = {
 				type: 'button',
 				name: 'Red Gain Value',
 				style: {
-					
 					text: '$(canon-ptz:rGainValue)',
 					size: '14',
 					color: '16777215',
@@ -2397,7 +2561,6 @@ module.exports = {
 				type: 'button',
 				name: 'Blue Gain Up',
 				style: {
-					
 					text: 'BLUE\\nGAIN\\nUP',
 					size: '14',
 					color: '16777215',
@@ -2422,7 +2585,6 @@ module.exports = {
 				type: 'button',
 				name: 'Blue Gain Down',
 				style: {
-					
 					text: 'BLUE\\nGAIN\\nDOWN',
 					size: '14',
 					color: '16777215',
@@ -2447,7 +2609,6 @@ module.exports = {
 				type: 'button',
 				name: 'Blue Gain Value',
 				style: {
-					
 					text: '$(canon-ptz:bGainValue)',
 					size: '14',
 					color: '16777215',
@@ -2468,7 +2629,6 @@ module.exports = {
 				type: 'button',
 				name: 'Preset Recall Mode - Toggle',
 				style: {
-					
 					text: 'TOGGLE PSET MODE\\n:$(canon-ptz:presetRecallMode)',
 					size: '7',
 					color: '16777215',
@@ -2493,7 +2653,6 @@ module.exports = {
 				type: 'button',
 				name: 'Set Preset Recall Mode - Normal',
 				style: {
-					
 					text: 'PRESET\\nMODE NORMAL',
 					size: '14',
 					color: '16777215',
@@ -2533,7 +2692,6 @@ module.exports = {
 				type: 'button',
 				name: 'Set Preset Recall Mode - Time',
 				style: {
-					
 					text: 'PRESET\\nMODE\\nTIME',
 					size: '14',
 					color: '16777215',
@@ -2562,7 +2720,6 @@ module.exports = {
 				type: 'button',
 				name: 'Set Preset Recall Mode - Speed',
 				style: {
-					
 					text: 'PRESET\\nMODE\\nSPEED',
 					size: '14',
 					color: '16777215',
@@ -2591,7 +2748,6 @@ module.exports = {
 				type: 'button',
 				name: 'Preset Recall Mode Value',
 				style: {
-					
 					text: '$(canon-ptz:presetRecallMode)',
 					size: '14',
 					color: '16777215',
@@ -2608,7 +2764,6 @@ module.exports = {
 				type: 'button',
 				name: 'Recall Time Up',
 				style: {
-					
 					text: 'RECALL\\nTIME\\nUP',
 					size: '14',
 					color: '16777215',
@@ -2632,7 +2787,6 @@ module.exports = {
 				type: 'button',
 				name: 'Recall Time Down',
 				style: {
-					
 					text: 'RECALL\\nTIME\\nDOWN',
 					size: '14',
 					color: '16777215',
@@ -2656,7 +2810,6 @@ module.exports = {
 				type: 'button',
 				name: 'Recall Time Value',
 				style: {
-					
 					text: 'TIME:\\n$(canon-ptz:presetTimeValue)',
 					size: '14',
 					color: '16777215',
@@ -2673,7 +2826,6 @@ module.exports = {
 				type: 'button',
 				name: 'Recall Speed Up',
 				style: {
-					
 					text: 'RECALL\\nSPEED\\nUP',
 					size: '14',
 					color: '16777215',
@@ -2697,7 +2849,6 @@ module.exports = {
 				type: 'button',
 				name: 'Recall Speed Down',
 				style: {
-					
 					text: 'RECALL\\nSPEED\\nDOWN',
 					size: '14',
 					color: '16777215',
@@ -2721,7 +2872,6 @@ module.exports = {
 				type: 'button',
 				name: 'Recall Speed Value',
 				style: {
-					
 					text: 'SPEED:\\n$(canon-ptz:presetSpeedValue)',
 					size: '14',
 					color: '16777215',
@@ -2739,7 +2889,6 @@ module.exports = {
 					type: 'button',
 					name: 'Save Preset ' + save,
 					style: {
-						
 						text: 'SAVE\\nPSET\\n' + save,
 						size: '14',
 						color: '16777215',
@@ -2775,7 +2924,6 @@ module.exports = {
 					type: 'button',
 					name: 'Recall Preset ' + recall,
 					style: {
-						
 						text: 'Recall\\nPSET\\n' + recall,
 						size: '14',
 						color: '16777215',
@@ -2814,7 +2962,6 @@ module.exports = {
 				type: 'button',
 				name: 'Preset Last Used',
 				style: {
-					
 					text: '$(canon-ptz:presetLastUsed)',
 					size: '14',
 					color: '16777215',
@@ -2823,7 +2970,7 @@ module.exports = {
 				steps: [],
 				feedbacks: []
 			}
-		}		
+		}
 
 		self.setPresetDefinitions(presets);
 	}
