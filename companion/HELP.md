@@ -25,6 +25,12 @@ The actions are separated into the following categories:
 - Tally Off (PVW/PGM)
 - Tally On (PVW/PGM)
 - Tally Toggle
+- Washer Off
+- Washer On
+- Washer Toggle
+- Wiper Off
+- Wiper On
+- Wiper Toggle
 - Digital Zoom On/Off
 - Image Stabilization On/Off
 - Send Custom Command
@@ -118,6 +124,8 @@ A list of all the available Variables in this module sorted into the following c
 - Power State
 - Tally Program State
 - Tally Preview State
+- Washer State
+- Wiper State
 - Digital Zoom On/Off
 - Image Stabilization On/Off
 - Firmware Version
@@ -171,6 +179,8 @@ A list of all the available Feedbacks in this module sorted into the following c
 - Power State
 - Tally Program State
 - Tally Preview State
+- Washer State
+- Wiper State
 - Digital Zoom On/Off
 - Image Stabilization On/Off
 
