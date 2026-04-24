@@ -648,14 +648,14 @@ module.exports = {
 						label: 'Zoom Speed Setting',
 						id: 'speed',
 						default: 8,
-						choices: c.CHOICES_ZOOM_SPEED,
+						choices: c.CHOICES_ZOOM_SPEED(),
 					},
 				],
 				callback: async (action) => {
 					self.zSpeed = action.options.speed
 					var idx = -1
-					for (var i = 0; i < c.CHOICES_ZOOM_SPEED.length; ++i) {
-						if (c.CHOICES_ZOOM_SPEED[i].id == self.zSpeed) {
+					for (var i = 0; i < c.CHOICES_ZOOM_SPEED().length; ++i) {
+						if (c.CHOICES_ZOOM_SPEED()[i].id == self.zSpeed) {
 							idx = i
 							break
 						}
@@ -663,7 +663,7 @@ module.exports = {
 					if (idx > -1) {
 						self.zSpeedIndex = idx
 					}
-					self.zSpeed = c.CHOICES_ZOOM_SPEED[self.zSpeedIndex].id
+					self.zSpeed = c.CHOICES_ZOOM_SPEED()[self.zSpeedIndex].id
 					self.data.zoomSpeed = self.zSpeed;
 					self.getCameraInformation_Delayed();
 				}
@@ -678,7 +678,7 @@ module.exports = {
 					} else if (self.zSpeedIndex > 0) {
 						self.zSpeedIndex--
 					}
-					self.zSpeed = c.CHOICES_ZOOM_SPEED[self.zSpeedIndex].id
+					self.zSpeed = c.CHOICES_ZOOM_SPEED()[self.zSpeedIndex].id
 					self.data.zoomSpeed = self.zSpeed;
 					self.getCameraInformation_Delayed();
 				}
@@ -688,12 +688,12 @@ module.exports = {
 				name: 'Lens - Zoom Speed Down',
 				options: [],
 				callback: async (action) => {
-					if (self.zSpeedIndex == c.CHOICES_ZOOM_SPEED.length) {
-						self.zSpeedIndex = c.CHOICES_ZOOM_SPEED.length
-					} else if (self.zSpeedIndex < c.CHOICES_ZOOM_SPEED.length) {
+					if (self.zSpeedIndex == c.CHOICES_ZOOM_SPEED().length) {
+						self.zSpeedIndex = c.CHOICES_ZOOM_SPEED().length
+					} else if (self.zSpeedIndex < c.CHOICES_ZOOM_SPEED().length) {
 						self.zSpeedIndex++
 					}
-					self.zSpeed = c.CHOICES_ZOOM_SPEED[self.zSpeedIndex].id
+					self.zSpeed = c.CHOICES_ZOOM_SPEED()[self.zSpeedIndex].id
 					self.data.zoomSpeed = self.zSpeed;
 					self.getCameraInformation_Delayed();
 				}
@@ -1453,6 +1453,32 @@ module.exports = {
 				}
 			}
 
+			actions.gainMode = {
+				name: 'Exposure - Gain Mode (Auto/Manual Gain)',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Auto / Manual Gain',
+						id: 'bol',
+						default: 0,
+						choices: [
+							{ id: 'auto', label: 'Auto Gain' },
+							{ id: 'manual', label: 'Manual Gain' },
+						],
+					},
+				],
+				callback: async (action) => {
+					if (action.options.bol == 'auto') {
+						cmd = 'c.1.me.gain.mode=auto'
+					}
+					if (action.options.bol == 'manual') {
+						cmd = 'c.1.me.gain.mode=manual'
+					}
+					self.sendPTZ(self.ptzCommand, cmd)
+					self.getCameraInformation_Delayed();
+				}
+			}
+
 			actions.gainS = {
 				name: 'Exposure - Set Gain',
 				options: [
@@ -1868,17 +1894,33 @@ module.exports = {
 				name: 'Preset - Save',
 				options: [
 					{
+						type: 'checkbox',
+						label: 'Use variables as Preset Number',
+						id: 'use_variables',
+						default: false
+					},
+					{
 						type: 'dropdown',
 						label: 'Preset Number',
 						id: 'val',
 						default: c.CHOICES_PRESETS()[0].id,
 						choices: c.CHOICES_PRESETS(),
+						isVisible: (options) => !options['use_variables'],
+					},
+					{
+						type: 'textinput',
+						label: 'Preset Number',
+						id: 'val_v',
+						default: '$(canon-ptz:presetLastUsedNumber)',
+						tooltip: 'Use variable to select preset.',
+						useVariables: true,
+						isVisible: (options) => !!options['use_variables'],
 					},
 					{
 						type: 'textinput',
 						label: 'Preset Name',
 						id: 'name',
-						default: 'preset',
+						default: '$(canon-ptz:presetLastUsed)',
 						tooltip: 'Set the name of the preset.',
 						useVariables: true
 					},
@@ -1921,7 +1963,18 @@ module.exports = {
 				],
 				callback: async (action) => {
 					let presetName = await self.parseVariablesInString(action.options.name);
-					cmd = 'p=' + action.options.val + '&name=' + presetName;
+					let presetNumber = action.options.val;
+					
+					if (action.options.use_variables) {
+						presetNumber = await self.parseVariablesInString(action.options.val_v);
+					}
+
+					if (isNaN(presetNumber) || presetNumber < 1 || presetNumber > 100) {
+						self.log('info', `Preset must be a number between 1 and 100. Value entered: ${presetNumber}`);
+						return;
+					}
+
+					cmd = 'p=' + presetNumber + '&name=' + presetName;
 					if ((action.options.save_ptz) && (action.options.save_focus) && (action.options.save_exposure) && (action.options.save_whitebalance) && (action.options.save_is) && (action.options.save_cp)) {
 						cmd += '&all=enabled';
 					}
@@ -2082,6 +2135,162 @@ module.exports = {
 							cmd += '&p.ptzspeed=' + self.data.presetSpeedValue;
 							break;
 					}
+
+					self.data.presetLastUsed = val;
+
+					self.stopCustomTrace();
+					self.sendPTZ(self.ptzCommand, cmd);
+					self.checkVariables();
+					self.checkFeedbacks();
+				}
+			}
+
+			actions.recallMotionPset = {
+				name: 'Preset - Motion Between Two Presets',
+				options: [
+					{
+						type: 'textinput',
+						label: 'First Preset',
+						id: 'preset1',
+						default: 1,
+						useVariables: true,
+					},
+					{
+						type: 'textinput',
+						label: 'Second Preset',
+						id: 'preset2',
+						default: 2,
+						useVariables: true,
+					},
+					{
+						type: 'textinput',
+						label: 'Time (in seconds 2-60)',
+						id: 'time',
+						default: 10,
+						useVariables: true,
+					},
+					{
+						type: 'textinput',
+						label: 'Loops',
+						id: 'loops',
+						default: 1
+					}
+				],
+				callback: async (action) => {
+					let preset1 = parseInt(await self.parseVariablesInString(action.options.preset1));
+					let preset2 = parseInt(await self.parseVariablesInString(action.options.preset2));
+					//make sure its a number and is between 1 and 100
+					if (isNaN(preset1)) {
+						preset1 = 1;
+					}
+					else if (preset1 < 1) {
+						preset1 = 1;
+					}
+					else if (preset1 > 100) {
+						preset1 = 100;
+					}
+
+					// console.log(self.data.);
+
+					// this.setVariableValues({
+					// 	'custom:cam1_motion_preset': 1
+					// })
+
+					cmd = 'p=' + preset1;
+
+					cmd += '&p.ptzspeed=100';
+
+					self.stopCustomTrace();
+					console.log(`Set camera to preset ${preset1} now! ${cmd}`);
+					self.sendPTZ(self.ptzCommand, cmd);
+					self.checkVariables();
+					self.checkFeedbacks();
+					if (action.options.loops < 1) action.options.loops = 1;
+					if (action.options.loops > 100) action.options.loops = 100;
+
+					const time = action.options.time * 1000;
+
+					setTimeout(async () => {
+						loopPTZ(preset1, preset2, time, action.options.loops);
+					}, 1000);
+
+
+					function loopPTZ(preset1, preset2, time, count) {
+						console.log(`Looping PTZ from ${preset1} to ${preset2} for ${time}ms. ${count} loops left.`);
+						if (count <= 0) {
+							console.log("DONE!");
+							// this.setVariableValues({
+							// 	'custom:cam1_motion_preset': undefined
+							// })
+							return;
+						}
+
+
+						let cmd = 'p=' + preset2;
+						cmd += '&p.ptztime=' + time;
+						console.log(`Set camera to preset ${preset2} now! ${cmd}`);
+
+						self.stopCustomTrace();
+						// CHECK A GLOBAL VARIABLE TO SEE IF WE SHOULD STOP THE LOOP
+						// if(this.getVariableValue('custom:cam1_motion_preset') != 1) {
+						// 	console.log("DONE!");
+						// 	return;
+						// }
+						self.sendPTZ(self.ptzCommand, cmd);
+						self.checkVariables();
+						self.checkFeedbacks();
+
+						setTimeout(() => {
+							let cmd = 'p=' + preset1;
+							cmd += '&p.ptztime=' + time;
+							console.log(`Set camera to preset ${preset1} now! ${cmd}`);
+							// CHECK A GLOBAL VARIABLE TO SEE IF WE SHOULD STOP THE LOOP
+							// if(this.getVariableValue('cam1_motion_preset') != 1) {
+							// 	console.log("DONE!");
+							// 	return;
+							// }
+							self.stopCustomTrace();
+
+							self.sendPTZ(self.ptzCommand, cmd);
+							self.checkVariables();
+							self.checkFeedbacks();
+
+							// Call the function again to loop
+							setTimeout(() => loopPTZ(preset1, preset2, time, (count - 1)),time);
+							
+						}, time);
+					}
+
+				}
+			}
+
+			actions.recallPsetFast = {
+				name: 'Preset - Recall Fast (by number)',
+				options: [
+					{
+						type: 'textinput',
+						label: 'Preset Number',
+						id: 'val',
+						default: 1,
+						useVariables: true,
+						useExpressions: true
+					},
+				],
+				callback: async (action) => {
+					let val = parseInt(await self.parseVariablesInString(action.options.val));
+
+					//make sure its a number and is between 1 and 100
+					if (isNaN(val)) {
+						val = 1;
+					}
+					else if (val < 1) {
+						val = 1;
+					}
+					else if (val > 100) {
+						val = 100;
+					}
+
+					cmd = 'p=' + val + '&p.ptzspeed=100';
 
 					self.data.presetLastUsed = val;
 
@@ -3051,7 +3260,7 @@ module.exports = {
 					{
 						type: 'textinput',
 						id: 'trackingStartTime',
-						label: 'Tracking Start Time (1-10)',
+						label: 'Tracking Start Time (0-10)',
 						default: 5,
 						useVariables: true
 					}
@@ -3074,8 +3283,8 @@ module.exports = {
 					let base = 'update_config.cgi'
 					let trackingStartTime = parseInt(await self.parseVariablesInString(action.options.trackingStartTime));
 					//make sure it is a number and not nan
-					if (isNaN(trackingStartTime) || trackingStartTime < 1 || trackingStartTime > 10) {
-						self.log('error', 'Tracking Start Time must be a number from 1-10.')
+					if (isNaN(trackingStartTime) || trackingStartTime < 0 || trackingStartTime > 10) {
+						self.log('error', 'Tracking Start Time must be a number from 0-10.')
 						return;
 					}
 
@@ -3114,12 +3323,12 @@ module.exports = {
 					let trackingStartTime = parseInt(self.data.trackingConfig.trackingStartTime);
 					//make sure it is a number and not nan
 					if (isNaN(trackingStartTime)) {
-						trackingStartTime = 1;
+						trackingStartTime = 0;
 					}
 					else {
 						trackingStartTime--;
-						if (trackingStartTime < 1) {
-							trackingStartTime = 1;
+						if (trackingStartTime < 0) {
+							trackingStartTime = 0;
 						}
 					}
 

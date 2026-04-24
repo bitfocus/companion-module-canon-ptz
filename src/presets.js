@@ -943,7 +943,7 @@ module.exports = {
 							{
 								actionId: 'zSpeedS',
 								options: {
-									speed: 15
+									speed: 127
 								}
 							}
 						],
@@ -970,7 +970,7 @@ module.exports = {
 							{
 								actionId: 'zSpeedS',
 								options: {
-									speed: 8
+									speed: 63
 								}
 							}
 						],

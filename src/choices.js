@@ -15,24 +15,13 @@ module.exports = {
 		{ id: 10,    label: 'Speed 01 (Slow)' }
 	],
 
-	CHOICES_ZOOM_SPEED: [
-		{ id: 15, label: 'Speed 15 (Fast)' },
-		{ id: 14, label: 'Speed 14' },
-		{ id: 13, label: 'Speed 13' },
-		{ id: 12, label: 'Speed 12' },
-		{ id: 11, label: 'Speed 11' },
-		{ id: 10, label: 'Speed 10' },
-		{ id: 9,  label: 'Speed 09' },
-		{ id: 8,  label: 'Speed 08' },
-		{ id: 7,  label: 'Speed 07' },
-		{ id: 6,  label: 'Speed 06' },
-		{ id: 5,  label: 'Speed 05' },
-		{ id: 4,  label: 'Speed 04' },
-		{ id: 3,  label: 'Speed 03' },
-		{ id: 2,  label: 'Speed 02' },
-		{ id: 1,  label: 'Speed 01' },
-		{ id: 0,  label: 'Speed 00 (Slow)' }
-	],
+	CHOICES_ZOOM_SPEED: function () {
+		var p = []
+		for (var i = 0; i <= 127; i++) {
+			p.push({ id: i, label: 'Speed ' + i })
+		}
+		return p
+	},
 
 	CHOICES_FOCUS_SPEED: [
 		{ id: 2, label: 'High' },
