@@ -621,6 +621,7 @@ module.exports = {
 				cameraName: true, //name of camera
 				firmwareVersion: true, //firmware version
 				protocolVersion: true, //protocol version
+				macAddress: true, //MAC address
 				//zoom/focus
 				zoomSpeed: true, //zoom speed value
 				zoomValue: true, //current zoom value
