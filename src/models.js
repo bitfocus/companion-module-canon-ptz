@@ -452,6 +452,8 @@ module.exports = {
 				kelvinValue: true, //current kelvin value
 				rGainValue: true, //current r gain value
 				bGainValue: true, //current b gain value
+				//other
+				colorBars: true, //camera color bars state is on/off
 				//recall preset
 				presetNames: true, // preset stored names as variables
 				presetLastUsed: true, //preset last recalled
@@ -472,6 +474,7 @@ module.exports = {
 				autoIrisMode: true, //iris mode is auto or manual
 				autoGainMode: true, //gain mode is auto or manual
 				whitebalanceMode: true, //white balance mode
+				colorBars: true, //camera color bars is on or off
 				presetLastUsed: true, //preset last recalled
 				presetRecallMode: true //preset recall mode is normal, time, or speed
 			},
@@ -507,6 +510,7 @@ module.exports = {
 				rGain: {cmd: 'c.1.wb.shift.rgain=', dropdown: c.CHOICES_RGAIN_CRN() },
 				bGain: {cmd: 'c.1.wb.shift.bgain=', dropdown: c.CHOICES_BGAIN_CRN() },
 				wbPreset: true,
+				colorBars: true, //camera color bars state is on/off
 				presets: true, //save, recall, set preset recall mode
 				timePset: true, //set preset drive recall time
 				speedPset: true, //set preset drive recall speed

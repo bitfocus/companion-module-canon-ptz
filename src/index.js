@@ -143,6 +143,9 @@ class canonptzInstance extends InstanceBase {
 			rGainValue: '0',
 			bGainValue: '0',
 	
+			//Other
+			colorBars: '',
+
 			//Recall Preset
 			presetLastUsed: 1,
 			presetRecallMode: 'normal',
