@@ -2458,6 +2458,48 @@ module.exports = {
 			}
 		}
 
+		if (s.colorBars == true) {
+			presets.colorBarsOnOff = {
+				category: 'Other',
+				type: 'button',
+				name: 'Color Bars On/Off',
+				style: {
+					text: 'Color Bars\\nON/OFF',
+					size: '14',
+					color: '16777215',
+					bgcolor: combineRgb(0, 0, 0),
+				},
+				steps: [
+					{
+						down: [
+							{
+								actionId: 'colorBarsOn',
+								options: {}
+							}
+						],
+						up: [
+							{
+								actionId: 'colorBarsOff',
+								options: {}
+							}
+						],
+					},
+				],
+				feedbacks: [
+					{
+						feedbackId: 'colorBars',
+						options: {
+							option: '1',
+						},
+						style: {
+							color: foregroundColor,
+							bgcolor: backgroundColorRed,
+						}
+					}
+				]
+			}
+		}
+
 		// ###########################
 		// #### Load/Save Presets ####
 		// ###########################

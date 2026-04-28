@@ -85,18 +85,19 @@ class canonptzInstance extends InstanceBase {
 			imageStabilization: '',
 			firmwareVersion: '',
 			protocolVersion: '',
+			macAddress: '',
 			platformStatus: '',
-	
+
 			//Zoom/Focus
 			zoomSpeed: 8,
 			zoomValue: '', //unknown starting value (for XF605 etc)
 			focusSpeed: 1,
 			focusValue: 0,
 			autoFocusMode: '',
-	
+
 			//Pan/Tilt
 			panTiltSpeedValue: 625,
-	
+
 			//Exposure
 			exposureShootingMode: 'auto',
 			exposureShootingModeListString: '',
@@ -142,6 +143,9 @@ class canonptzInstance extends InstanceBase {
 			rGainValue: '0',
 			bGainValue: '0',
 	
+			//Other
+			colorBars: '',
+
 			//Recall Preset
 			presetLastUsed: 1,
 			presetRecallMode: 'normal',

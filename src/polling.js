@@ -48,6 +48,12 @@ module.exports = {
 	
 		const result = await connection.sendRequest(cmd);
 
+		self.processResult(result);
+	},
+
+	processResult(result) {
+		let self = this;
+
 		//do something with data
 		try {
 			if (result && result.response && result.response.data) {
@@ -119,7 +125,7 @@ module.exports = {
 		let self = this;
 
 		self.data.info.push(str);
-	
+
 		try {
 			// Store Values from Events
 			switch (str[0]) {
@@ -132,7 +138,7 @@ module.exports = {
 						self.initFeedbacks()
 						self.initVariables()
 						self.initPresets()
-	
+
 						self.checkVariables()
 						self.checkFeedbacks()
 					}
@@ -169,6 +175,9 @@ module.exports = {
 					break;
 				case 's.protocol':
 					self.data.protocolVersion = str[1];
+					break;
+				case 's.hardware.address':
+					self.data.macAddress = str[1];
 					break;
 				//Zoom/Focus
 				case 'c.1.focus.speed':
@@ -345,6 +354,9 @@ module.exports = {
 					break;
 				case 'c.1.platform.status':
 					self.data.platformStatus = str[1];
+					break;
+				case 'c.1.colorbar':
+					self.data.colorBars = str[1];
 					break;
 				case 'p':
 					self.data.presetLastUsed = parseInt(str[1]);
