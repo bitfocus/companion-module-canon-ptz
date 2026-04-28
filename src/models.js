@@ -30,6 +30,7 @@ module.exports = {
 				imageStabilization: true, //image stabilization is turned on/off
 				firmwareVersion: true, //firmware version
 				protocolVersion: true, //protocol version
+				macAddress: true, //MAC address
 				//zoom/focus
 				zoomSpeed: true, //zoom speed value
 				focusSpeed: true, //focus speed value
@@ -129,6 +130,7 @@ module.exports = {
 				imageStabilization: true, //image stabilization is turned on/off
 				firmwareVersion: true, //firmware version
 				protocolVersion: true, //protocol version
+				macAddress: true, //MAC address
 				//zoom/focus
 				zoomSpeed: true, //zoom speed value
 				focusSpeed: true, //focus speed value
@@ -228,6 +230,7 @@ module.exports = {
 				imageStabilization: true, //image stabilization is turned on/off
 				firmwareVersion: true, //firmware version
 				protocolVersion: true, //protocol version
+				macAddress: true, //MAC address
 				//zoom/focus
 				zoomSpeed: true, //zoom speed value
 				focusSpeed: true, //focus speed value
@@ -327,6 +330,7 @@ module.exports = {
 				imageStabilization: true, //image stabilization is turned on/off
 				firmwareVersion: true, //firmware version
 				protocolVersion: true, //protocol version
+				macAddress: true, //MAC address
 				//zoom/focus
 				zoomSpeed: true, //zoom speed value
 				focusSpeed: true, //focus speed value
@@ -426,6 +430,7 @@ module.exports = {
 				imageStabilization: true, //image stabilization is turned on/off
 				firmwareVersion: true, //firmware version
 				protocolVersion: true, //protocol version
+				macAddress: true, //MAC address
 				//zoom/focus
 				zoomSpeed: true, //zoom speed value
 				focusSpeed: true, //focus speed value
@@ -525,6 +530,7 @@ module.exports = {
 				imageStabilization: true, //image stabilization is turned on/off
 				firmwareVersion: true, //firmware version
 				protocolVersion: true, //protocol version
+				macAddress: true, //MAC address
 				//zoom/focus
 				zoomSpeed: true, //zoom speed value
 				focusSpeed: true, //focus speed value
@@ -619,6 +625,7 @@ module.exports = {
 				cameraName: true, //name of camera
 				firmwareVersion: true, //firmware version
 				protocolVersion: true, //protocol version
+				macAddress: true, //MAC address
 				//zoom/focus
 				zoomSpeed: true, //zoom speed value
 				zoomValue: true, //current zoom value
@@ -713,6 +720,7 @@ module.exports = {
 				cameraName: true, //name of camera
 				firmwareVersion: true, //firmware version
 				protocolVersion: true, //protocol version
+				macAddress: true, //MAC address
 				//zoom/focus
 				zoomSpeed: true, //zoom speed value
 				zoomValue: true, //current zoom value
@@ -807,6 +815,7 @@ module.exports = {
 				cameraName: true, //name of camera
 				firmwareVersion: true, //firmware version
 				protocolVersion: true, //protocol version
+				macAddress: true, //MAC address
 				//zoom/focus
 				zoomSpeed: true, //zoom speed value
 				zoomValue: true, //current zoom value
@@ -901,6 +910,7 @@ module.exports = {
 				cameraName: true, //name of camera
 				firmwareVersion: true, //firmware version
 				protocolVersion: true, //protocol version
+				macAddress: true, //MAC address
 				//zoom/focus
 				zoomSpeed: true, //zoom speed value
 				zoomValue: true, //current zoom value
