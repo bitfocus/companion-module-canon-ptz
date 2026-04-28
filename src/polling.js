@@ -48,6 +48,12 @@ module.exports = {
 	
 		const result = await connection.sendRequest(cmd);
 
+		self.processResult(result);
+	},
+
+	processResult(result) {
+		let self = this;
+
 		//do something with data
 		try {
 			if (result && result.response && result.response.data) {
