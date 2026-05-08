@@ -144,6 +144,7 @@ class canonptzInstance extends InstanceBase {
 			bGainValue: '0',
 
 			//Recall Preset
+			presetCount: 100,
 			presetLastUsed: 1,
 			presetRecallMode: 'normal',
 			presetTimeValue: 2000,
@@ -154,7 +155,7 @@ class canonptzInstance extends InstanceBase {
 		}
 
 		//preset names
-		for (let i = 1; i <= 100; i++) {
+		for (let i = 1; i <= this.data.presetCount; i++) {
 			this.data['presetname' + i] = i;
 		}
 

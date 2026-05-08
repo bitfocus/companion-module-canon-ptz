@@ -361,20 +361,21 @@ module.exports = {
 					self.checkFeedbacks()
 					break;
 				case 'p.count':
-					let presetCount = parseInt(str[1]) || 100;
-					for (let i = 1; i <= presetCount; i++) {
-						if (str[0] === ('p.' + i + '.name.utf8')) {
-							self.data['presetname' + i] = str[1];
-							if ((self.data['presetname' + i] === '') || (self.data['presetname' + i] === ('preset' + i))) {
-								self.data['presetname' + i] = i;
-							}
-						}
-					}
+					self.data.presetCount = parseInt(str[1]) || 100;
 					break;
 				default:
 					break;
 			}
-
+			if ((str[0].indexOf('p.') !== -1) && (str[0].indexOf('.name.utf8') !== -1)) {
+				for (let i = 1; i <= self.data.presetCount; i++) {
+					if (str[0] === ('p.' + i + '.name.utf8')) {
+						self.data['presetname' + i] = str[1];
+						if ((self.data['presetname' + i] === '') || (self.data['presetname' + i] === ('preset' + i))) {
+							self.data['presetname' + i] = i;
+						}
+					}
+				}
+			}
 		}
 		catch(error) {
 			self.log('error', 'Error parsing response from PTZ: ' + String(error))

@@ -2648,7 +2648,7 @@ module.exports = {
 					},
 					{
 						type: 'textinput',
-						label: 'Preset51',
+						label: 'Preset 5',
 						id: 'preset5',
 						default: '5',
 						useVariables: true,
