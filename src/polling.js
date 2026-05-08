@@ -45,14 +45,20 @@ module.exports = {
 		const connection = new API(self.config);
 
 		const cmd = 'info.cgi'
-	
+
 		const result = await connection.sendRequest(cmd);
+
+		self.processResult(result);
+	},
+
+	processResult(result) {
+		let self = this;
 
 		//do something with data
 		try {
 			if (result && result.response && result.response.data) {
 				let data = result.response.data;
-				
+
 				try {
 					var str_raw = String(data)
 					var str = {}
@@ -65,7 +71,7 @@ module.exports = {
 						str = str_raw[i].trim() // remove new line, carriage return and so on.
 						str = str.split('=') // Split Commands and data
 						if ((str_raw[i].indexOf('p.') === -1) && (str_raw[i].indexOf('t.') === -1)) {
-							
+
 							if (self.config.verbose == true) {
 								self.log('debug', 'Received CMD: ' + String(str_raw[i]))
 							}
@@ -94,14 +100,14 @@ module.exports = {
 					}
 					self.updateStatus(InstanceStatus.ConnectionFailure)
 				}
-				
+
 				// Cleanup polling
 				if (self.config.continuePolling !== true) {
 					self.stopPolling()
 				}
-				
+
 				self.errorCount++;
-			}	
+			}
 		}
 		catch(error) {
 			if (self.config.verbose) {
@@ -119,7 +125,7 @@ module.exports = {
 		let self = this;
 
 		self.data.info.push(str);
-	
+
 		try {
 			// Store Values from Events
 			switch (str[0]) {
@@ -132,7 +138,7 @@ module.exports = {
 						self.initFeedbacks()
 						self.initVariables()
 						self.initPresets()
-	
+
 						self.checkVariables()
 						self.checkFeedbacks()
 					}
@@ -169,6 +175,9 @@ module.exports = {
 					break;
 				case 's.protocol':
 					self.data.protocolVersion = str[1];
+					break;
+				case 's.hardware.address':
+					self.data.macAddress = str[1];
 					break;
 				//Zoom/Focus
 				case 'c.1.focus.speed':

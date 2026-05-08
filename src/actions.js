@@ -21,6 +21,8 @@ module.exports = {
 				}
 
 				const result = await connection.sendRequest(cmd)
+
+				self.processResult(result);
 			}
 		} catch (error) {
 			let errorText = String(error);
@@ -40,7 +42,7 @@ module.exports = {
 
 	initActions: function () {
 		let self = this;
-		
+
 		let actions = {}
 		let SERIES = {}
 		let cmd = ''
@@ -277,7 +279,7 @@ module.exports = {
 						cmd = 'tally=on&tally.mode=program';
 						self.data.tallyProgram = 'on';
 						self.data.tallyPreview = 'off';
-					}	
+					}
 					self.sendPTZ(self.ptzCommand, cmd)
 					self.getCameraInformation_Delayed();
 				}
@@ -757,7 +759,7 @@ module.exports = {
 					self.data.focusSpeed = self.fSpeed;
 
 					self.checkVariables();
-					
+
 					cmd = 'focus.speed=' + self.data.focusSpeed;
 					self.sendPTZ(self.ptzCommand, cmd);
 					self.getCameraInformation_Delayed();
@@ -818,7 +820,7 @@ module.exports = {
 					self.data.focusSpeed = self.fSpeed;
 
 					self.checkVariables();
-					
+
 					cmd = 'focus.speed=' + self.data.focusSpeed;
 					self.sendPTZ(self.ptzCommand, cmd);
 					self.getCameraInformation_Delayed();
@@ -902,7 +904,7 @@ module.exports = {
 				callback: async (action) => {
 					cmd = s.exposureShootingMode.cmd + action.options.val;
 					self.sendPTZ(self.ptzCommand, cmd);
-										
+
 					self.getCameraInformation_Delayed();
 				}
 			}
@@ -962,7 +964,7 @@ module.exports = {
 						self.data.exposureShootingMode = 'manual';
 						cmd = 'c.1.exp=' + self.data.exposureMode;
 						self.sendPTZ(self.ptzCommand, cmd);
-					}		
+					}
 					self.getCameraInformation_Delayed();
 				}
 			}
@@ -1248,7 +1250,7 @@ module.exports = {
 					}
 					self.irisValue = s.iris.dropdown[self.irisIndex].id
 					self.data.irisValue = self.irisValue;
-					
+
 					if (self.irisValue === 'auto') {
 						cmd = 'c.1.me.diaphragm.mode=auto'
 						self.sendPTZ(self.ptzCommand, cmd)
@@ -1291,7 +1293,7 @@ module.exports = {
 					}
 					self.irisValue = s.iris.dropdown[self.irisIndex].id
 					self.data.irisValue = self.irisValue;
-					
+
 					if (self.irisValue === 'auto') {
 						cmd = 'c.1.me.diaphragm.mode=auto'
 						self.sendPTZ(self.ptzCommand, cmd)
@@ -1964,7 +1966,7 @@ module.exports = {
 				callback: async (action) => {
 					let presetName = await self.parseVariablesInString(action.options.name);
 					let presetNumber = action.options.val;
-					
+
 					if (action.options.use_variables) {
 						presetNumber = await self.parseVariablesInString(action.options.val_v);
 					}
@@ -2018,7 +2020,7 @@ module.exports = {
 					}
 
 					self.stopCustomTrace();
-					
+
 					self.checkVariables();
 					self.checkFeedbacks();
 
@@ -2039,7 +2041,7 @@ module.exports = {
 					}
 
 					self.checkVariables();
-					self.checkFeedbacks();					
+					self.checkFeedbacks();
 				}
 			}
 
@@ -2055,7 +2057,7 @@ module.exports = {
 
 				actions.setMultiplePresetNames.options.push(optionObj);
 			}
-		
+
 			actions.recallPset = {
 				name: 'Preset - Recall',
 				options: [
@@ -2257,7 +2259,7 @@ module.exports = {
 
 							// Call the function again to loop
 							setTimeout(() => loopPTZ(preset1, preset2, time, (count - 1)),time);
-							
+
 						}, time);
 					}
 
@@ -2316,7 +2318,7 @@ module.exports = {
 					let val = parseInt(await self.parseVariablesInString(action.options.val));
 
 					cmd = `p=${val}&all=disabled`;
-					
+
 					self.checkVariables();
 					self.checkFeedbacks();
 
@@ -2391,7 +2393,7 @@ module.exports = {
 					self.stopCustomTrace();
 					self.checkVariables();
 					self.checkFeedbacks();
-				}				
+				}
 			}
 
 			actions.timePsetDown = {
@@ -2484,7 +2486,7 @@ module.exports = {
 					self.stopCustomTrace();
 					self.checkVariables();
 					self.checkFeedbacks();
-				}				
+				}
 			}
 
 			actions.speedPsetDown = {
@@ -2547,7 +2549,7 @@ module.exports = {
 					if (!isNaN(recallSpeed) && recallSpeed > 0 && recallSpeed <= 100) {
 						self.presetRecallSpeed = recallSpeed;
 						self.data.presetSpeedValue = recallSpeed;
-						
+
 						self.stopCustomTrace();
 						self.checkVariables();
 						self.checkFeedbacks();
@@ -2754,7 +2756,7 @@ module.exports = {
 					self.data.presetRecallMode = 'time';
 
 					self.stopCustomTrace();
-					
+
 					self.log('debug', 'Custom Trace Loop Started');
 					self.customTraceLoop = true;
 
@@ -2767,7 +2769,7 @@ module.exports = {
 						if (opt.loopmode == 'pendulum') {
 							direction = 'backward';
 						}
-					}					
+					}
 
 					delay = 0; //amount of time after action is pressed before starting trace
 
@@ -2776,7 +2778,7 @@ module.exports = {
 					if (opt.move_to_start_max) {
 						//go ahead and move to the start position without setting the drive time, then advance the position to the next preset in the array before beginning trace
 						self.sendPTZ(self.ptzCommand, 'p=' + self.customTracePresetArray[position].preset);
-						
+
 						delay = parseInt(await self.parseVariablesInString(opt.trace_delay)); //give it time to get there before starting trace
 						if (isNaN(delay)) {
 							delay = 2;
@@ -3005,7 +3007,7 @@ module.exports = {
 				],
 				learn: (action) => {
 					let sensitivity = self.data.trackingConfig.sensitivity;
-	
+
 					if (sensitivity) {
 
 						return {
@@ -3267,7 +3269,7 @@ module.exports = {
 				],
 				learn: (action) => {
 					let trackingStartTime = self.data.trackingConfig.trackingStartTime;
-	
+
 					if (trackingStartTime) {
 
 						return {
@@ -3468,7 +3470,7 @@ module.exports = {
 					let limitLeft = self.data.trackingConfig.visibilityLimitLeft;
 					let limitRight = self.data.trackingConfig.visibilityLimitRight;
 					let limitLower = self.data.trackingConfig.visibilityLimitLower;
-	
+
 					if (limitUpper && limitLeft && limitRight && limitLower) {
 						limitUpper = limitUpper.split(':');
 						limitLeft = limitLeft.split(':');
@@ -3519,7 +3521,7 @@ module.exports = {
 						self.log('error', 'All values must be numbers.')
 						return;
 					}
-					
+
 					let cmd = `visibilityLimitUpper=${upper_x}:${upper_y}:${upper_z}&visibilityLimitLeft=${left_x}:${left_y}:${left_z}&visibilityLimitRight=${right_x}:${right_y}:${right_z}&visibilityLimitLower=${lower_x}:${lower_y}:${lower_z}`
 					self.sendTrackingCommand(base, cmd);
 				}
@@ -3552,7 +3554,7 @@ module.exports = {
 				],
 				learn: (action) => {
 					let limit = self.data.trackingConfig.visibilityLimitUpper;
-	
+
 					if (limit) {
 						limit = limit.split(':');
 						return {
@@ -3578,7 +3580,7 @@ module.exports = {
 						self.log('error', 'All values must be numbers.')
 						return;
 					}
-					
+
 					let cmd = `visibilityLimitUpper=${x}:${y}:${z}`
 					self.sendTrackingCommand(base, cmd);
 				}
@@ -3611,7 +3613,7 @@ module.exports = {
 				],
 				learn: (action) => {
 					let limit = self.data.trackingConfig.visibilityLimitLeft;
-	
+
 					if (limit) {
 						limit = limit.split(':');
 						return {
@@ -3637,7 +3639,7 @@ module.exports = {
 						self.log('error', 'All values must be numbers.')
 						return;
 					}
-					
+
 					let cmd = `visibilityLimitLeft=${x}:${y}:${z}`
 					self.sendTrackingCommand(base, cmd);
 				}
@@ -3670,7 +3672,7 @@ module.exports = {
 				],
 				learn: (action) => {
 					let limit = self.data.trackingConfig.visibilityLimitRight;
-	
+
 					if (limit) {
 						limit = limit.split(':');
 						return {
@@ -3696,7 +3698,7 @@ module.exports = {
 						self.log('error', 'All values must be numbers.')
 						return;
 					}
-					
+
 					let cmd = `visibilityLimitRight=${x}:${y}:${z}`
 					self.sendTrackingCommand(base, cmd);
 				}
@@ -3729,7 +3731,7 @@ module.exports = {
 				],
 				learn: (action) => {
 					let limit = self.data.trackingConfig.visibilityLimitLower;
-	
+
 					if (limit) {
 						limit = limit.split(':');
 						return {
@@ -3755,7 +3757,7 @@ module.exports = {
 						self.log('error', 'All values must be numbers.')
 						return;
 					}
-					
+
 					let cmd = `visibilityLimitLower=${x}:${y}:${z}`
 					self.sendTrackingCommand(base, cmd);
 				}
@@ -3774,7 +3776,7 @@ module.exports = {
 						let x = limit[0];
 						let y = limit[1];
 						let z = limit[2];
-					
+
 						let cmd = `pan=${x}&tilt=${y}&zoom=${z}`
 						self.sendPTZ(self.ptzCommand, cmd);
 					}
@@ -3794,7 +3796,7 @@ module.exports = {
 						let x = limit[0];
 						let y = limit[1];
 						let z = limit[2];
-					
+
 						let cmd = `pan=${x}&tilt=${y}&zoom=${z}`
 						self.sendPTZ(self.ptzCommand, cmd);
 					}
@@ -3814,7 +3816,7 @@ module.exports = {
 						let x = limit[0];
 						let y = limit[1];
 						let z = limit[2];
-					
+
 						let cmd = `pan=${x}&tilt=${y}&zoom=${z}`
 						self.sendPTZ(self.ptzCommand, cmd);
 					}
@@ -3834,7 +3836,7 @@ module.exports = {
 						let x = limit[0];
 						let y = limit[1];
 						let z = limit[2];
-					
+
 						let cmd = `pan=${x}&tilt=${y}&zoom=${z}`
 						self.sendPTZ(self.ptzCommand, cmd);
 					}
@@ -3882,7 +3884,7 @@ module.exports = {
 				],
 				learn: (action) => {
 					let currentPosition = self.data.trackingInformation.camera_ptz_info;
-	
+
 					if (currentPosition) {
 						return {
 							...action.options,
@@ -4010,7 +4012,7 @@ module.exports = {
 				],
 				learn: (action) => {
 					let targetPosition = self.data.trackingConfig.targetPosition;
-	
+
 					if (targetPosition) {
 						targetPosition =  targetPosition.split(':');
 						return {
@@ -4054,7 +4056,7 @@ module.exports = {
 				],
 				learn: (action) => {
 					let targetSizeLevel = self.data.trackingConfig.targetSizeLevel;
-	
+
 					if (targetSizeLevel) {
 						return {
 							...action.options,
