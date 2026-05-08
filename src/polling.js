@@ -355,6 +355,9 @@ module.exports = {
 				case 'c.1.platform.status':
 					self.data.platformStatus = str[1];
 					break;
+				case 'c.1.colorbar':
+					self.data.colorBars = str[1];
+					break;
 				case 'p':
 					self.data.presetLastUsed = parseInt(str[1]);
 					self.checkVariables()

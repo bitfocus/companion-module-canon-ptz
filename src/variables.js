@@ -141,6 +141,11 @@ module.exports = {
 			variables.push({ variableId: 'bGainValue', name: 'Blue Gain Value' })
 		}
 
+		//Other
+		if (SERIES.variables.colorBars == true) {
+			variables.push({ variableId: 'colorBars', name: 'Color Bars ON/OFF' })
+		}
+
 		//Recall Preset
 		if (SERIES.variables.presetNames == true) {
 			for (let i = 1; i <= 100; i++) {
@@ -493,6 +498,8 @@ module.exports = {
 					variableValues.bGainValue = value;
 				}
 			}
+
+			variableValues.colorBars = self.data.colorBars;
 
 			//Recall Preset
 			if (SERIES.variables.presetNames == true) {

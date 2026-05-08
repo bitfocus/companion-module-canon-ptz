@@ -496,6 +496,48 @@ module.exports = {
 			}
 		}
 
+		if (SERIES.feedbacks.colorBars == true) {
+			feedbacks.colorBars = {
+				type: 'boolean',
+				name: 'Other - Color Bars State',
+				description: 'Indicate if Color Bars is ON or OFF',
+				defaultStyle: {
+					color: foregroundColor,
+					bgcolor: backgroundColorRed,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Indicate in X State',
+						id: 'option',
+						default: '1',
+						choices: [
+							{ id: '0', label: 'OFF' },
+							{ id: '1', label: 'ON' },
+						],
+					},
+				],
+				callback: function (feedback, bank) {
+					let opt = feedback.options
+					switch (opt.option) {
+						case '0':
+							if (self.data.colorBars === 'off') {
+								return true
+							}
+							break
+						case '1':
+							if (self.data.colorBars === 'on') {
+								return true
+							}
+							break
+						default:
+							break
+					}
+					return false
+				}
+			}
+		}
+
 		if (SERIES.feedbacks.presetLastUsed == true) {
 			feedbacks.lastUsedPset = {
 				type: 'boolean',

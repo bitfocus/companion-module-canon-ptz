@@ -142,6 +142,9 @@ class canonptzInstance extends InstanceBase {
 			kelvinList: null,
 			rGainValue: '0',
 			bGainValue: '0',
+	
+			//Other
+			colorBars: '',
 
 			//Recall Preset
 			presetCount: 100,

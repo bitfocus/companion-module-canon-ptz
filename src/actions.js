@@ -1888,6 +1888,54 @@ module.exports = {
 		}
 
 		// #########################
+		// ####  Other Actions  ####
+		// #########################
+
+		if (s.colorBars == true) {
+			actions.colorBarsOff = {
+				name: 'Other - Color Bars Off',
+				options: [],
+				callback: async (action) => {
+					cmd = 'c.1.colorbar=off'
+					self.sendPTZ(self.ptzCommand, cmd)
+					self.data.colorBars = 'off';
+					self.getCameraInformation_Delayed();
+				}
+			}
+
+			actions.colorBarsOn = {
+				name: 'Other - Color Bars On',
+				options: [],
+				callback: async (action) => {
+					cmd = 'c.1.colorbar=on'
+					self.sendPTZ(self.ptzCommand, cmd)
+					self.data.colorBars = 'on';
+					self.getCameraInformation_Delayed();
+				}
+			}
+
+			actions.colorBarsToggle = {
+				name: 'Other - Color Bars Toggle On/Off',
+				options: [],
+				callback: async (action) => {
+					let cmd = 'c.1.colorbar='
+					if (self.data.colorBars) {
+						if (self.data.colorBars == 'on') {
+							cmd += 'off'
+							self.data.colorBars = 'off';
+						}
+						else {
+							cmd += 'on'
+							self.data.colorBars = 'on';
+						}
+						self.sendPTZ(self.ptzCommand, cmd)
+						self.getCameraInformation_Delayed();
+					}
+				}
+			}
+		}
+
+		// #########################
 		// #### Presets Actions ####
 		// #########################
 
