@@ -21,6 +21,8 @@ module.exports = {
 				}
 
 				const result = await connection.sendRequest(cmd)
+
+				self.processResult(result);
 			}
 		} catch (error) {
 			let errorText = String(error);
