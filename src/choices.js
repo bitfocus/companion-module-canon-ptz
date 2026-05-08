@@ -388,7 +388,7 @@ module.exports = {
 		{ id: '1600',    label: 'ND 1/16' },
 		{ id: '6400',    label: 'ND 1/64' }
 	],
-	
+
 	CHOICES_NDFILTER_OTHER: [
 		{ id: '0',    label: 'Off' },
 		{ id: '400',    label: 'ND 1/4' },
@@ -568,7 +568,7 @@ module.exports = {
 		}
 		return p
 	},
-	
+
 	// ###############################
 	// #### Preset Speed Look Ups ####
 	// ###############################
@@ -578,7 +578,7 @@ module.exports = {
 		{ id: 'time', label: 'Time' },
 		{ id: 'speed', label: 'Speed' }
 	],
-	
+
 	CHOICES_PSTIME: function () {
 		var p = []
 		for (var i = 2; i <= 99; ++i) {

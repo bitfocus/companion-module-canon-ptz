@@ -611,12 +611,14 @@ module.exports = {
 				custom: true //allow user to send custom commands
 			}
 		},
-		{	
+		{
 			id: 'CR-X300',
 			variables: {
 				//system
 				powerState: true, //camera is on or off (idle or standby)
 				cameraName: true, //name of camera
+				tallyProgram: true, //camera tally program state is on/off
+				tallyPreview: true, //camera tally preview state is on/off
 				firmwareVersion: true, //firmware version
 				protocolVersion: true, //protocol version
 				//zoom/focus
@@ -705,7 +707,7 @@ module.exports = {
 				custom: true //allow user to send custom commands
 			}
 		},
-		{	
+		{
 			id: 'CR-X500',
 			variables: {
 				//system
@@ -799,7 +801,7 @@ module.exports = {
 				custom: true //allow user to send custom commands
 			}
 		},
-		{	
+		{
 			id: 'XF-605',
 			variables: {
 				//system
@@ -893,7 +895,7 @@ module.exports = {
 				custom: true //allow user to send custom commands
 			}
 		},
-		{	
+		{
 			id: 'Other',
 			variables: {
 				//system

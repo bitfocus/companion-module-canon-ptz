@@ -14,9 +14,9 @@ class API {
 
 	async sendRequest(cmd) {
 		let self = this;
-		
+
 		let requestUrl = self.baseUrl + cmd;
-		
+
 		try {
 			const response = await axios.get(requestUrl)
 			//self.updateStatus(InstanceStatus.Ok);
