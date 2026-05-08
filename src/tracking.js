@@ -20,11 +20,11 @@ module.exports = {
 			}, self.config.trackingInterval)
 		}
 	},
-	
+
 	stopTrackingPolling() {
 		let self = this;
 		//self.log('error', 'Stopping Polling due to Server error.');
-	
+
 		clearInterval(self.pollTrackingTimer);
 		delete self.pollTrackingTimer
 	},
@@ -35,11 +35,11 @@ module.exports = {
 		if (self.config.trackingAddonUrl == undefined || self.config.trackingAddonUrl == '') {
 			self.config.trackingAddonUrl = '/cgi-addon/Auto_Tracking_RA-AT001/app_ctrl/';
 		}
-		
+
 		let trackingBaseUrl = `http://${self.config.host}:${self.config.httpPort}${self.config.trackingAddonUrl}`;
 
 		let requestUrl = `${trackingBaseUrl}${cmd}`;
-		
+
 		try {
 			const response = await axios.get(requestUrl)
 			return {
@@ -53,7 +53,7 @@ module.exports = {
 			}
 		}
 	},
-	
+
 	async getCameraTrackingConfig() {
 		let self = this;
 
@@ -64,7 +64,7 @@ module.exports = {
 		try {
 			if (result && result.response && result.response.data) {
 				let data = result.response.data;
-				
+
 				try {
 					self.data.trackingConfig = data; //just store it all for now
 					self.updateStatus(InstanceStatus.Ok)
@@ -87,14 +87,14 @@ module.exports = {
 					}
 					//self.updateStatus(InstanceStatus.ConnectionFailure)
 				}
-				
+
 				// Cleanup polling
 				if (self.config.continuePolling !== true) {
 					self.stopTrackingPolling()
 				}
-				
+
 				self.errorTrackingCount++;
-			}	
+			}
 		}
 		catch(error) {
 			if (self.config.verbose) {
@@ -118,7 +118,7 @@ module.exports = {
 		try {
 			if (result && result.response && result.response.data) {
 				let data = result.response.data;
-				
+
 				try {
 					self.data.trackingInformation = data;
 					//do stuff with the info data here
@@ -143,14 +143,14 @@ module.exports = {
 					}
 					//self.updateStatus(InstanceStatus.ConnectionFailure)
 				}
-				
+
 				// Cleanup polling
 				if (self.config.continuePolling !== true) {
 					self.stopTrackingPolling()
 				}
-				
+
 				self.errorTrackingCount++;
-			}	
+			}
 		}
 		catch(error) {
 			if (self.config.verbose) {
@@ -175,7 +175,7 @@ module.exports = {
 		try {
 			if (result && result.response && result.response.data) {
 				let data = result.response.data;
-				
+
 				try {
 					let str_raw = String(data)
 					//don't particularly care about the response here I guess
@@ -194,14 +194,14 @@ module.exports = {
 					}
 					//self.updateStatus(InstanceStatus.ConnectionFailure)
 				}
-				
+
 				// Cleanup polling
 				if (self.config.continuePolling !== true) {
 					self.stopTrackingPolling()
 				}
-				
+
 				self.errorTrackingCount++;
-			}	
+			}
 		}
 		catch(error) {
 			if (self.config.verbose) {

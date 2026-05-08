@@ -30,6 +30,7 @@ module.exports = {
 				imageStabilization: true, //image stabilization is turned on/off
 				firmwareVersion: true, //firmware version
 				protocolVersion: true, //protocol version
+				macAddress: true, //MAC address
 				//zoom/focus
 				zoomSpeed: true, //zoom speed value
 				focusSpeed: true, //focus speed value
@@ -229,6 +230,7 @@ module.exports = {
 				imageStabilization: true, //image stabilization is turned on/off
 				firmwareVersion: true, //firmware version
 				protocolVersion: true, //protocol version
+				macAddress: true, //MAC address
 				//zoom/focus
 				zoomSpeed: true, //zoom speed value
 				focusSpeed: true, //focus speed value
@@ -328,6 +330,7 @@ module.exports = {
 				imageStabilization: true, //image stabilization is turned on/off
 				firmwareVersion: true, //firmware version
 				protocolVersion: true, //protocol version
+				macAddress: true, //MAC address
 				//zoom/focus
 				zoomSpeed: true, //zoom speed value
 				focusSpeed: true, //focus speed value
@@ -531,6 +534,7 @@ module.exports = {
 				imageStabilization: true, //image stabilization is turned on/off
 				firmwareVersion: true, //firmware version
 				protocolVersion: true, //protocol version
+				macAddress: true, //MAC address
 				//zoom/focus
 				zoomSpeed: true, //zoom speed value
 				focusSpeed: true, //focus speed value
@@ -617,14 +621,17 @@ module.exports = {
 				custom: true //allow user to send custom commands
 			}
 		},
-		{	
+		{
 			id: 'CR-X300',
 			variables: {
 				//system
 				powerState: true, //camera is on or off (idle or standby)
 				cameraName: true, //name of camera
+				tallyProgram: true, //camera tally program state is on/off
+				tallyPreview: true, //camera tally preview state is on/off
 				firmwareVersion: true, //firmware version
 				protocolVersion: true, //protocol version
+				macAddress: true, //MAC address
 				//zoom/focus
 				zoomSpeed: true, //zoom speed value
 				zoomValue: true, //current zoom value
@@ -711,7 +718,7 @@ module.exports = {
 				custom: true //allow user to send custom commands
 			}
 		},
-		{	
+		{
 			id: 'CR-X500',
 			variables: {
 				//system
@@ -719,6 +726,7 @@ module.exports = {
 				cameraName: true, //name of camera
 				firmwareVersion: true, //firmware version
 				protocolVersion: true, //protocol version
+				macAddress: true, //MAC address
 				//zoom/focus
 				zoomSpeed: true, //zoom speed value
 				zoomValue: true, //current zoom value
@@ -805,7 +813,7 @@ module.exports = {
 				custom: true //allow user to send custom commands
 			}
 		},
-		{	
+		{
 			id: 'XF-605',
 			variables: {
 				//system
@@ -813,6 +821,7 @@ module.exports = {
 				cameraName: true, //name of camera
 				firmwareVersion: true, //firmware version
 				protocolVersion: true, //protocol version
+				macAddress: true, //MAC address
 				//zoom/focus
 				zoomSpeed: true, //zoom speed value
 				zoomValue: true, //current zoom value
@@ -899,7 +908,7 @@ module.exports = {
 				custom: true //allow user to send custom commands
 			}
 		},
-		{	
+		{
 			id: 'Other',
 			variables: {
 				//system
@@ -907,6 +916,7 @@ module.exports = {
 				cameraName: true, //name of camera
 				firmwareVersion: true, //firmware version
 				protocolVersion: true, //protocol version
+				macAddress: true, //MAC address
 				//zoom/focus
 				zoomSpeed: true, //zoom speed value
 				zoomValue: true, //current zoom value
