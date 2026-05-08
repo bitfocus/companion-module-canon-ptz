@@ -170,6 +170,9 @@ module.exports = {
 				case 's.protocol':
 					self.data.protocolVersion = str[1];
 					break;
+				case 's.hardware.address':
+					self.data.macAddress = str[1];
+					break;
 				//Zoom/Focus
 				case 'c.1.focus.speed':
 					self.data.focusSpeed = str[1];

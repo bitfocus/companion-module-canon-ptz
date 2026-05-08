@@ -85,6 +85,7 @@ class canonptzInstance extends InstanceBase {
 			imageStabilization: '',
 			firmwareVersion: '',
 			protocolVersion: '',
+			macAddress: '',
 			platformStatus: '',
 
 			//Zoom/Focus

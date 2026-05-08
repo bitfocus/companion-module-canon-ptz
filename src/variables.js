@@ -62,6 +62,9 @@ module.exports = {
 		if (SERIES.variables.protocolVersion == true) {
 			variables.push({ variableId: 'protocolVersion', name: 'Protocol Version' })
 		}
+		if (SERIES.variables.macAddress == true) {
+			variables.push({ variableId: 'macAddress', name: 'MAC Address' })
+		}
 
 		//Zoom/Focus
 		if (SERIES.variables.zoomSpeed == true) {
@@ -251,6 +254,7 @@ module.exports = {
 			variableValues.imageStabilization = self.data.imageStabilization;
 			variableValues.firmwareVersion = self.data.firmwareVersion;
 			variableValues.protocolVersion = self.data.protocolVersion;
+			variableValues.macAddress = self.data.macAddress;
 
 			//Zoom/Focus
 			variableValues.zoomSpeed = self.data.zoomSpeed;
