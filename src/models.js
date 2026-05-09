@@ -34,6 +34,7 @@ module.exports = {
 				macAddress: true, //MAC address
 				//zoom/focus
 				zoomSpeed: true, //zoom speed value
+				zoomValue: true, //current zoom value
 				focusSpeed: true, //focus speed value
 				focusValue: true, //focus length value
 				autoFocusMode: true, //focus mode auto/manual
@@ -137,6 +138,7 @@ module.exports = {
 				macAddress: true, //MAC address
 				//zoom/focus
 				zoomSpeed: true, //zoom speed value
+				zoomValue: true, //current zoom value
 				focusSpeed: true, //focus speed value
 				focusValue: true, //focus length value
 				autoFocusMode: true, //focus mode auto/manual
@@ -440,6 +442,7 @@ module.exports = {
 				macAddress: true, //MAC address
 				//zoom/focus
 				zoomSpeed: true, //zoom speed value
+				zoomValue: true, //current zoom value
 				focusSpeed: true, //focus speed value
 				focusValue: true, //focus length value
 				autoFocusMode: true, //focus mode auto/manual
@@ -547,6 +550,7 @@ module.exports = {
 				macAddress: true, //MAC address
 				//zoom/focus
 				zoomSpeed: true, //zoom speed value
+				zoomValue: true, //current zoom value
 				focusSpeed: true, //focus speed value
 				focusValue: true, //focus length value
 				autoFocusMode: true, //focus mode auto/manual
