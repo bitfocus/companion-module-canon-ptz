@@ -53,6 +53,9 @@ module.exports = {
 		if (SERIES.variables.digitalZoom == true) {
 			variables.push({ variableId: 'digitalZoom', name: 'Digital Zoom ON/OFF' })
 		}
+		if (SERIES.variables.digitalMagnificationValue == true) {
+			variables.push({ variableId: 'digitalMagnificationValue', name: 'Digital Magnification Value' })
+		}
 		if (SERIES.variables.imageStabilization == true) {
 			variables.push({ variableId: 'imageStabilization', name: 'Image Stabilization ON/OFF' })
 		}
@@ -256,6 +259,7 @@ module.exports = {
 			variableValues.tallyProgram = self.data.tallyProgram;
 			variableValues.tallyPreview = self.data.tallyPreview;
 			variableValues.digitalZoom = self.data.digitalZoom;
+			variableValues.digitalMagnificationValue = self.data.digitalMagnificationValue;
 			variableValues.imageStabilization = self.data.imageStabilization;
 			variableValues.firmwareVersion = self.data.firmwareVersion;
 			variableValues.protocolVersion = self.data.protocolVersion;

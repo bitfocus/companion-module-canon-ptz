@@ -31,7 +31,7 @@ module.exports = {
 	stopPolling() {
 		let self = this;
 		//self.log('error', 'Stopping Polling due to Server error.');
-	
+
 		clearInterval(self.pollTimer);
 		delete self.pollTimer
 
@@ -163,6 +163,9 @@ module.exports = {
 					break;
 				case 'c.1.zoom.mode':
 					self.data.digitalZoom = str[1];
+					break;
+				case 'c.1.zoom.mag':
+					self.data.digitalMagnificationValue = str[1];
 					break;
 				case 'c.1.zoom':
 					self.data.zoomValue = str[1];

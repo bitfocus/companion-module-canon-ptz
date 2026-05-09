@@ -82,6 +82,7 @@ class canonptzInstance extends InstanceBase {
 			tallyProgram: '',
 			tallyPreview: '',
 			digitalZoom: '',
+			digitalMagnificationValue: '',
 			imageStabilization: '',
 			firmwareVersion: '',
 			protocolVersion: '',
