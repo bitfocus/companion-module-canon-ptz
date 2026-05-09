@@ -16,10 +16,10 @@ module.exports = {
 		clearInterval(self.pollTimerOnlineStatus); //this one just runs every 5 minutes to see if the camera has come back online after being unplugged without having to restart the module instance
 
 		// Setup polling if enabled
-		if (self.pollTimer === undefined && self.config.poll_interval > 0) {
+		if (self.pollTimer === undefined && self.config.interval > 0) {
 			self.pollTimer = setInterval(() => {
 				self.getCameraInformation.bind(self)()
-			}, self.config.poll_interval)
+			}, self.config.interval)
 		}
 
 		// Setup online status polling
