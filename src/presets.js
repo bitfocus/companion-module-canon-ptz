@@ -343,7 +343,7 @@ module.exports = {
 			}
 		}
 
-		if (s.digitalMagnification.cmd == true) {
+		if (s.digitalMagnification.cmd) {
 			presets.digitalMagnificationOnOff = {
 				category: 'System',
 				type: 'button',
@@ -394,7 +394,7 @@ module.exports = {
 					type: 'button',
 					name: 'Digital Magnification: ' + s.digitalMagnification.dropdown[x].label,
 					style: {
-						text: s.digitalMagnification.dropdown[x].label,
+						text: 'DMAG\n' + s.digitalMagnification.dropdown[x].label,
 						size: '18',
 						color: '16777215',
 						bgcolor: combineRgb(0, 0, 0)
