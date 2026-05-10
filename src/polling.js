@@ -92,8 +92,7 @@ module.exports = {
 					}
 					self.updateStatus(InstanceStatus.Error)
 				}
-			}
-			else {
+			} else {
 				if (!self.errorCount) {
 					if (self.config.verbose) {
 						self.log('error', `Error Getting Data: No response received from server. Is the Camera Online?`);
