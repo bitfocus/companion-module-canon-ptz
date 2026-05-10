@@ -87,7 +87,7 @@ module.exports = {
 				tallyPreview: true, // Has Green Tally Light Control
 				cameraName: true, //Supports Custom Camera Name
 				digitalZoom: true, //Supports Digital Zoom
-				digitalMagnification: true, //digital mag is available
+				digitalMagnification: { cmd: 'c.1.zoom.mag=', dropdown: c.CHOICES_DIGITALMAGNIFICATION_CRN() },
 				imageStabilization: true, //Supports Image Stabilization
 				panTilt: true,
 				ptSpeed: true,
@@ -191,7 +191,7 @@ module.exports = {
 				tallyPreview: true, // Has Green Tally Light Control
 				cameraName: true, //Supports Custom Camera Name
 				digitalZoom: true, //Supports Digital Zoom
-				digitalMagnification: true, //digital mag is available
+				digitalMagnification: { cmd: 'c.1.zoom.mag=', dropdown: c.CHOICES_DIGITALMAGNIFICATION_CRN() },
 				imageStabilization: true, //Supports Image Stabilization
 				panTilt: true,
 				ptSpeed: true,
@@ -498,7 +498,7 @@ module.exports = {
 				tallyPreview: true, // Has Green Tally Light Control
 				cameraName: true, //Supports Custom Camera Name
 				digitalZoom: true, //Supports Digital Zoom
-				digitalMagnification: true, //digital mag is available
+				digitalMagnification: { cmd: 'c.1.zoom.mag=', dropdown: c.CHOICES_DIGITALMAGNIFICATION_CRN() },
 				imageStabilization: true, //Supports Image Stabilization
 				panTilt: true,
 				ptSpeed: true,
@@ -603,7 +603,7 @@ module.exports = {
 				tallyPreview: true, // Has Green Tally Light Control
 				cameraName: true, //Supports Custom Camera Name
 				digitalZoom: true, //Supports Digital Zoom
-				digitalMagnification: true, //digital mag is available
+				digitalMagnification: { cmd: 'c.1.zoom.mag=', dropdown: c.CHOICES_DIGITALMAGNIFICATION_CRN() },
 				imageStabilization: true, //Supports Image Stabilization
 				panTilt: true,
 				ptSpeed: true,
@@ -703,7 +703,7 @@ module.exports = {
 				tallyPreview: true, // Has Green Tally Light Control
 				cameraName: true, //Supports Custom Camera Name
 				digitalZoom: true, //Supports Digital Zoom
-				digitalMagnification: true, //digital mag is available
+				digitalMagnification: { cmd: 'c.1.zoom.mag=', dropdown: c.CHOICES_DIGITALMAGNIFICATION_CRN() },
 				imageStabilization: true, //Supports Image Stabilization
 				panTilt: true, // Has Pan/Tilt Support
 				ptSpeed: true, // Internal Speed Options
@@ -897,7 +897,7 @@ module.exports = {
 				tallyPreview: true, // Has Green Tally Light Control
 				cameraName: true, //Supports Custom Camera Name
 				digitalZoom: true, //Supports Digital Zoom
-				digitalMagnification: true, //digital mag is available
+				digitalMagnification: { cmd: 'c.1.zoom.mag=', dropdown: c.CHOICES_DIGITALMAGNIFICATION_OTHER() },
 				imageStabilization: true, //Supports Image Stabilization
 				panTilt: false, // Has Pan/Tilt Support
 				ptSpeed: true, // Internal Speed Options

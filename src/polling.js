@@ -166,6 +166,15 @@ module.exports = {
 				case 'c.1.zoom.mag':
 					self.data.digitalMagnificationValue = str[1];
 					break;
+				case 'c.1.zoom.mag.list':
+					if (self.data.digitalMagnificationListString !== str[1]) { //only rebuild the actions if the list has changed
+						self.data.digitalMagnificationListString = str[1];
+						self.log('info', 'New Digital Magnification List detected, reloading module: ' + self.data.digitalMagnificationListString);
+						self.data.digitalMagnificationList = str[1].split(',');
+						self.initActions()
+						self.initPresets()
+					}
+					break;
 				case 'c.1.zoom':
 					self.data.zoomValue = str[1];
 					break;

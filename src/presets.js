@@ -343,6 +343,91 @@ module.exports = {
 			}
 		}
 
+		if (s.digitalMagnification.cmd == true) {
+			presets.digitalMagnificationOnOff = {
+				category: 'System',
+				type: 'button',
+				name: 'Digital Magnification On/Off',
+				style: {
+					text: 'DMAG\\n$(canon-ptz:digitalZoom)',
+					size: '14',
+					color: '16777215',
+					bgcolor: combineRgb(0, 0, 0),
+				},
+				steps: [
+					{
+						down: [
+							{
+								actionId: 'digitalMagnification',
+								options: {
+									bol: 1
+								}
+							}
+						],
+						up: [
+							{
+								actionId: 'digitalMagnification',
+								options: {
+									bol: 0
+								}
+							}
+						]
+					},
+				],
+				feedbacks: [
+					{
+						feedbackId: 'digitalMagnification',
+						options: {
+							option: '1',
+						},
+						style: {
+							color: foregroundColor,
+							bgcolor: backgroundColorRed,
+						}
+					}
+				]
+			}
+
+			for (let x in s.digitalMagnification.dropdown) {
+				presets['digitalMagnificationValue-' + s.digitalMagnification.dropdown[x].id] = {
+					category: 'Lens',
+					type: 'button',
+					name: 'Digital Magnification: ' + s.digitalMagnification.dropdown[x].label,
+					style: {
+						text: s.digitalMagnification.dropdown[x].label,
+						size: '18',
+						color: '16777215',
+						bgcolor: combineRgb(0, 0, 0)
+					},
+					steps: [
+						{
+							down: [
+								{
+									actionId: 'digitalMagnificationValue',
+									options: {
+										val: s.digitalMagnification.dropdown[x].id
+									}
+								}
+							],
+							up: []
+						},
+					],
+					feedbacks: [
+						{
+							feedbackId: 'digitalMagnificationValue',
+							options: {
+								option: s.digitalMagnification.dropdown[x].id
+							},
+							style: {
+								color: foregroundColor,
+								bgcolor: backgroundColorRed,
+							}
+						}
+					]
+				}
+			}
+		}
+
 		if (s.imageStabilization == true) {
 			presets.imageStabilization = {
 				category: 'System',
