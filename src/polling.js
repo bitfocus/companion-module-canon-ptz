@@ -31,7 +31,7 @@ module.exports = {
 	stopPolling() {
 		let self = this;
 		//self.log('error', 'Stopping Polling due to Server error.');
-	
+
 		clearInterval(self.pollTimer);
 		delete self.pollTimer
 
@@ -92,8 +92,7 @@ module.exports = {
 					}
 					self.updateStatus(InstanceStatus.Error)
 				}
-			}
-			else {
+			} else {
 				if (!self.errorCount) {
 					if (self.config.verbose) {
 						self.log('error', `Error Getting Data: No response received from server. Is the Camera Online?`);
@@ -163,6 +162,18 @@ module.exports = {
 					break;
 				case 'c.1.zoom.mode':
 					self.data.digitalZoom = str[1];
+					break;
+				case 'c.1.zoom.mag':
+					self.data.digitalMagnificationValue = str[1];
+					break;
+				case 'c.1.zoom.mag.list':
+					if (self.data.digitalMagnificationListString !== str[1]) { //only rebuild the actions if the list has changed
+						self.data.digitalMagnificationListString = str[1];
+						self.log('info', 'New Digital Magnification List detected, reloading module: ' + self.data.digitalMagnificationListString);
+						self.data.digitalMagnificationList = str[1].split(',');
+						self.initActions()
+						self.initPresets()
+					}
 					break;
 				case 'c.1.zoom':
 					self.data.zoomValue = str[1];
