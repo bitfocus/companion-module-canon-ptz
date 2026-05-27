@@ -1493,23 +1493,17 @@ module.exports = {
 					},
 				],
 				callback: async (action) => {
-					self.gainIndex = action.options.val;
+					self.gainIndex = s.gain.dropdown.findIndex((GAIN) => GAIN.id == action.options.val);
+					self.gainValue = action.options.val
+					self.data.gainValue = self.gainValue
 
-					if (self.gainValue === 'auto') {
-						cmd = 'c.1.me.gain.mode=auto'
-						self.sendPTZ(self.ptzCommand, cmd)
-					}
-					else {
-						cmd = 'c.1.me.gain.mode=manual'
-						self.sendPTZ(self.ptzCommand, cmd)
+					//Force manual mode so we can set the gain value
+					cmd = 'c.1.me.gain.mode=manual'
+					self.sendPTZ(self.ptzCommand, cmd)
 
-						self.gainIndex = s.gain.dropdown.findIndex((GAIN) => GAIN.id == action.options.val);
-						self.gainValue = action.options.val;
-						self.data.gainValue = self.gainValue;
-						cmd = s.gain.cmd + self.gainValue;
-						self.sendPTZ(self.ptzCommand, cmd);
-					}
-					self.getCameraInformation_Delayed();
+					cmd = s.gain.cmd + self.gainValue
+					self.sendPTZ(self.ptzCommand, cmd)
+					self.getCameraInformation_Delayed()
 				}
 			}
 		}
