@@ -23,6 +23,31 @@ module.exports = {
 		return p
 	},
 
+	CHOICES_DIGITALMAGNIFICATION_CRN: function () {
+		var list = [100,150,300,600];
+
+		return this.CHOICES_DIGITALMAGNIFICATION_BUILD(list);
+	},
+
+	CHOICES_DIGITALMAGNIFICATION_OTHER: function () {
+		var list = [100,150,300,600];
+
+		return this.CHOICES_DIGITALMAGNIFICATION_BUILD(list);
+	},
+
+	CHOICES_DIGITALMAGNIFICATION_BUILD: function (list) {
+		var p = [];
+
+		for (let i = 0; i < list.length; i++) {
+			p.push({
+				id: list[i],
+				label: list[i] + '%'
+			})
+		}
+
+		return p
+	},
+
 	CHOICES_FOCUS_SPEED: [
 		{ id: 2, label: 'High' },
 		{ id: 1, label: 'Medium' },
