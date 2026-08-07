@@ -27,12 +27,14 @@ module.exports = {
 				tallyProgram: true, //camera tally program state is on/off
 				tallyPreview: true, //camera tally preview state is on/off
 				digitalZoom: true, //digital zoom is turned on/off
+				digitalMagnificationValue: true, //digital mag is available
 				imageStabilization: true, //image stabilization is turned on/off
 				firmwareVersion: true, //firmware version
 				protocolVersion: true, //protocol version
 				macAddress: true, //MAC address
 				//zoom/focus
 				zoomSpeed: true, //zoom speed value
+				zoomValue: true, //current zoom value
 				focusSpeed: true, //focus speed value
 				focusValue: true, //focus length value
 				autoFocusMode: true, //focus mode auto/manual
@@ -67,6 +69,7 @@ module.exports = {
 				tallyProgram: true, //pgm tally is on or off
 				tallyPreview: true, //pvw tally is on or off
 				digitalZoom: true, //digital zoom is on or off
+				digitalMagnification: true, //digital mag is available
 				imageStabilization: true, //image stabilization is on or off
 				autoFocusMode: true, //focus mode is auto or manual,
 				exposureShootingMode: true, //exposure shooting mode (auto, manual, scene)
@@ -84,6 +87,7 @@ module.exports = {
 				tallyPreview: true, // Has Green Tally Light Control
 				cameraName: true, //Supports Custom Camera Name
 				digitalZoom: true, //Supports Digital Zoom
+				digitalMagnification: { cmd: 'c.1.zoom.mag=', dropdown: c.CHOICES_DIGITALMAGNIFICATION_CRN() },
 				imageStabilization: true, //Supports Image Stabilization
 				panTilt: true,
 				ptSpeed: true,
@@ -127,12 +131,14 @@ module.exports = {
 				tallyProgram: true, //camera tally program state is on/off
 				tallyPreview: true, //camera tally preview state is on/off
 				digitalZoom: true, //digital zoom is turned on/off
+				digitalMagnificationValue: true, //digital mag is available
 				imageStabilization: true, //image stabilization is turned on/off
 				firmwareVersion: true, //firmware version
 				protocolVersion: true, //protocol version
 				macAddress: true, //MAC address
 				//zoom/focus
 				zoomSpeed: true, //zoom speed value
+				zoomValue: true, //current zoom value
 				focusSpeed: true, //focus speed value
 				focusValue: true, //focus length value
 				autoFocusMode: true, //focus mode auto/manual
@@ -167,6 +173,7 @@ module.exports = {
 				tallyProgram: true, //pgm tally is on or off
 				tallyPreview: true, //pvw tally is on or off
 				digitalZoom: true, //digital zoom is on or off
+				digitalMagnification: true, //digital mag is available
 				imageStabilization: true, //image stabilization is on or off
 				autoFocusMode: true, //focus mode is auto or manual,
 				exposureShootingMode: true, //exposure shooting mode (auto, manual, scene)
@@ -184,6 +191,7 @@ module.exports = {
 				tallyPreview: true, // Has Green Tally Light Control
 				cameraName: true, //Supports Custom Camera Name
 				digitalZoom: true, //Supports Digital Zoom
+				digitalMagnification: { cmd: 'c.1.zoom.mag=', dropdown: c.CHOICES_DIGITALMAGNIFICATION_CRN() },
 				imageStabilization: true, //Supports Image Stabilization
 				panTilt: true,
 				ptSpeed: true,
@@ -427,12 +435,14 @@ module.exports = {
 				tallyProgram: true, //camera tally program state is on/off
 				tallyPreview: true, //camera tally preview state is on/off
 				digitalZoom: true, //digital zoom is turned on/off
+				digitalMagnificationValue: true, //digital mag is available
 				imageStabilization: true, //image stabilization is turned on/off
 				firmwareVersion: true, //firmware version
 				protocolVersion: true, //protocol version
 				macAddress: true, //MAC address
 				//zoom/focus
 				zoomSpeed: true, //zoom speed value
+				zoomValue: true, //current zoom value
 				focusSpeed: true, //focus speed value
 				focusValue: true, //focus length value
 				autoFocusMode: true, //focus mode auto/manual
@@ -469,6 +479,7 @@ module.exports = {
 				tallyProgram: true, //pgm tally is on or off
 				tallyPreview: true, //pvw tally is on or off
 				digitalZoom: true, //digital zoom is on or off
+				digitalMagnification: true, //digital mag is available
 				imageStabilization: true, //image stabilization is on or off
 				autoFocusMode: true, //focus mode is auto or manual
 				exposureShootingMode: true, //exposure shooting mode (auto, manual, scene)
@@ -487,6 +498,7 @@ module.exports = {
 				tallyPreview: true, // Has Green Tally Light Control
 				cameraName: true, //Supports Custom Camera Name
 				digitalZoom: true, //Supports Digital Zoom
+				digitalMagnification: { cmd: 'c.1.zoom.mag=', dropdown: c.CHOICES_DIGITALMAGNIFICATION_CRN() },
 				imageStabilization: true, //Supports Image Stabilization
 				panTilt: true,
 				ptSpeed: true,
@@ -531,12 +543,14 @@ module.exports = {
 				tallyProgram: true, //camera tally program state is on/off
 				tallyPreview: true, //camera tally preview state is on/off
 				digitalZoom: true, //digital zoom is turned on/off
+				digitalMagnificationValue: true, //digital mag is available
 				imageStabilization: true, //image stabilization is turned on/off
 				firmwareVersion: true, //firmware version
 				protocolVersion: true, //protocol version
 				macAddress: true, //MAC address
 				//zoom/focus
 				zoomSpeed: true, //zoom speed value
+				zoomValue: true, //current zoom value
 				focusSpeed: true, //focus speed value
 				focusValue: true, //focus length value
 				autoFocusMode: true, //focus mode auto/manual
@@ -571,6 +585,7 @@ module.exports = {
 				tallyProgram: true, //pgm tally is on or off
 				tallyPreview: true, //pvw tally is on or off
 				digitalZoom: true, //digital zoom is on or off
+				digitalMagnification: true, //digital mag is available
 				imageStabilization: true, //image stabilization is on or off
 				autoFocusMode: true, //focus mode is auto or manual
 				exposureShootingMode: true, //exposure shooting mode (auto, manual, scene)
@@ -588,6 +603,7 @@ module.exports = {
 				tallyPreview: true, // Has Green Tally Light Control
 				cameraName: true, //Supports Custom Camera Name
 				digitalZoom: true, //Supports Digital Zoom
+				digitalMagnification: { cmd: 'c.1.zoom.mag=', dropdown: c.CHOICES_DIGITALMAGNIFICATION_CRN() },
 				imageStabilization: true, //Supports Image Stabilization
 				panTilt: true,
 				ptSpeed: true,
@@ -629,6 +645,8 @@ module.exports = {
 				cameraName: true, //name of camera
 				tallyProgram: true, //camera tally program state is on/off
 				tallyPreview: true, //camera tally preview state is on/off
+				digitalZoom: true, //digital zoom is turned on/off
+				digitalMagnificationValue: true, //digital mag is available
 				firmwareVersion: true, //firmware version
 				protocolVersion: true, //protocol version
 				macAddress: true, //MAC address
@@ -667,6 +685,7 @@ module.exports = {
 				tallyProgram: true, //pgm tally is on or off
 				tallyPreview: true, //pvw tally is on or off
 				digitalZoom: true, //digital zoom is on or off
+				digitalMagnification: true, //digital mag is available
 				imageStabilization: true, //image stabilization is on or off
 				autoFocusMode: true, //focus mode is auto or manual
 				exposureShootingMode: true, //exposure shooting mode (auto, manual, scene)
@@ -684,6 +703,7 @@ module.exports = {
 				tallyPreview: true, // Has Green Tally Light Control
 				cameraName: true, //Supports Custom Camera Name
 				digitalZoom: true, //Supports Digital Zoom
+				digitalMagnification: { cmd: 'c.1.zoom.mag=', dropdown: c.CHOICES_DIGITALMAGNIFICATION_CRN() },
 				imageStabilization: true, //Supports Image Stabilization
 				panTilt: true, // Has Pan/Tilt Support
 				ptSpeed: true, // Internal Speed Options
@@ -819,6 +839,8 @@ module.exports = {
 				//system
 				powerState: true, //camera is on or off (idle or standby)
 				cameraName: true, //name of camera
+				digitalZoom: true, //digital zoom is turned on/off
+				digitalMagnificationValue: true, //digital mag is available
 				firmwareVersion: true, //firmware version
 				protocolVersion: true, //protocol version
 				macAddress: true, //MAC address
@@ -857,6 +879,7 @@ module.exports = {
 				tallyProgram: true, //pgm tally is on or off
 				tallyPreview: true, //pvw tally is on or off
 				digitalZoom: true, //digital zoom is on or off
+				digitalMagnification: true, //digital mag is available
 				imageStabilization: true, //image stabilization is on or off
 				autoFocusMode: true, //focus mode is auto or manual
 				exposureShootingMode: true, //exposure shooting mode (auto, manual, scene)
@@ -874,6 +897,7 @@ module.exports = {
 				tallyPreview: true, // Has Green Tally Light Control
 				cameraName: true, //Supports Custom Camera Name
 				digitalZoom: true, //Supports Digital Zoom
+				digitalMagnification: { cmd: 'c.1.zoom.mag=', dropdown: c.CHOICES_DIGITALMAGNIFICATION_OTHER() },
 				imageStabilization: true, //Supports Image Stabilization
 				panTilt: false, // Has Pan/Tilt Support
 				ptSpeed: true, // Internal Speed Options
