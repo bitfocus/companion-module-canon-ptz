@@ -108,6 +108,7 @@ The actions are separated into the following categories:
 **Save presets**
 
 - Save Preset 1-100, with options to set name and settings to save (ptz, focus, exposure, etc.)
+- The save options can be driven by variables instead of checkboxes — tick "Use variables for the save options below" and point each one at a variable holding true/false. One set of custom variables can then change what every camera saves, without editing each button.
 
 **Recall Presets**
 

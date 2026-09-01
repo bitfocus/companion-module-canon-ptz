@@ -2203,40 +2203,107 @@ module.exports = {
 					},
 					{
 						type: 'checkbox',
+						label: 'Use variables for the save options below',
+						id: 'use_variables_save',
+						default: false,
+						tooltip: 'Drive each option from a variable so one set of switches can change what every camera saves.'
+					},
+					{
+						type: 'checkbox',
 						label: 'Save Position (PTZ)',
 						id: 'save_ptz',
-						default: true
+						default: true,
+						isVisible: (options) => !options['use_variables_save'],
+					},
+					{
+						type: 'textinput',
+						label: 'Save Position (PTZ)',
+						id: 'save_ptz_v',
+						default: 'true',
+						tooltip: 'true/false, 1/0, yes/no, on/off.',
+						useVariables: true,
+						isVisible: (options) => !!options['use_variables_save'],
 					},
 					{
 						type: 'checkbox',
 						label: 'Save Focus',
 						id: 'save_focus',
-						default: true
+						default: true,
+						isVisible: (options) => !options['use_variables_save'],
+					},
+					{
+						type: 'textinput',
+						label: 'Save Focus',
+						id: 'save_focus_v',
+						default: 'true',
+						tooltip: 'true/false, 1/0, yes/no, on/off.',
+						useVariables: true,
+						isVisible: (options) => !!options['use_variables_save'],
 					},
 					{
 						type: 'checkbox',
 						label: 'Save Exposure',
 						id: 'save_exposure',
-						default: true
+						default: true,
+						isVisible: (options) => !options['use_variables_save'],
+					},
+					{
+						type: 'textinput',
+						label: 'Save Exposure',
+						id: 'save_exposure_v',
+						default: 'true',
+						tooltip: 'true/false, 1/0, yes/no, on/off.',
+						useVariables: true,
+						isVisible: (options) => !!options['use_variables_save'],
 					},
 					{
 						type: 'checkbox',
 						label: 'Save White Balance',
 						id: 'save_whitebalance',
-						default: true
+						default: true,
+						isVisible: (options) => !options['use_variables_save'],
+					},
+					{
+						type: 'textinput',
+						label: 'Save White Balance',
+						id: 'save_whitebalance_v',
+						default: 'true',
+						tooltip: 'true/false, 1/0, yes/no, on/off.',
+						useVariables: true,
+						isVisible: (options) => !!options['use_variables_save'],
 					},
 					{
 						type: 'checkbox',
 						label: 'Save Image Stabilization (IS)',
 						id: 'save_is',
-						default: true
+						default: true,
+						isVisible: (options) => !options['use_variables_save'],
+					},
+					{
+						type: 'textinput',
+						label: 'Save Image Stabilization (IS)',
+						id: 'save_is_v',
+						default: 'true',
+						tooltip: 'true/false, 1/0, yes/no, on/off.',
+						useVariables: true,
+						isVisible: (options) => !!options['use_variables_save'],
 					},
 					{
 						type: 'checkbox',
 						label: 'Save CP',
 						id: 'save_cp',
-						default: true
-					}
+						default: true,
+						isVisible: (options) => !options['use_variables_save'],
+					},
+					{
+						type: 'textinput',
+						label: 'Save CP',
+						id: 'save_cp_v',
+						default: 'true',
+						tooltip: 'true/false, 1/0, yes/no, on/off.',
+						useVariables: true,
+						isVisible: (options) => !!options['use_variables_save'],
+					},
 				],
 				callback: async (action) => {
 					let presetName = await self.parseVariablesInString(action.options.name);
@@ -2251,42 +2318,53 @@ module.exports = {
 						return;
 					}
 
+					//each option is either its checkbox or a variable that resolves to one
+					let saveOptions = {};
+					for (const key of ['save_ptz', 'save_focus', 'save_exposure', 'save_whitebalance', 'save_is', 'save_cp']) {
+						if (action.options.use_variables_save) {
+							saveOptions[key] = self.parseBoolean(await self.parseVariablesInString(action.options[key + '_v']));
+						}
+						else {
+							saveOptions[key] = !!action.options[key];
+						}
+					}
+
 					cmd = 'p=' + presetNumber + '&name=' + presetName;
-					if ((action.options.save_ptz) && (action.options.save_focus) && (action.options.save_exposure) && (action.options.save_whitebalance) && (action.options.save_is) && (action.options.save_cp)) {
+					if ((saveOptions.save_ptz) && (saveOptions.save_focus) && (saveOptions.save_exposure) && (saveOptions.save_whitebalance) && (saveOptions.save_is) && (saveOptions.save_cp)) {
 						cmd += '&all=enabled';
 					}
 					else {
-						if (action.options.save_ptz) {
+						if (saveOptions.save_ptz) {
 							cmd += '&ptz=enabled';
 						}
 						else {
 							cmd += '&ptz=disabled';
 						}
-						if (action.options.save_focus) {
+						if (saveOptions.save_focus) {
 							cmd += '&focus=enabled';
 						}
 						else {
 							cmd += '&focus=disabled';
 						}
-						if (action.options.save_exposure) {
+						if (saveOptions.save_exposure) {
 							cmd += '&exp=enabled';
 						}
 						else {
 							cmd += '&exp=disabled';
 						}
-						if (action.options.save_whitebalance) {
+						if (saveOptions.save_whitebalance) {
 							cmd += '&wb=enabled';
 						}
 						else {
 							cmd += '&wb=disabled';
 						}
-						if (action.options.save_is) {
+						if (saveOptions.save_is) {
 							cmd += '&is=enabled';
 						}
 						else {
 							cmd += '&is=disabled';
 						}
-						if (action.options.save_cp) {
+						if (saveOptions.save_cp) {
 							cmd += '&cp=enabled';
 						}
 						else {

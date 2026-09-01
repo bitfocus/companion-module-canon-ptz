@@ -200,6 +200,18 @@ module.exports = {
 		return best;
 	},
 
+	//Variables arrive as strings, so a checkbox driven by one has to accept
+	//whatever a user is likely to put in a custom variable
+	parseBoolean: function (value) {
+		if (typeof value === 'boolean') {
+			return value;
+		}
+
+		const text = String(value).trim().toLowerCase();
+
+		return text === 'true' || text === '1' || text === 'yes' || text === 'on' || text === 'enabled';
+	},
+
 	clampPreset: function (value, fallback) {
 		let preset = parseInt(value);
 
