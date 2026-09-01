@@ -73,6 +73,10 @@ module.exports = {
 		var s = SERIES.actions;
 
 		//check if any lists need to be updated
+		if (self.data.digitalMagnificationList !== null) {
+			s.digitalMagnification.dropdown = c.CHOICES_DIGITALMAGNIFICATION_BUILD(self.data.digitalMagnificationList); //rebuild the list by running the function again
+		}
+
 		if (self.data.exposureShootingModeList !== null) {
 			s.exposureShootingMode.dropdown = c.CHOICES_EXPOSURESHOOTINGMODES_BUILD(self.data.exposureShootingModeList); //rebuild the list by running the function again
 		}
@@ -311,6 +315,55 @@ module.exports = {
 						self.data.digitalZoom = 'dzoom';
 					}
 					self.sendPTZ(self.ptzCommand, cmd)
+					self.getCameraInformation_Delayed();
+				}
+			}
+		}
+
+		if (s.digitalMagnification.cmd) {
+			actions.digitalMagnification = {
+				name: 'Digital Magnification On/Off',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'On/Off',
+						id: 'bol',
+						default: 0,
+						choices: [
+							{ id: 0, label: 'Off' },
+							{ id: 1, label: 'On' },
+						],
+					},
+				],
+				callback: async (action) => {
+					if (action.options.bol == 0) {
+						cmd = 'c.1.zoom.mode=off'
+						self.data.digitalZoom = 'off';
+					}
+					if (action.options.bol == 1) {
+						cmd = 'c.1.zoom.mode=mag'
+						self.data.digitalZoom = 'mag';
+					}
+					self.sendPTZ(self.ptzCommand, cmd)
+					self.getCameraInformation_Delayed();
+				}
+			}
+
+			actions.digitalMagnificationValue = {
+				name: 'Digital Magnification Value',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Digital Magnification Value',
+						id: 'val',
+						default: s.digitalMagnification.dropdown[0].id,
+						choices: s.digitalMagnification.dropdown
+					}
+				],
+				callback: async (action) => {
+					cmd = 'c.1.zoom.mag=' + action.options.val;
+					self.sendPTZ(self.ptzCommand, cmd);
+					self.data.digitalMagnificationValue = action.options.val;
 					self.getCameraInformation_Delayed();
 				}
 			}

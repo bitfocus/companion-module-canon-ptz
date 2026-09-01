@@ -199,6 +199,75 @@ module.exports = {
 			}
 		}
 
+		if (SERIES.feedbacks.digitalMagnification == true) {
+			feedbacks.digitalMagnification = {
+				type: 'boolean',
+				name: 'System - Digital Magnification State',
+				description: 'Indicate if Digital Magnification is ON or OFF',
+				defaultStyle: {
+					color: foregroundColor,
+					bgcolor: backgroundColorRed,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Indicate in X State',
+						id: 'option',
+						default: '1',
+						choices: [
+							{ id: '0', label: 'Off' },
+							{ id: '1', label: 'On' },
+						]
+					}
+				],
+				callback: function (feedback, bank) {
+					let opt = feedback.options
+					switch (opt.option) {
+						case '0':
+							if (self.data.digitalZoom === 'off') {
+								return true
+							}
+							break
+						case '1':
+							if (self.data.digitalZoom === 'mag') {
+								return true
+							}
+							break
+						default:
+							break
+					}
+					return false
+				}
+			}
+
+			feedbacks.digitalMagnificationValue = {
+				type: 'boolean',
+				name: 'Zoom - Digital Magnification Value',
+				description: 'Indicate if in the selected Digital Magnification Value',
+				defaultStyle: {
+					color: foregroundColor,
+					bgcolor: backgroundColorRed,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Indicate in X State',
+						id: 'option',
+						default: SERIES.actions.digitalMagnification.dropdown[0].id,
+						choices: SERIES.actions.digitalMagnification.dropdown
+					}
+				],
+				callback: function (feedback, bank) {
+					let opt = feedback.options
+					//opt.option
+					if (self.data.digitalMagnificationValue === opt.option) {
+						return true
+					}
+					return false
+				}
+			}
+		}
+
 		if (SERIES.feedbacks.imageStabilization == true) {
 			feedbacks.imageStabilization = {
 				type: 'boolean',
