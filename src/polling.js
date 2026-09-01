@@ -92,6 +92,13 @@ module.exports = {
 					}
 					self.updateStatus(InstanceStatus.Error)
 				}
+			} else if (result && result.unauthorized === true) {
+				if (!self.errorCount) {
+					self.log('error', 'The camera rejected the login. Check the username and password in the connection config, or enable guest access on the camera.');
+					self.updateStatus(InstanceStatus.AuthenticationFailure)
+				}
+
+				self.errorCount++;
 			} else {
 				if (!self.errorCount) {
 					if (self.config.verbose) {
@@ -236,7 +243,7 @@ module.exports = {
 					self.initActions()
 					self.initPresets()
 					break;
-				case 'c.1.ae.gainlimit.max':
+				case 'c.1.ae.gainlimit.max.max':
 					self.data.aeGainLimitMaxMax = parseInt(str[1]);
 					self.initActions()
 					self.initPresets()

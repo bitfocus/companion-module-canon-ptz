@@ -31,6 +31,28 @@ module.exports = {
 			},
 			{
 				type: 'static-text',
+				id: 'authInfo',
+				width: 12,
+				label: 'Authentication',
+				value:
+					"Leave these blank if the camera allows guest access. If guest access is turned off, enter a camera user account here \u2014 the module will authenticate with it.",
+			},
+			{
+				type: 'textinput',
+				id: 'username',
+				label: 'Username (optional)',
+				width: 4,
+				default: '',
+			},
+			{
+				type: 'textinput',
+				id: 'password',
+				label: 'Password (optional)',
+				width: 4,
+				default: '',
+			},
+			{
+				type: 'static-text',
 				id: 'dummy1',
 				width: 12,
 				label: ' ',
