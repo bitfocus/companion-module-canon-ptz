@@ -2,6 +2,18 @@ let { MODELS, SERIES_SPECS } = require('./models.js')
 const c = require('./choices.js')
 
 module.exports = {
+	//resolve a raw protocol value to the friendly label from its action's dropdown,
+	//falling back to the raw value when the camera reports something unlisted
+	labelFor: function (spec, value) {
+		if (spec && spec.dropdown) {
+			let choice = spec.dropdown.find((CHOICE) => CHOICE.id == value);
+			if (choice) {
+				return choice.label;
+			}
+		}
+		return value;
+	},
+
 	initVariables: function () {
 		let self = this;
 
@@ -125,6 +137,28 @@ module.exports = {
 		}
 		if (SERIES.variables.ndfilterValue == true) {
 			variables.push({ variableId: 'ndfilterValue', name: 'Neutral Density Value' })
+		}
+		if (SERIES.variables.ndMode == true) {
+			variables.push({ variableId: 'ndMode', name: 'Neutral Density Mode' })
+		}
+		if (SERIES.variables.sceneMode == true) {
+			variables.push({ variableId: 'sceneMode', name: 'Scene Mode' })
+		}
+		if (SERIES.variables.gainIncrement == true) {
+			variables.push({ variableId: 'gainIncrement', name: 'Gain Increment' })
+		}
+		if (SERIES.variables.irisIncrement == true) {
+			variables.push({ variableId: 'irisIncrement', name: 'Iris Increment' })
+		}
+		if (SERIES.variables.irisFine == true) {
+			variables.push({ variableId: 'irisFine', name: 'Iris Fine' })
+		}
+		if (SERIES.variables.zoomAccel == true) {
+			variables.push({ variableId: 'zoomAccel', name: 'Soft Zoom Control' })
+		}
+		if (SERIES.variables.oneshotAutoFocusStatus == true) {
+			variables.push({ variableId: 'oneshotAutoFocusStatus', name: 'One Shot AF Status' })
+			variables.push({ variableId: 'oneshotAutoFocusResult', name: 'One Shot AF Result' })
 		}
 		if (SERIES.variables.pedestalValue == true) {
 			variables.push({ variableId: 'pedestalValue', name: 'Pedestal Value' })
@@ -446,6 +480,35 @@ module.exports = {
 					}
 				}
 				variableValues.ndfilterValue = ndfilterValue;
+			}
+
+			if (SERIES.variables.ndMode == true) {
+				variableValues.ndMode = self.labelFor(SERIES.actions.ndMode, self.data.ndMode);
+			}
+
+			if (SERIES.variables.sceneMode == true) {
+				variableValues.sceneMode = self.labelFor(SERIES.actions.scene, self.data.sceneMode);
+			}
+
+			if (SERIES.variables.gainIncrement == true) {
+				variableValues.gainIncrement = self.labelFor(SERIES.actions.gainIncrement, self.data.gainIncrement);
+			}
+
+			if (SERIES.variables.irisIncrement == true) {
+				variableValues.irisIncrement = self.labelFor(SERIES.actions.irisIncrement, self.data.irisIncrement);
+			}
+
+			if (SERIES.variables.irisFine == true) {
+				variableValues.irisFine = self.data.irisFine;
+			}
+
+			if (SERIES.variables.zoomAccel == true) {
+				variableValues.zoomAccel = self.labelFor(SERIES.actions.zoomAccel, self.data.zoomAccel);
+			}
+
+			if (SERIES.variables.oneshotAutoFocusStatus == true) {
+				variableValues.oneshotAutoFocusStatus = self.data.oneshotAutoFocusStatus;
+				variableValues.oneshotAutoFocusResult = self.data.oneshotAutoFocusResult;
 			}
 
 			if (SERIES.variables.pedestalValue == true) {

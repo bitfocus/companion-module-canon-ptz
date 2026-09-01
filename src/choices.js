@@ -64,6 +64,14 @@ module.exports = {
 		return this.CHOICES_EXPOSURESHOOTINGMODES_BUILD(list);
 	},
 
+	// CR-N400/CR-N350 (and CR-N700/CR-N500/XF605) have no scene mode
+	// XC Protocol Specifications BPE-7216-011, c.<c>.shooting.list
+	CHOICES_EXPOSURESHOOTINGMODES_CRN400: function () {
+		var list = ['fullauto', 'manual'];
+
+		return this.CHOICES_EXPOSURESHOOTINGMODES_BUILD(list);
+	},
+
 	CHOICES_EXPOSURESHOOTINGMODES_OTHER: function () {
 		var list = ['fullauto', 'manual', 'scene'];
 
@@ -106,6 +114,14 @@ module.exports = {
 		return this.CHOICES_EXPOSUREMODES_BUILD(list);
 	},
 
+	// CR-N400/CR-N350 (and CR-N700/CR-N500/XF605) have no Av/Tv exposure modes
+	// XC Protocol Specifications BPE-7216-011, c.<c>.exp.list
+	CHOICES_EXPOSUREMODES_CRN400: function () {
+		var list = ['auto', 'manual'];
+
+		return this.CHOICES_EXPOSUREMODES_BUILD(list);
+	},
+
 	CHOICES_EXPOSUREMODES_OTHER: function () {
 		var list = ['auto', 'tv', 'av', 'manual'];
 
@@ -130,6 +146,51 @@ module.exports = {
 					break;
 				case 'manual':
 					label = 'Manual';
+					break;
+				default:
+					label = list[i];
+					break;
+			}
+
+			p.push({
+				id: list[i],
+				label: label
+			})
+		}
+
+		return p
+	},
+
+	// ########################
+	// #### Scene Mode Look Ups ####
+	// ########################
+
+	// Only the CR-N300/CR-N100/CR-X300 offer scene mode
+	// XC Protocol Specifications BPE-7216-011, c.<c>.scene.list
+	CHOICES_SCENE_CRN: function () {
+		var list = ['portrait', 'sports', 'lowlight', 'spotlight'];
+
+		return this.CHOICES_SCENE_BUILD(list);
+	},
+
+	CHOICES_SCENE_BUILD: function (list) {
+		var p = [];
+
+		for (let i = 0; i < list.length; i++) {
+			let label = '';
+
+			switch(list[i]) {
+				case 'portrait':
+					label = 'Portrait';
+					break;
+				case 'sports':
+					label = 'Sports';
+					break;
+				case 'lowlight':
+					label = 'Low Light';
+					break;
+				case 'spotlight':
+					label = 'Spotlight';
 					break;
 				default:
 					label = list[i];
@@ -353,6 +414,34 @@ module.exports = {
 		return p
 	},
 
+	// The CR-N400/CR-N350 top out at 30.0 dB, not the 36.0 dB of the CR-N300/CR-N100
+	// XC Protocol Specifications BPE-7216-011, c.<c>.ae.gainlimit.max.max
+	CHOICES_GAIN_CRN400: function () {
+		return this.CHOICES_GAIN_BUILD(0, 300);
+	},
+
+	// min/max are in dB multiplied by 10, and are received in 0.5 dB (5) increments
+	CHOICES_GAIN_BUILD: function (min, max) {
+		var p = []
+
+		for (var i = min; i <= max; i += 5) {
+			p.push({
+				id: i.toString(),
+				label: (i / 10).toFixed(1) + ' dB'
+			})
+		}
+
+		return p
+	},
+
+	// The CR-N400/CR-N350 (and CR-N700, C-series, XF605) can switch the manual
+	// gain step between 1.0 dB (normal) and 0.5 dB (fine)
+	// XC Protocol Specifications BPE-7216-011, c.<c>.me.gain.increment.list
+	CHOICES_GAININCREMENT: [
+		{ id: 'normal', label: 'Normal (1.0 dB)' },
+		{ id: 'fine',   label: 'Fine (0.5 dB)' }
+	],
+
 	CHOICES_GAIN_XF605: [
 		//-60, -30, 0, 30, 60, 90, 120, 150, 180, 210.
 		{ id: '-60',    label: '-6dB' },
@@ -419,6 +508,15 @@ module.exports = {
 		{ id: '400',    label: 'ND 1/4' },
 		{ id: '1600',    label: 'ND 1/16' },
 		{ id: '6400',    label: 'ND 1/64' }
+	],
+
+	// On the CR-N400/CR-N350/CR-N300/CR-N100/CR-X300 the ND filter itself is
+	// read-only; what can be controlled is whether it tracks the iris (assist)
+	// or stays put (fixed)
+	// XC Protocol Specifications BPE-7216-011, c.<c>.nd.mode.list
+	CHOICES_NDMODE_CRN: [
+		{ id: 'assist', label: 'Assist (Follows Iris)' },
+		{ id: 'fixed',  label: 'Fixed' }
 	],
 
 	// ###########################
@@ -581,6 +679,27 @@ module.exports = {
 		}
 		return p
 	},
+
+	// ###############################
+	// ####    Zoom / Iris Modes  ####
+	// ###############################
+
+	// Soft (ramped) zoom start/stop, on the CR-N400/CR-N350/CR-N300/CR-N100/CR-X300
+	// XC Protocol Specifications BPE-7216-011, c.<c>.zoom.accel.list
+	CHOICES_ZOOMACCEL_CRN: [
+		{ id: 'off',   label: 'Off' },
+		{ id: 'start', label: 'Start Only' },
+		{ id: 'stop',  label: 'Stop Only' },
+		{ id: 'both',  label: 'Start and Stop' }
+	],
+
+	// The CR-N400/CR-N350 (and CR-N700, C-series, XF605) can switch the manual
+	// iris step between 1/3 and 1/4 stop. The value is the inverse of the step.
+	// XC Protocol Specifications BPE-7216-011, c.<c>.me.diaphragm.increment.list
+	CHOICES_IRISINCREMENT_CRN400: [
+		{ id: '3', label: '1/3 Stop' },
+		{ id: '4', label: '1/4 Stop' }
+	],
 
 	// ###############################
 	// ####       Presets         ####

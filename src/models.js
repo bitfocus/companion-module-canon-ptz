@@ -51,6 +51,9 @@ module.exports = {
 				gainMode: true, //gain auto/manual
 				gainValue: true, //gain value
 				ndfilterValue: true, //neutral density value
+				ndMode: true, //ND filter mode assist/fixed
+				zoomAccel: true, //soft zoom control setting
+				sceneMode: true, //scene shooting mode
 				pedestalValue: true, //pedestal value
 				//white balance
 				whitebalanceMode: true, //white balance mode auto, manual, wb_a, wb_b, daylight, tungsten, kelvin
@@ -93,12 +96,14 @@ module.exports = {
 				ptSpeed: true,
 				zoom: true,
 				zoomSpeed: true,
+				zoomAccel: { cmd: 'c.1.zoom.accel=', dropdown: c.CHOICES_ZOOMACCEL_CRN }, //Supports soft (ramped) zoom start/stop
 				focus: true,
 				focusSpeed: true,
 				autoFocus: true,
 				oneshotAutoFocus: true,
 				exposureShootingMode: { cmd: 'c.1.shooting=', dropdown: c.CHOICES_EXPOSURESHOOTINGMODES_CRN() },
 				exposureMode: { cmd: 'c.1.exp=', dropdown: c.CHOICES_EXPOSUREMODES_CRN() },
+				scene: { cmd: 'c.1.scene=', dropdown: c.CHOICES_SCENE_CRN() }, //Supports Scene shooting mode
 				aeGainLimit: true,
 				aeBrightness: { cmd: 'c.1.ae.brightness=', dropdown: c.CHOICES_AEBRIGHTNESS_CRN() },
 				aePhotometry: { cmd: 'c.1.ae.photometry=', dropdown: c.CHOICES_AEPHOTOMETRY_CRN() },
@@ -107,7 +112,8 @@ module.exports = {
 				shutter: { cmd: 'c.1.me.shutter=', dropdown: c.CHOICES_SHUTTER_CRN() },
 				iris: { cmd: 'me.diaphragm=', dropdown: c.CHOICES_IRIS_CRN() },
 				gain: { cmd: 'c.1.me.gain=', dropdown: c.CHOICES_GAIN_CRN() },
-				ndfilter: { cmd: 'c.1.nd.filter=', dropdown: c.CHOICES_NDFILTER_CRN300 }, // Has ND Filter Support
+				ndfilter: { dropdown: c.CHOICES_NDFILTER_CRN500 }, // ND filter value is read-only on this model
+				ndMode: { cmd: 'c.1.nd.mode=', dropdown: c.CHOICES_NDMODE_CRN }, // ND filter mode is what can be set
 				pedestal: { cmd: 'c.1.blacklevel=', dropdown: c.CHOICES_PEDESTAL_CRN() },
 				whitebalanceMode: {cmd: 'c.1.wb=', dropdown: c.CHOICES_WBMODE_CRN() },
 				kelvin: {cmd: 'c.1.wb.kelvin=', dropdown: c.CHOICES_KELVIN_CRN() },
@@ -258,6 +264,12 @@ module.exports = {
 				gainMode: true, //gain auto/manual
 				gainValue: true, //gain value
 				ndfilterValue: true, //neutral density value
+				ndMode: true, //ND filter mode assist/fixed
+				zoomAccel: true, //soft zoom control setting
+				gainIncrement: true, //gain step normal/fine
+				irisIncrement: true, //iris step 1/3 or 1/4 stop
+				irisFine: true, //fine iris adjustment on/off
+				oneshotAutoFocusStatus: true, //one shot AF status and result
 				pedestalValue: true, //pedestal value
 				//white balance
 				whitebalanceMode: true, //white balance mode auto, manual, wb_a, wb_b, daylight, tungsten, kelvin
@@ -295,17 +307,20 @@ module.exports = {
 				cameraName: true, //Supports Custom Camera Name
 				digitalZoom: true, //Supports Digital Zoom
 				digitalMagnification: { cmd: 'c.1.zoom.mag=', dropdown: c.CHOICES_DIGITALMAGNIFICATION_CRN() },
+				advancedZoom: true, //Supports the Advanced Zoom digital zoom mode
 				imageStabilization: true, //Supports Image Stabilization
 				panTilt: true,
 				ptSpeed: true,
 				zoom: true,
 				zoomSpeed: true,
+				zoomAccel: { cmd: 'c.1.zoom.accel=', dropdown: c.CHOICES_ZOOMACCEL_CRN }, //Supports soft (ramped) zoom start/stop
 				focus: true,
 				focusSpeed: true,
 				autoFocus: true,
 				oneshotAutoFocus: true,
-				exposureShootingMode: { cmd: 'c.1.shooting=', dropdown: c.CHOICES_EXPOSURESHOOTINGMODES_CRN() },
-				exposureMode: { cmd: 'c.1.exp=', dropdown: c.CHOICES_EXPOSUREMODES_CRN() },
+				spotAutoFocus: true, //Supports Spot (Touch) AF
+				exposureShootingMode: { cmd: 'c.1.shooting=', dropdown: c.CHOICES_EXPOSURESHOOTINGMODES_CRN400() }, // No scene mode
+				exposureMode: { cmd: 'c.1.exp=', dropdown: c.CHOICES_EXPOSUREMODES_CRN400() }, // No Av/Tv
 				aeGainLimit: true,
 				aeBrightness: { cmd: 'c.1.ae.brightness=', dropdown: c.CHOICES_AEBRIGHTNESS_CRN() },
 				aePhotometry: { cmd: 'c.1.ae.photometry=', dropdown: c.CHOICES_AEPHOTOMETRY_CRN() },
@@ -313,8 +328,12 @@ module.exports = {
 				aeResp: true,
 				shutter: { cmd: 'c.1.me.shutter=', dropdown: c.CHOICES_SHUTTER_CRN() },
 				iris: { cmd: 'me.diaphragm=', dropdown: c.CHOICES_IRIS_CRN() },
-				gain: { cmd: 'c.1.me.gain=', dropdown: c.CHOICES_GAIN_CRN() },
-				ndfilter: { cmd: 'c.1.nd.filter=', dropdown: c.CHOICES_NDFILTER_CRN300 }, // Has ND Filter Support
+				irisIncrement: { cmd: 'c.1.me.diaphragm.increment=', dropdown: c.CHOICES_IRISINCREMENT_CRN400 }, //Supports 1/3 or 1/4 stop iris steps
+				irisFine: true, //Supports fine iris adjustment
+				gain: { cmd: 'c.1.me.gain=', dropdown: c.CHOICES_GAIN_CRN400() }, // Tops out at 30.0 dB
+				gainIncrement: { cmd: 'c.1.me.gain.increment=', dropdown: c.CHOICES_GAININCREMENT }, //Supports 1.0/0.5 dB gain steps
+				ndfilter: { dropdown: c.CHOICES_NDFILTER_CRN500 }, // ND filter value is read-only on this model
+				ndMode: { cmd: 'c.1.nd.mode=', dropdown: c.CHOICES_NDMODE_CRN }, // ND filter mode is what can be set
 				pedestal: { cmd: 'c.1.blacklevel=', dropdown: c.CHOICES_PEDESTAL_CRN() },
 				whitebalanceMode: {cmd: 'c.1.wb=', dropdown: c.CHOICES_WBMODE_CRN() },
 				kelvin: {cmd: 'c.1.wb.kelvin=', dropdown: c.CHOICES_KELVIN_CRN() },
@@ -361,6 +380,12 @@ module.exports = {
 				gainMode: true, //gain auto/manual
 				gainValue: true, //gain value
 				ndfilterValue: true, //neutral density value
+				ndMode: true, //ND filter mode assist/fixed
+				zoomAccel: true, //soft zoom control setting
+				gainIncrement: true, //gain step normal/fine
+				irisIncrement: true, //iris step 1/3 or 1/4 stop
+				irisFine: true, //fine iris adjustment on/off
+				oneshotAutoFocusStatus: true, //one shot AF status and result
 				pedestalValue: true, //pedestal value
 				//white balance
 				whitebalanceMode: true, //white balance mode auto, manual, wb_a, wb_b, daylight, tungsten, kelvin
@@ -398,17 +423,20 @@ module.exports = {
 				cameraName: true, //Supports Custom Camera Name
 				digitalZoom: true, //Supports Digital Zoom
 				digitalMagnification: { cmd: 'c.1.zoom.mag=', dropdown: c.CHOICES_DIGITALMAGNIFICATION_CRN() },
+				advancedZoom: true, //Supports the Advanced Zoom digital zoom mode
 				imageStabilization: true, //Supports Image Stabilization
 				panTilt: true,
 				ptSpeed: true,
 				zoom: true,
 				zoomSpeed: true,
+				zoomAccel: { cmd: 'c.1.zoom.accel=', dropdown: c.CHOICES_ZOOMACCEL_CRN }, //Supports soft (ramped) zoom start/stop
 				focus: true,
 				focusSpeed: true,
 				autoFocus: true,
 				oneshotAutoFocus: true,
-				exposureShootingMode: { cmd: 'c.1.shooting=', dropdown: c.CHOICES_EXPOSURESHOOTINGMODES_CRN() },
-				exposureMode: { cmd: 'c.1.exp=', dropdown: c.CHOICES_EXPOSUREMODES_CRN() },
+				spotAutoFocus: true, //Supports Spot (Touch) AF
+				exposureShootingMode: { cmd: 'c.1.shooting=', dropdown: c.CHOICES_EXPOSURESHOOTINGMODES_CRN400() }, // No scene mode
+				exposureMode: { cmd: 'c.1.exp=', dropdown: c.CHOICES_EXPOSUREMODES_CRN400() }, // No Av/Tv
 				aeGainLimit: true,
 				aeBrightness: { cmd: 'c.1.ae.brightness=', dropdown: c.CHOICES_AEBRIGHTNESS_CRN() },
 				aePhotometry: { cmd: 'c.1.ae.photometry=', dropdown: c.CHOICES_AEPHOTOMETRY_CRN() },
@@ -416,8 +444,12 @@ module.exports = {
 				aeResp: true,
 				shutter: { cmd: 'c.1.me.shutter=', dropdown: c.CHOICES_SHUTTER_CRN() },
 				iris: { cmd: 'me.diaphragm=', dropdown: c.CHOICES_IRIS_CRN() },
-				gain: { cmd: 'c.1.me.gain=', dropdown: c.CHOICES_GAIN_CRN() },
-				ndfilter: { cmd: 'c.1.nd.filter=', dropdown: c.CHOICES_NDFILTER_CRN300 }, // Has ND Filter Support
+				irisIncrement: { cmd: 'c.1.me.diaphragm.increment=', dropdown: c.CHOICES_IRISINCREMENT_CRN400 }, //Supports 1/3 or 1/4 stop iris steps
+				irisFine: true, //Supports fine iris adjustment
+				gain: { cmd: 'c.1.me.gain=', dropdown: c.CHOICES_GAIN_CRN400() }, // Tops out at 30.0 dB
+				gainIncrement: { cmd: 'c.1.me.gain.increment=', dropdown: c.CHOICES_GAININCREMENT }, //Supports 1.0/0.5 dB gain steps
+				ndfilter: { dropdown: c.CHOICES_NDFILTER_CRN500 }, // ND filter value is read-only on this model
+				ndMode: { cmd: 'c.1.nd.mode=', dropdown: c.CHOICES_NDMODE_CRN }, // ND filter mode is what can be set
 				pedestal: { cmd: 'c.1.blacklevel=', dropdown: c.CHOICES_PEDESTAL_CRN() },
 				whitebalanceMode: {cmd: 'c.1.wb=', dropdown: c.CHOICES_WBMODE_CRN() },
 				kelvin: {cmd: 'c.1.wb.kelvin=', dropdown: c.CHOICES_KELVIN_CRN() },
