@@ -2889,38 +2889,6 @@ module.exports = {
 
 		if (s.presets == true) {
 			for (let save = 1; save <= 100; save++) {
-				presets['presetSaveToggles' + save] = {
-					category: 'Save Preset (Module Toggles)',
-					type: 'button',
-					name: 'Save Preset ' + save + ' (Module Toggles)',
-					style: {
-						text: 'SAVE\\nPSET\\n' + save + '\\n$(canon-ptz:savePresetOptions)',
-						size: '14',
-						color: foregroundColor,
-						bgcolor: combineRgb(0, 0, 0)
-					},
-					steps: [
-						{
-							down: [
-								{
-									actionId: 'savePset',
-									options: {
-										val: save,
-										name: 'preset' + save,
-										save_source: 'module',
-									}
-								}
-							],
-							up: []
-						},
-					],
-					feedbacks: []
-				}
-			}
-		}
-
-		if (s.presets == true) {
-			for (let save = 1; save <= 100; save++) {
 				presets['presetSave' + save] = {
 					category: 'Save Preset',
 					type: 'button',

@@ -112,7 +112,7 @@ The actions are separated into the following categories:
   - **This button** — the checkboxes on the button itself. This is the default and how Save Preset has always worked.
   - **Module toggles** — the module's own switches, shared by every Save button pointed at them. Flip them with the **Preset - Set Save Option** action (each option, or All, set On/Off/Toggle). Nothing has to be created first: the toggles ship with the module, default to all on, read back as the `savePresetOption_*` variables, and are remembered across a restart.
   - **Variables** — point each option at any variable holding true/false, 1/0, yes/no or on/off.
-- The **Preset Save Options** preset category has a ready-made switch per option (green when that option is being saved, dark when it is not), an All button, and a summary button. Drop them on a page next to the **Save Preset (Module Toggles)** buttons to pick what a save writes without editing any button.
+- The **Preset Save Options** preset category has a ready-made switch per option (green when that option is being saved, dark when it is not), an All button, and a summary button. Drop them on a page next to any Save Preset button set to "Module toggles" to pick what a save writes without editing that button again.
 
 **Recall Presets**
 
