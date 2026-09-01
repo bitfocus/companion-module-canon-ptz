@@ -33,6 +33,8 @@ The actions are separated into the following categories:
 - Tally On (PVW/PGM)
 - Tally Toggle
 - Digital Zoom On/Off
+- Digital Magnification On/Off
+- Digital Magnification Value
 - Image Stabilization On/Off
 - Send Custom Command
 - Change Module IP
@@ -59,6 +61,8 @@ The actions are separated into the following categories:
 - Focus Speed Down
 - Focus Mode (Auto/Manual Focus)
 - One Shot Auto Focus (OSAF)
+- Spot (Touch) Auto Focus — CR-N350/CR-N400
+- Soft Zoom Control — CR-N100/CR-N350/CR-N400
 
 **Exposure**
 
@@ -74,9 +78,14 @@ The actions are separated into the following categories:
 - Gain Up
 - Gain Down
 - Set Gain
-- ND Filter Up
-- ND Filter Down
-- Set ND Filter
+- ND Filter Up — not on CR-N100/CR-N350/CR-N400, where the ND filter is read-only
+- ND Filter Down — as above
+- Set ND Filter — as above
+- ND Filter Mode (Assist/Fixed) — CR-N100/CR-N350/CR-N400
+- Scene Mode — CR-N100
+- Gain Increment (Normal/Fine) — CR-N350/CR-N400
+- Iris Increment (1/3, 1/4 Stop) — CR-N350/CR-N400
+- Iris Fine On/Off — CR-N350/CR-N400
 - Pedestal Up
 - Pedestal Down
 - Set Pedestal (Black Level)
