@@ -101,6 +101,8 @@ module.exports = {
 	//Cursor positions for the up/down actions, and their matching values
 	defaultIndexes: function () {
 		return {
+			//cleared here so swapping cameras re-reports an unknown model once
+			unknownModelLogged: false,
 			ptSpeed: 625,
 			ptSpeedIndex: 4,
 			zSpeed: 8,

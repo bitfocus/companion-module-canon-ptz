@@ -1,4 +1,54 @@
+const { MODELS, SERIES_SPECS } = require('./models.js')
+
 module.exports = {
+	//Resolve the configured or camera-reported model name to its SERIES_SPECS
+	//profile. Canon's c.<c>.type spelling doesn't always match the id in
+	//MODELS -- rev 011 writes the XF605 with no hyphen, while MODELS has
+	//"Canon XF-605" -- so fall back to a normalised comparison before giving
+	//up. An unknown model must degrade to the "Other" profile: dereferencing
+	//the miss is what crashed the module once per poll in #87.
+	resolveSeries: function (model) {
+		let self = this;
+
+		let series = '';
+
+		if (model !== '' && model !== undefined) {
+			let match = MODELS.find((MODEL) => MODEL.id == model);
+
+            if (match === undefined) {
+				const normalise = (name) => String(name).toLowerCase().replace(/[^a-z0-9]/g, '');
+				match = MODELS.find((MODEL) => normalise(MODEL.id) === normalise(model));
+
+				if (match !== undefined) {
+					self.log('debug', `Model '${model}' matched '${match.id}' after normalising the name.`);
+				}
+			}
+
+			if (match !== undefined) {
+				series = match.series;
+			}
+			else {
+				if (!self.unknownModelLogged) {
+					self.log('warn', `Unrecognised camera model '${model}'. Falling back to the 'Other' profile -- please report this so it can be added.`);
+					self.unknownModelLogged = true;
+				}
+				series = 'Other';
+			}
+		}
+
+		return series;
+	},
+
+	//The profile for a series, or the "Other" profile when it has none of its own
+	seriesSpec: function (series) {
+		if (series === 'Auto' || series === 'Other' || series === '') {
+			return SERIES_SPECS.find((SPEC) => SPEC.id == 'Other');
+		}
+
+		return SERIES_SPECS.find((SPEC) => SPEC.id == series)
+			|| SERIES_SPECS.find((SPEC) => SPEC.id == 'Other');
+	},
+
 	runCustomTrace: function(loop, loopMode, repeatCount, position, direction) {
 		let self = this;
 

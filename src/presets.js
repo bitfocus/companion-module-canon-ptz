@@ -23,21 +23,10 @@ module.exports = {
 			self.data.model = self.config.model
 		}
 
-		if (self.data.model !== '') {
-			self.data.series = MODELS.find((MODELS) => MODELS.id == self.data.model).series
-		}
+		self.data.series = self.resolveSeries(self.data.model)
 
 		// Find the specific commands for a given series
-		if (
-			self.data.series === 'Auto' ||
-			self.data.series === 'Other' ||
-			SERIES_SPECS.find((SERIES_SPECS) => SERIES_SPECS.id == self.data.series) == undefined
-		) {
-			SERIES = SERIES_SPECS.find((SERIES_SPECS) => SERIES_SPECS.id == 'Other')
-		}
-		else {
-			SERIES = SERIES_SPECS.find((SERIES_SPECS) => SERIES_SPECS.id == self.data.series)
-		}
+		SERIES = self.seriesSpec(self.data.series)
 
 		let s = SERIES.actions;
 
