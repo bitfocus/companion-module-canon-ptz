@@ -192,6 +192,15 @@ module.exports = {
 			variables.push({ variableId: 'presetSpeedValue', name: 'Preset Speed Value' })
 		}
 
+		//Save Preset options. These read back ON/OFF, which parseBoolean also
+		//accepts, so they drop straight into the variable mode of Preset - Save.
+		if (SERIES.actions.presets == true) {
+			for (const option of c.SAVE_PRESET_OPTIONS) {
+				variables.push({ variableId: 'savePresetOption_' + option.key, name: 'Save Preset Option - ' + option.label + ' ON/OFF' })
+			}
+			variables.push({ variableId: 'savePresetOptions', name: 'Save Preset Options - Summary' })
+		}
+
 		if (self.config.enableTracking) {
 			//build the auto tracking add on variables if enabled
 			variables.push({ variableId: 'tracking_autotracking', name: 'Auto Tracking - On/Off' })
@@ -580,6 +589,21 @@ module.exports = {
 			if (SERIES.variables.presetSpeedValue == true) {
 				let value = c.CHOICES_PSSPEED().find((PRESETSPEEDVALUE) => PRESETSPEEDVALUE.id == self.data.presetSpeedValue).varLabel;
 				variableValues.presetSpeedValue = value;
+			}
+
+			if (SERIES.actions.presets == true) {
+				let enabled = [];
+
+				for (const option of c.SAVE_PRESET_OPTIONS) {
+					let on = self.data.savePresetOptions[option.key] == true;
+					variableValues['savePresetOption_' + option.key] = on ? 'ON' : 'OFF';
+
+					if (on) {
+						enabled.push(option.short);
+					}
+				}
+
+				variableValues.savePresetOptions = enabled.length ? enabled.join(', ') : 'None';
 			}
 
 			if (self.config.enableTracking) {

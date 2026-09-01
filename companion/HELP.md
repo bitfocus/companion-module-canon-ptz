@@ -108,7 +108,11 @@ The actions are separated into the following categories:
 **Save presets**
 
 - Save Preset 1-100, with options to set name and settings to save (ptz, focus, exposure, etc.)
-- The save options can be driven by variables instead of checkboxes — tick "Use variables for the save options below" and point each one at a variable holding true/false. One set of custom variables can then change what every camera saves, without editing each button.
+- "Where the save options come from" chooses how a Save Preset button decides what to write:
+  - **This button** — the checkboxes on the button itself. This is the default and how Save Preset has always worked.
+  - **Module toggles** — the module's own switches, shared by every Save button pointed at them. Flip them with the **Preset - Set Save Option** action (each option, or All, set On/Off/Toggle). Nothing has to be created first: the toggles ship with the module, default to all on, read back as the `savePresetOption_*` variables, and are remembered across a restart.
+  - **Variables** — point each option at any variable holding true/false, 1/0, yes/no or on/off.
+- The **Preset Save Options** preset category has a ready-made switch per option (green when that option is being saved, dark when it is not), an All button, and a summary button. Drop them on a page next to the **Save Preset (Module Toggles)** buttons to pick what a save writes without editing any button.
 
 **Recall Presets**
 
@@ -179,6 +183,8 @@ A list of all the available Variables in this module sorted into the following c
 - Preset Recall Mode
 - Preset Time Value
 - Preset Speed Value
+- Save Preset Option ON/OFF, one per option (`savePresetOption_ptz`, `_focus`, `_exposure`, `_whitebalance`, `_is`, `_cp`)
+- Save Preset Options summary, e.g. `PTZ, Exp, WB` (`savePresetOptions`)
 
 ## Feedbacks
 
@@ -206,6 +212,7 @@ A list of all the available Feedbacks in this module sorted into the following c
 
 - Preset Last Used
 - Preset Recall Mode
+- Preset Save Option State — whether one option (or All) is currently set to be saved
 
 **Custom**
 

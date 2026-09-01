@@ -2784,6 +2784,141 @@ module.exports = {
 			}
 		}
 
+		// #################################
+		// #### Preset Save Option Toggles ####
+		// #################################
+
+		if (s.presets == true) {
+			//One switch per thing a Save Preset can write. Green is "this gets
+			//saved", dark is "leave whatever the preset already had". Point a
+			//Save button at the module toggles and these drive it.
+			for (const option of c.SAVE_PRESET_OPTIONS) {
+				presets['savePresetOption_' + option.key] = {
+					category: 'Preset Save Options',
+					type: 'button',
+					name: 'Save Option - ' + option.label + ' On/Off',
+					style: {
+						text: option.short + '\\n$(canon-ptz:savePresetOption_' + option.key + ')',
+						size: '18',
+						color: foregroundColor,
+						bgcolor: combineRgb(40, 40, 40),
+					},
+					steps: [
+						{
+							down: [
+								{
+									actionId: 'savePresetOption',
+									options: {
+										option: option.key,
+										state: 'toggle',
+									}
+								}
+							],
+							up: [],
+						},
+					],
+					feedbacks: [
+						{
+							feedbackId: 'savePresetOption',
+							options: {
+								option: option.key,
+								state: '1',
+							},
+							style: {
+								color: combineRgb(0, 0, 0),
+								bgcolor: backgroundColorGreen,
+							}
+						}
+					]
+				}
+			}
+
+			presets.savePresetOption_all = {
+				category: 'Preset Save Options',
+				type: 'button',
+				name: 'Save Option - All On/Off',
+				style: {
+					text: 'SAVE\\nALL',
+					size: '18',
+					color: foregroundColor,
+					bgcolor: combineRgb(40, 40, 40),
+				},
+				steps: [
+					{
+						down: [
+							{
+								actionId: 'savePresetOption',
+								options: {
+									option: 'all',
+									state: 'true',
+								}
+							}
+						],
+						up: [],
+					},
+				],
+				feedbacks: [
+					{
+						feedbackId: 'savePresetOption',
+						options: {
+							option: 'all',
+							state: '1',
+						},
+						style: {
+							color: combineRgb(0, 0, 0),
+							bgcolor: backgroundColorGreen,
+						}
+					}
+				]
+			}
+
+			presets.savePresetOption_summary = {
+				category: 'Preset Save Options',
+				type: 'button',
+				name: 'Save Options - Summary',
+				style: {
+					text: 'SAVING\\n$(canon-ptz:savePresetOptions)',
+					size: '14',
+					color: foregroundColor,
+					bgcolor: combineRgb(0, 0, 0),
+				},
+				steps: [],
+				feedbacks: []
+			}
+		}
+
+		if (s.presets == true) {
+			for (let save = 1; save <= 100; save++) {
+				presets['presetSaveToggles' + save] = {
+					category: 'Save Preset (Module Toggles)',
+					type: 'button',
+					name: 'Save Preset ' + save + ' (Module Toggles)',
+					style: {
+						text: 'SAVE\\nPSET\\n' + save + '\\n$(canon-ptz:savePresetOptions)',
+						size: '14',
+						color: foregroundColor,
+						bgcolor: combineRgb(0, 0, 0)
+					},
+					steps: [
+						{
+							down: [
+								{
+									actionId: 'savePset',
+									options: {
+										val: save,
+										name: 'preset' + save,
+										save_source: 'module',
+									}
+								}
+							],
+							up: []
+						},
+					],
+					feedbacks: []
+				}
+			}
+		}
+
 		if (s.presets == true) {
 			for (let save = 1; save <= 100; save++) {
 				presets['presetSave' + save] = {
@@ -2804,6 +2939,7 @@ module.exports = {
 									options: {
 										val: save,
 										name: 'preset' + save,
+										save_source: 'button',
 										save_ptz: true,
 										save_focus: true,
 										save_exposure: true,

@@ -80,6 +80,9 @@ class canonptzInstance extends InstanceBase {
 
 		Object.assign(this, state.defaultIndexes())
 
+		//data was just rebuilt from defaults, so put the saved toggles back
+		this.loadSavePresetOptions()
+
 		this.config.host = this.config.host || ''
 		this.config.httpPort = this.config.httpPort || 80
 		this.config.model = this.config.model || 'Auto'
