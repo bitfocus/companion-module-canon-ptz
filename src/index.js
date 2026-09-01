@@ -4,6 +4,7 @@ const { InstanceBase, runEntrypoint } = require('@companion-module/base')
 const UpgradeScripts = require('./upgrades')
 
 const config = require('./config')
+const state = require('./state')
 const actions = require('./actions')
 const feedbacks = require('./feedbacks')
 const variables = require('./variables')
@@ -70,129 +71,14 @@ class canonptzInstance extends InstanceBase {
 		}
 		this.config = config
 
-		this.data = {
-			debug: false,
-			model: 'Auto',
-			modelDetected: '',
-			series: 'Auto',
-			//System
-			cameraName: '',
-			powerState: '',
-			tallyState: '',
-			tallyProgram: '',
-			tallyPreview: '',
-			digitalZoom: '',
-			digitalMagnificationValue: '',
-			digitalMagnificationListString: '',
-			digitalMagnificationList: null,
-			imageStabilization: '',
-			firmwareVersion: '',
-			protocolVersion: '',
-			macAddress: '',
-			platformStatus: '',
-
-			//Zoom/Focus
-			zoomSpeed: 8,
-			zoomValue: '', //unknown starting value (for XF605 etc)
-			focusSpeed: 1,
-			focusValue: 0,
-			autoFocusMode: '',
-
-			//Pan/Tilt
-			panTiltSpeedValue: 625,
-
-			//Exposure
-			exposureShootingMode: 'auto',
-			exposureShootingModeListString: '',
-			exposureShootingModeList: null,
-			exposureMode: 'auto',
-			exposureModeListString: '',
-			exposureModeList: null,
-			aeGainLimitMax: 330,
-			aeGainLimitMaxMin: -60,
-			aeGainLimitMaxMax: 330,
-			aeBrightness: 0,
-			aeBrightnessListString: '',
-			aeBrightnessList: null,
-			aePhotometry: 'center',
-			aePhotometryListString: '',
-			aePhotometryList: null,
-			aeFlickerReduct: 'off',
-			aeFlickerReductListString: '',
-			aeFlickerReductList: null,
-			aeResp: 1,
-			aeRespMin: 0,
-			aeRespMax: 2,
-			shutterMode: 'manual',
-			shutterValue: 2,
-			shutterListString: '',
-			shutterList: null,
-			irisMode: 'manual',
-			irisValue: 180,
-			irisListString: '',
-			irisList: null,
-			gainMode: 'manual',
-			gainValue: 10,
-			ndfilterValue: '0',
-			pedestalValue: '',
-
-			//White Balance
-			whitebalanceMode: 'auto',
-			whitebalanceModeListString: '',
-			whitebalanceModeList: null,
-			kelvinValue: '2000',
-			kelvinListString: '',
-			kelvinList: null,
-			rGainValue: '0',
-			bGainValue: '0',
-	
-			//Other
-			colorBars: '',
-
-			//Recall Preset
-			presetCount: 100,
-			presetLastUsed: 1,
-			presetRecallMode: 'normal',
-			presetTimeValue: 2000,
-			presetSpeedValue: 1,
-
-			trackingConfig: {},
-			trackingInformation: {},
-		}
+		this.data = state.defaultData()
 
 		//preset names
 		for (let i = 1; i <= this.data.presetCount; i++) {
 			this.data['presetname' + i] = i;
 		}
 
-		this.ptSpeed = 625
-		this.ptSpeedIndex = 4
-		this.zSpeed = 8
-		this.zSpeedIndex = 7
-		this.fSpeed = 1
-		this.fSpeedIndex = 1
-		this.exposureModeIndex = 0
-		this.shutterValue = 0
-		this.shutterIndex = 0
-		this.irisValue = 'auto'
-		this.irisIndex = 0
-		this.gainValue = 'auto'
-		this.gainIndex = 0
-		this.ndfilterValue = '0'
-		this.ndfilterIndex = 0
-		this.pedestalValue = 0
-		this.pedestalIndex = 51
-		this.whitebalanceModeIndex = 0;
-		this.kelvinIndex = 0
-		this.kelvinValue = 2820
-		this.rGainIndex = 50
-		this.rGainValue = 0
-		this.bGainIndex = 50
-		this.bGainValue = 0
-		this.presetRecallModeIndex = 0
-		this.presetLastUsedIndex = 0
-		this.presetDriveTimeIndex = 0
-		this.presetDriveSpeedIndex = 0
+		Object.assign(this, state.defaultIndexes())
 
 		this.config.host = this.config.host || ''
 		this.config.httpPort = this.config.httpPort || 80

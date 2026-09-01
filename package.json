@@ -3,7 +3,7 @@
 	"version": "2.5.0",
 	"main": "src/index.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "node test/smoke.js"
 	},
 	"license": "MIT",
 	"repository": {
