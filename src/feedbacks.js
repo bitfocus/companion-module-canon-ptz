@@ -199,7 +199,7 @@ module.exports = {
 			}
 		}
 
-		if (SERIES.feedbacks.digitalMagnification == true) {
+		if (SERIES.feedbacks.digitalMagnification == true && SERIES.actions.digitalMagnification) {
 			feedbacks.digitalMagnification = {
 				type: 'boolean',
 				name: 'System - Digital Magnification State',

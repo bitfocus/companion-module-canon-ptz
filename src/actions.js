@@ -73,7 +73,7 @@ module.exports = {
 		var s = SERIES.actions;
 
 		//check if any lists need to be updated
-		if (self.data.digitalMagnificationList !== null) {
+		if (s.digitalMagnification && self.data.digitalMagnificationList !== null) {
 			s.digitalMagnification.dropdown = c.CHOICES_DIGITALMAGNIFICATION_BUILD(self.data.digitalMagnificationList); //rebuild the list by running the function again
 		}
 
@@ -320,7 +320,7 @@ module.exports = {
 			}
 		}
 
-		if (s.digitalMagnification.cmd) {
+		if (s.digitalMagnification && s.digitalMagnification.cmd) {
 			actions.digitalMagnification = {
 				name: 'Digital Magnification On/Off',
 				options: [

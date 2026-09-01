@@ -343,7 +343,7 @@ module.exports = {
 			}
 		}
 
-		if (s.digitalMagnification.cmd) {
+		if (s.digitalMagnification && s.digitalMagnification.cmd) {
 			presets.digitalMagnificationOnOff = {
 				category: 'System',
 				type: 'button',
