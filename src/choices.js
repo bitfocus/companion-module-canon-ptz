@@ -442,6 +442,35 @@ module.exports = {
 		{ id: 'fine',   label: 'Fine (0.5 dB)' }
 	],
 
+	//Cinema EOS bodies reach much further than the remote cameras:
+	//me.gain.max is 42.0 dB, or 54.0 dB with extended gain on, and the floor
+	//drops to -6.0 dB extended. XC Protocol Specifications BPE-7216-011,
+	//c.<c>.me.gain.min / c.<c>.me.gain.max
+	CHOICES_GAIN_CINEMA: function () {
+		return this.CHOICES_GAIN_BUILD(-60, 540);
+	},
+
+	//The C-series carries a wider ND range than the remote cameras when
+	//Extended ND is on. c.<c>.nd.filter.list
+	CHOICES_NDFILTER_CINEMA: [
+		{ id: '0',      label: 'Off' },
+		{ id: '400',    label: 'ND 1/4 (2 stops)' },
+		{ id: '1600',   label: 'ND 1/16 (4 stops)' },
+		{ id: '6400',   label: 'ND 1/64 (6 stops)' },
+		{ id: '25600',  label: 'ND 1/256 (8 stops, extended)' },
+		{ id: '102400', label: 'ND 1/1024 (10 stops, extended)' }
+	],
+
+	//Cinema EOS has no auto or scene exposure: c.<c>.shooting.list and
+	//c.<c>.exp.list are both just "manual"
+	CHOICES_EXPOSURESHOOTINGMODES_CINEMA: function () {
+		return this.CHOICES_EXPOSURESHOOTINGMODES_BUILD(['manual']);
+	},
+
+	CHOICES_EXPOSUREMODES_CINEMA: function () {
+		return this.CHOICES_EXPOSUREMODES_BUILD(['manual']);
+	},
+
 	CHOICES_GAIN_XF605: [
 		//-60, -30, 0, 30, 60, 90, 120, 150, 180, 210.
 		{ id: '-60',    label: '-6dB' },
