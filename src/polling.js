@@ -326,8 +326,32 @@ module.exports = {
 				case 'c.1.me.gain':
 					self.data.gainValue = str[1];
 					break;
+				case 'c.1.me.gain.increment':
+					self.data.gainIncrement = str[1];
+					break;
+				case 'c.1.me.diaphragm.increment':
+					self.data.irisIncrement = str[1];
+					break;
+				case 'c.1.me.diaphragm.fine':
+					self.data.irisFine = str[1];
+					break;
 				case 'c.1.nd.filter':
 					self.data.ndfilterValue = str[1];
+					break;
+				case 'c.1.nd.mode':
+					self.data.ndMode = str[1];
+					break;
+				case 'c.1.scene':
+					self.data.sceneMode = str[1];
+					break;
+				case 'c.1.zoom.accel':
+					self.data.zoomAccel = str[1];
+					break;
+				case 'c.1.focus.oneshot.status':
+					self.data.oneshotAutoFocusStatus = str[1];
+					break;
+				case 'c.1.focus.oneshot.result':
+					self.data.oneshotAutoFocusResult = str[1];
 					break;
 				case 'c.1.blacklevel':
 					self.data.pedestalValue = str[1];

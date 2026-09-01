@@ -2,7 +2,14 @@ Canon PTZ
 
 ## This module supports the following Canon PTZ cameras:
 
-**CR-N300, CR-N500, CR-N700**
+**CR-N100, CR-N300, CR-N350, CR-N400, CR-N500, CR-N700, CR-X300, CR-X500**
+
+Model capabilities follow the feature tables in Canon's XC Protocol Specifications (BPE-7216-011). A few notes on the newer models:
+
+- On the CR-N100, CR-N350 and CR-N400 the ND filter value is read-only. Use **Exposure - ND Filter Mode** (Assist / Fixed) to control it; the ND filter value is still reported as a variable.
+- The CR-N350 and CR-N400 have no Scene shooting mode and no Av/Tv exposure modes, and their gain tops out at 30.0 dB.
+- The CR-N350 and CR-N400 add Advanced Zoom, Spot (Touch) AF, gain increment, and iris increment/fine controls.
+- The CR-N100 adds Scene mode selection.
 
 It also supports the following Canon XF series cameras:
 

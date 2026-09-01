@@ -291,6 +291,16 @@ module.exports = {
 		}
 
 		if (s.digitalZoom == true) {
+			let digitalZoomChoices = [
+				{ id: 0, label: 'Off' },
+				{ id: 1, label: 'On' },
+			]
+
+			//the CR-N400/CR-N350 also offer Advanced Zoom as a zoom mode
+			if (s.advancedZoom == true) {
+				digitalZoomChoices.push({ id: 2, label: 'Advanced Zoom' })
+			}
+
 			actions.digitalZoom = {
 				name: 'Digital Zoom On/Off',
 				options: [
@@ -299,10 +309,7 @@ module.exports = {
 						label: 'On/Off',
 						id: 'bol',
 						default: 0,
-						choices: [
-							{ id: 0, label: 'Off' },
-							{ id: 1, label: 'On' },
-						],
+						choices: digitalZoomChoices,
 					},
 				],
 				callback: async (action) => {
@@ -313,6 +320,10 @@ module.exports = {
 					if (action.options.bol == 1) {
 						cmd = 'c.1.zoom.mode=dzoom'
 						self.data.digitalZoom = 'dzoom';
+					}
+					if (action.options.bol == 2) {
+						cmd = 'c.1.zoom.mode=advanced'
+						self.data.digitalZoom = 'advanced';
 					}
 					self.sendPTZ(self.ptzCommand, cmd)
 					self.getCameraInformation_Delayed();
@@ -364,6 +375,27 @@ module.exports = {
 					cmd = 'c.1.zoom.mag=' + action.options.val;
 					self.sendPTZ(self.ptzCommand, cmd);
 					self.data.digitalMagnificationValue = action.options.val;
+					self.getCameraInformation_Delayed();
+				}
+			}
+		}
+
+		if (s.zoomAccel && s.zoomAccel.cmd) {
+			actions.zoomAccel = {
+				name: 'Lens - Soft Zoom Control',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Ramp Zoom On',
+						id: 'val',
+						default: s.zoomAccel.dropdown[0].id,
+						choices: s.zoomAccel.dropdown
+					}
+				],
+				callback: async (action) => {
+					cmd = s.zoomAccel.cmd + action.options.val;
+					self.sendPTZ(self.ptzCommand, cmd);
+					self.data.zoomAccel = action.options.val;
 					self.getCameraInformation_Delayed();
 				}
 			}
@@ -932,7 +964,19 @@ module.exports = {
 				name: 'Lens - Focus - One Shot Auto Focus',
 				options: [],
 				callback: async (action) => {
-					cmd = 'focus=one_shot'
+					//one_shot is a focus *action*; 'focus' itself only takes auto/manual
+					cmd = 'c.1.focus.action=one_shot'
+					self.sendPTZ(self.ptzCommand, cmd)
+				}
+			}
+		}
+
+		if (s.spotAutoFocus == true) {
+			actions.focusSpotAF = {
+				name: 'Lens - Focus - Spot (Touch) Auto Focus',
+				options: [],
+				callback: async (action) => {
+					cmd = 'c.1.focus.action=spot'
 					self.sendPTZ(self.ptzCommand, cmd)
 				}
 			}
@@ -1018,6 +1062,31 @@ module.exports = {
 						cmd = 'c.1.exp=' + self.data.exposureMode;
 						self.sendPTZ(self.ptzCommand, cmd);
 					}
+					self.getCameraInformation_Delayed();
+				}
+			}
+		}
+
+		if (s.scene && s.scene.cmd) {
+			actions.sceneMode = {
+				name: 'Exposure - Scene Mode',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Scene Mode',
+						id: 'val',
+						default: s.scene.dropdown[0].id,
+						choices: s.scene.dropdown
+					}
+				],
+				callback: async (action) => {
+					//scene is only selectable while the shooting mode is scene
+					cmd = 'c.1.shooting=scene';
+					self.sendPTZ(self.ptzCommand, cmd);
+					self.data.exposureShootingMode = 'scene';
+					cmd = s.scene.cmd + action.options.val;
+					self.sendPTZ(self.ptzCommand, cmd);
+					self.data.sceneMode = action.options.val;
 					self.getCameraInformation_Delayed();
 				}
 			}
@@ -1617,6 +1686,93 @@ module.exports = {
 					self.data.ndfilterValue = self.ndfilterValue;
 					cmd = s.ndfilter.cmd + self.ndfilterValue;
 					self.sendPTZ(self.ptzCommand, cmd);
+					self.getCameraInformation_Delayed();
+				}
+			}
+		}
+
+		if (s.ndMode && s.ndMode.cmd) {
+			actions.ndMode = {
+				name: 'Exposure - ND Filter Mode',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'ND Filter Mode',
+						id: 'val',
+						default: s.ndMode.dropdown[0].id,
+						choices: s.ndMode.dropdown
+					}
+				],
+				callback: async (action) => {
+					cmd = s.ndMode.cmd + action.options.val;
+					self.sendPTZ(self.ptzCommand, cmd);
+					self.data.ndMode = action.options.val;
+					self.getCameraInformation_Delayed();
+				}
+			}
+		}
+
+		if (s.gainIncrement && s.gainIncrement.cmd) {
+			actions.gainIncrement = {
+				name: 'Exposure - Gain Increment',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Gain Increment',
+						id: 'val',
+						default: s.gainIncrement.dropdown[0].id,
+						choices: s.gainIncrement.dropdown
+					}
+				],
+				callback: async (action) => {
+					cmd = s.gainIncrement.cmd + action.options.val;
+					self.sendPTZ(self.ptzCommand, cmd);
+					self.data.gainIncrement = action.options.val;
+					self.getCameraInformation_Delayed();
+				}
+			}
+		}
+
+		if (s.irisIncrement && s.irisIncrement.cmd) {
+			actions.irisIncrement = {
+				name: 'Exposure - Iris Increment',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Iris Increment',
+						id: 'val',
+						default: s.irisIncrement.dropdown[0].id,
+						choices: s.irisIncrement.dropdown
+					}
+				],
+				callback: async (action) => {
+					cmd = s.irisIncrement.cmd + action.options.val;
+					self.sendPTZ(self.ptzCommand, cmd);
+					self.data.irisIncrement = action.options.val;
+					self.getCameraInformation_Delayed();
+				}
+			}
+		}
+
+		if (s.irisFine == true) {
+			actions.irisFine = {
+				name: 'Exposure - Iris Fine On/Off',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'On/Off',
+						id: 'val',
+						default: 'off',
+						choices: [
+							{ id: 'off', label: 'Off' },
+							{ id: 'on', label: 'On' }
+						],
+					},
+				],
+				callback: async (action) => {
+					cmd = 'c.1.me.diaphragm.fine=' + action.options.val;
+					self.sendPTZ(self.ptzCommand, cmd);
+					self.data.irisFine = action.options.val;
 					self.getCameraInformation_Delayed();
 				}
 			}
