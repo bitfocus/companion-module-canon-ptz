@@ -11,6 +11,7 @@ module.exports = {
 		{ id: 'Canon CR-N700', series: 'CR-N700', label: 'Canon CR-N700' },
 		{ id: 'Canon CR-X300', series: 'CR-X300', label: 'Canon CR-X300' },
 		{ id: 'Canon CR-X500', series: 'CR-X500', label: 'Canon CR-X500' },
+		{ id: 'Canon EOS C80', series: 'C80', label: 'Canon EOS C80' },
 		{ id: 'Canon XF-605', series: 'XF-605', label: 'Canon XF-605' },
 		{ id: 'Other', series: 'Other', label: 'Other Cameras' }
 	],
@@ -861,6 +862,105 @@ module.exports = {
 				iris: { cmd: 'c.1.me.diaphragm=', dropdown: c.CHOICES_IRIS_OTHER() },
 				gain: { cmd: 'c.1.me.gain=', dropdown: c.CHOICES_GAIN_OTHER() }, // Has Gain Support
 				ndfilter: { cmd: 'c.1.nd.filter=', dropdown: c.CHOICES_NDFILTER_OTHER }, // Has ND Filter Support
+				pedestal: { cmd: 'c.1.blacklevel=', dropdown: c.CHOICES_PEDESTAL_OTHER() }, // Has Pedestal Support
+				whitebalanceMode: {cmd: 'c.1.wb=', dropdown: c.CHOICES_WBMODE_OTHER() },
+				kelvin: {cmd: 'c.1.wb.kelvin=', dropdown: c.CHOICES_KELVIN_OTHER() },
+				rGain: {cmd: 'c.1.wb.shift.rgain=', dropdown: c.CHOICES_RGAIN_OTHER() },
+				bGain: {cmd: 'c.1.wb.shift.bgain=', dropdown: c.CHOICES_BGAIN_OTHER() },
+				wbPreset: true,
+				presets: true, // Can Save and Recall Presets
+				speedPset: true, // Has Preset Recall Speed Control
+				timePset: true, // Has Preset Recall Time Control
+				traces: true, //prepare, start, stop traces
+				custom: true //allow user to send custom commands
+			}
+		},
+		{
+			id: 'C80',
+			variables: {
+				//system
+				powerState: true, //camera is on or off (idle or standby)
+				cameraName: true, //name of camera
+				digitalZoom: false, //digital zoom is turned on/off
+				digitalMagnificationValue: true, //digital mag is available
+				firmwareVersion: true, //firmware version
+				protocolVersion: true, //protocol version
+				macAddress: true, //MAC address
+				//zoom/focus
+				zoomSpeed: true, //zoom speed value
+				zoomValue: true, //current zoom value
+				focusSpeed: true, //focus speed value
+				focusValue: true, //focus length value
+				autoFocusMode: true, //focus mode auto/manual
+				//exposure
+				exposureShootingMode: true, //exposure shooting mode (auto, manual, scene)
+				exposureMode: true, //exposure mode auto, av, tv, manual
+				ae: true, //ae gainlimit, brightness, photometry, flickerreduct
+				shutterMode: true, //shutter mode auto/manual
+				shutterValue: true, //shutter value
+				irisMode: true, //iris auto/manual
+				irisValue: true, //iris value
+				gainMode: true, //gain auto/manual
+				gainValue: true, //gain value
+				ndfilterValue: true, //neutral density value
+				pedestalValue: true, //pedestal value
+				//white balance
+				whitebalanceMode: true, //white balance mode auto, manual, wb_a, wb_b, daylight, tungsten, kelvin
+				kelvinValue: true, //current kelvin value
+				rGainValue: true, //current r gain value
+				bGainValue: true, //current b gain value
+				//recall preset
+				presetNames: true, // preset stored names as variables
+				presetLastUsed: true, //preset last recalled
+				presetRecallMode: true, //preset recall mode normal, time, speed
+				presetTimeValue: true, //preset time value
+				presetSpeedValue: true //preset speed value
+			},
+			feedbacks: {
+				powerState: true, //power is on or off
+				tallyProgram: true, //pgm tally is on or off
+				tallyPreview: true, //pvw tally is on or off
+				digitalZoom: false, //digital zoom is on or off
+				digitalMagnification: true, //digital mag is available
+				imageStabilization: true, //image stabilization is on or off
+				autoFocusMode: true, //focus mode is auto or manual
+				exposureShootingMode: true, //exposure shooting mode (auto, manual, scene)
+				exposureMode: true, //exposure mode is full auto, program, tv, av, or manual
+				autoShutterMode: true, //shutter mode is auto or manual
+				autoIrisMode: true, //iris mode is auto or manual
+				autoGainMode: true, //gain mode is auto or manual
+				whitebalanceMode: true, //white balance mode
+				presetLastUsed: true, //preset last recalled
+				presetRecallMode: true //preset recall mode is normal, time, or speed
+			},
+			actions: {
+				powerState: true, // Has Power Control
+				tallyProgram: true, // Has Red Tally Light Control
+				tallyPreview: true, // Has Green Tally Light Control
+				cameraName: true, //Supports Custom Camera Name
+				digitalZoom: false, //Cinema EOS has no dzoom mode, only off and mag
+				digitalMagnification: { cmd: 'c.1.zoom.mag=', dropdown: c.CHOICES_DIGITALMAGNIFICATION_OTHER() },
+				imageStabilization: true, //Supports Image Stabilization
+				panTilt: false, // Has Pan/Tilt Support
+				ptSpeed: true, // Internal Speed Options
+				zoom: true, // Has Zoom Support
+				zoomValue: true, //for XF605, etc.
+				zoomSpeed: true, // Internal Speed Options
+				focus: true, // Has Focus Support
+				focusSpeed: true, // Internal Focus Options
+				autoFocus: true, // Has Auto Focus Support
+				oneshotAutoFocus: true, // Has One Shot Auto Focus Support
+				exposureShootingMode: { cmd: 'c.1.shooting=', dropdown: c.CHOICES_EXPOSURESHOOTINGMODES_CINEMA() }, // Manual only
+				exposureMode: { cmd: 'c.1.exp=', dropdown: c.CHOICES_EXPOSUREMODES_CINEMA() }, // Manual only
+				aeGainLimit: true,
+				aeBrightness: { cmd: 'c.1.ae.brightness=', dropdown: c.CHOICES_AEBRIGHTNESS_OTHER() },
+				aePhotometry: { cmd: 'c.1.ae.photometry=', dropdown: c.CHOICES_AEPHOTOMETRY_OTHER() },
+				aeFlickerReduct: { cmd: 'c.1.ae.flickerreduct=', dropdown: c.CHOICES_AEFLICKERREDUCT_OTHER() },
+				aeResp: true,
+				shutter: { cmd: 'c.1.me.shutter=', dropdown: c.CHOICES_SHUTTER_OTHER() }, // Has Shutter Support
+				iris: { cmd: 'c.1.me.diaphragm=', dropdown: c.CHOICES_IRIS_OTHER() },
+				gain: { cmd: 'c.1.me.gain=', dropdown: c.CHOICES_GAIN_CINEMA() }, // Reaches 54.0 dB with extended gain
+				ndfilter: { cmd: 'c.1.nd.filter=', dropdown: c.CHOICES_NDFILTER_CINEMA }, // Settable, with the extended range
 				pedestal: { cmd: 'c.1.blacklevel=', dropdown: c.CHOICES_PEDESTAL_OTHER() }, // Has Pedestal Support
 				whitebalanceMode: {cmd: 'c.1.wb=', dropdown: c.CHOICES_WBMODE_OTHER() },
 				kelvin: {cmd: 'c.1.wb.kelvin=', dropdown: c.CHOICES_KELVIN_OTHER() },

@@ -10,6 +10,7 @@ Model capabilities follow the feature tables in Canon's XC Protocol Specificatio
 - The CR-N350 and CR-N400 have no Scene shooting mode and no Av/Tv exposure modes, and their gain tops out at 30.0 dB.
 - The CR-N350 and CR-N400 add Advanced Zoom, Spot (Touch) AF, gain increment, and iris increment/fine controls.
 - The CR-N100 adds Scene mode selection.
+- The EOS C80 is supported as its own model. Cinema EOS bodies have no digital zoom mode — only the digital teleconverter — so **Digital Zoom On/Off** is not offered; use **Digital Magnification** instead. Their gain reaches 54.0 dB and exposure is manual-only.
 
 It also supports the following Canon XF series cameras:
 
@@ -107,6 +108,7 @@ The actions are separated into the following categories:
 **Save presets**
 
 - Save Preset 1-100, with options to set name and settings to save (ptz, focus, exposure, etc.)
+- The save options can be driven by variables instead of checkboxes — tick "Use variables for the save options below" and point each one at a variable holding true/false. One set of custom variables can then change what every camera saves, without editing each button.
 
 **Recall Presets**
 
@@ -204,3 +206,7 @@ A list of all the available Feedbacks in this module sorted into the following c
 
 - Preset Last Used
 - Preset Recall Mode
+
+**Custom**
+
+- Parameter Matches Value — compare any parameter the camera reports in `info.cgi` against a value, for things the module has no dedicated feedback for (for example `k.output2.crop`)

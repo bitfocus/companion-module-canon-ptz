@@ -293,7 +293,7 @@ module.exports = {
 				let exposureShootingModeValue = self.data.exposureShootingMode;
 				if (SERIES.actions.exposureShootingMode.dropdown) {
 					index = SERIES.actions.exposureShootingMode.dropdown.findIndex((EXPSHOOTINGMODE) => EXPSHOOTINGMODE.id == self.data.exposureShootingMode);
-					self.exposureShootingModeIndex = index;
+					self.exposureShootingModeIndex = index === -1 ? self.exposureShootingModeIndex : index;
 					let exposureShootingMode = SERIES.actions.exposureShootingMode.dropdown[self.exposureShootingModeIndex];
 					if (exposureShootingMode) {
 						exposureShootingModeValue = exposureShootingMode.label;
@@ -301,7 +301,7 @@ module.exports = {
 				}
 				else {
 					index = c.CHOICES_EXPOSURESHOOTINGMODES_OTHER().findIndex((EXPSHOOTINGMODE) => EXPSHOOTINGMODE.id == self.data.exposureShootingMode);
-					self.exposureShootingModeIndex = index;
+					self.exposureShootingModeIndex = index === -1 ? self.exposureShootingModeIndex : index;
 					let exposureShootingMode = SERIES.actions.exposureShootingMode.dropdown[self.exposureShootingModeIndex];
 					if (exposureShootingMode) {
 						exposureShootingModeValue = exposureShootingMode.label;
@@ -315,7 +315,7 @@ module.exports = {
 				let exposureModeValue = self.data.exposureMode;
 				if (SERIES.actions.exposureMode.dropdown) {
 					index = SERIES.actions.exposureMode.dropdown.findIndex((EXPMODE) => EXPMODE.id == self.data.exposureMode);
-					self.exposureModeIndex = index;
+					self.exposureModeIndex = index === -1 ? self.exposureModeIndex : index;
 					let exposureMode = SERIES.actions.exposureMode.dropdown[self.exposureModeIndex];
 					if (exposureMode) {
 						exposureModeValue = exposureMode.label;
@@ -323,7 +323,7 @@ module.exports = {
 				}
 				else {
 					index = c.CHOICES_EXPOSUREMODES_OTHER().findIndex((EXPMODE) => EXPMODE.id == self.data.exposureMode);
-					self.exposureModeIndex = index;
+					self.exposureModeIndex = index === -1 ? self.exposureModeIndex : index;
 					let exposureMode = SERIES.actions.exposureMode.dropdown[self.exposureModeIndex];
 					if (exposureMode) {
 						exposureModeValue = exposureMode.label;
@@ -351,7 +351,7 @@ module.exports = {
 				let shutterValue = self.data.shutterValue;
 				if (SERIES.actions.shutter.dropdown) {
 					index = SERIES.actions.shutter.dropdown.findIndex((SHUTTER) => SHUTTER.id == self.data.shutterValue);
-					self.shutterIndex = index;
+					self.shutterIndex = index === -1 ? self.shutterIndex : index;
 					let shutter = SERIES.actions.shutter.dropdown[self.shutterIndex];
 					if (shutter) {
 						shutterValue = shutter.label;
@@ -359,7 +359,7 @@ module.exports = {
 				}
 				else {
 					index = c.CHOICES_SHUTTER_OTHER().findIndex((SHUTTER) => SHUTTER.id == self.data.shutterValue);
-					self.shutterIndex = index;
+					self.shutterIndex = index === -1 ? self.shutterIndex : index;
 					let shutter = SERIES.actions.shutter.dropdown[self.shutterIndex];
 					if (shutter) {
 						shutterValue = shutter.label;
@@ -386,7 +386,7 @@ module.exports = {
 				let irisValue = self.data.irisValue;
 				if (SERIES.actions.iris.dropdown) {
 					index = SERIES.actions.iris.dropdown.findIndex((IRIS) => IRIS.id == self.data.irisValue);
-					self.irisIndex = index;
+					self.irisIndex = index === -1 ? self.irisIndex : index;
 					let iris = SERIES.actions.iris.dropdown[self.irisIndex];
 					if (iris) {
 						irisValue = iris.label;
@@ -394,7 +394,7 @@ module.exports = {
 				}
 				else {
 					index = c.CHOICES_IRIS_OTHER().findIndex((IRIS) => IRIS.id == self.data.irisValue);
-					self.irisIndex = index;
+					self.irisIndex = index === -1 ? self.irisIndex : index;
 					let iris = SERIES.actions.iris.dropdown[self.irisIndex];
 					if (iris) {
 						irisValue = iris.label;
@@ -421,7 +421,7 @@ module.exports = {
 				let gainValue = self.data.gainValue;
 				if (SERIES.actions.gain.dropdown) {
 					index = SERIES.actions.gain.dropdown.findIndex((GAIN) => GAIN.id == self.data.gainValue);
-					self.gainIndex = index;
+					self.gainIndex = index === -1 ? self.gainIndex : index;
 					let gain = SERIES.actions.gain.dropdown[self.gainIndex];
 					if (gain) {
 						gainValue = gain.label;
@@ -429,7 +429,7 @@ module.exports = {
 				}
 				else {
 					index = c.CHOICES_GAIN_OTHER().findIndex((GAIN) => GAIN.id == self.data.gainValue);
-					self.gainIndex = index;
+					self.gainIndex = index === -1 ? self.gainIndex : index;
 					let gain = SERIES.actions.gain.dropdown[self.gainIndex];
 					if (gain) {
 						gainValue = gain.label;
@@ -443,7 +443,7 @@ module.exports = {
 				let ndfilterValue = self.data.ndfilterValue;
 				if (SERIES.actions.ndfilter.dropdown) {
 					index = SERIES.actions.ndfilter.dropdown.findIndex((NDFILTER) => NDFILTER.id == self.data.ndfilterValue);
-					self.ndfilterIndex = index;
+					self.ndfilterIndex = index === -1 ? self.ndfilterIndex : index;
 					let ndfilter = SERIES.actions.ndfilter.dropdown[self.ndfilterIndex];
 					if (ndfilter) {
 						ndfilterValue = ndfilter.label;
@@ -451,7 +451,7 @@ module.exports = {
 				}
 				else {
 					index = c.CHOICES_NDFILTER_OTHER().findIndex((NDFILTER) => NDFILTER.id == self.data.ndfilterValue);
-					self.ndfilterIndex = index;
+					self.ndfilterIndex = index === -1 ? self.ndfilterIndex : index;
 					let ndfilter = SERIES.actions.ndfilter.dropdown[self.ndfilterIndex];
 					if (ndfilter) {
 						ndfilterValue = ndfilter.label;
@@ -494,7 +494,7 @@ module.exports = {
 				let pedestalValue = self.data.pedestalValue;
 				if (SERIES.actions.pedestal.dropdown) {
 					index = SERIES.actions.pedestal.dropdown.findIndex((PEDESTAL) => PEDESTAL.id == self.data.pedestalValue);
-					self.pedestalIndex = index;
+					self.pedestalIndex = index === -1 ? self.pedestalIndex : index;
 					let pedestal = SERIES.actions.pedestal.dropdown[self.pedestalIndex];
 					if (pedestal) {
 						pedestalValue = pedestal.label;
@@ -502,7 +502,7 @@ module.exports = {
 				}
 				else {
 					index = c.CHOICES_PEDESTAL_OTHER().findIndex((PEDESTAL) => PEDESTAL.id == self.data.pedestalValue);
-					self.pedestalIndex = index;
+					self.pedestalIndex = index === -1 ? self.pedestalIndex : index;
 					let pedestal = SERIES.actions.pedestal.dropdown[self.pedestalIndex];
 					if (pedestal) {
 						pedestalValue = pedestal.label;
@@ -568,7 +568,7 @@ module.exports = {
 				if (index == -1) {
 					index = 0;
 				}
-				self.presetRecallModeIndex = index;
+				self.presetRecallModeIndex = index === -1 ? self.presetRecallModeIndex : index;
 				variableValues.presetRecallMode = c.CHOICES_PRESETRECALLMODES[index].label;
 			}
 

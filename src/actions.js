@@ -1126,6 +1126,52 @@ module.exports = {
 					self.getCameraInformation_Delayed();
 				}
 			}
+
+			//Exposure compensation is what most cameras are riding on in P mode,
+			//so it wants a step control for an encoder, not just a set (#51, #54)
+			actions.aeBrightnessU = {
+				name: 'AE Brightness Up',
+				options: [
+					{
+						type: 'number',
+						label: 'Steps',
+						id: 'steps',
+						default: 1
+					}
+				],
+				callback: async (action) => {
+					let choice = self.stepChoice(s.aeBrightness.dropdown, self.data.aeBrightness, 'up', action.options.steps);
+					if (choice === undefined) {
+						return;
+					}
+					cmd = 'c.1.ae.brightness=' + choice.id;
+					self.sendPTZ(self.ptzCommand, cmd);
+					self.data.aeBrightness = choice.id;
+					self.getCameraInformation_Delayed();
+				}
+			}
+
+			actions.aeBrightnessD = {
+				name: 'AE Brightness Down',
+				options: [
+					{
+						type: 'number',
+						label: 'Steps',
+						id: 'steps',
+						default: 1
+					}
+				],
+				callback: async (action) => {
+					let choice = self.stepChoice(s.aeBrightness.dropdown, self.data.aeBrightness, 'down', action.options.steps);
+					if (choice === undefined) {
+						return;
+					}
+					cmd = 'c.1.ae.brightness=' + choice.id;
+					self.sendPTZ(self.ptzCommand, cmd);
+					self.data.aeBrightness = choice.id;
+					self.getCameraInformation_Delayed();
+				}
+			}
 		}
 
 		if (s.aePhotometry.cmd) {
@@ -1247,12 +1293,13 @@ module.exports = {
 				name: 'Exposure - Shutter Up',
 				options: [],
 				callback: async (action) => {
-					if (self.shutterIndex == s.shutter.dropdown.length) {
-						self.shutterIndex = s.shutter.dropdown.length
-					} else if (self.shutterIndex < s.shutter.dropdown.length) {
-						self.shutterIndex++
+					//step from what the camera last reported, not a cached cursor
+					let choice = self.stepChoice(s.shutter.dropdown, self.data.shutterValue, 'up');
+					if (choice === undefined) {
+						return;
 					}
-					self.shutterValue = s.shutter.dropdown[self.shutterIndex].id
+					self.shutterIndex = s.shutter.dropdown.indexOf(choice);
+					self.shutterValue = choice.id
 					self.data.shutterValue = self.shutterValue;
 
 					if (self.shutterValue === 'auto') {
@@ -1273,13 +1320,13 @@ module.exports = {
 				name: 'Exposure - Shutter Down',
 				options: [],
 				callback: async (action) => {
-					if (self.shutterIndex == 0) {
-						self.shutterIndex = 0
+					//step from what the camera last reported, not a cached cursor
+					let choice = self.stepChoice(s.shutter.dropdown, self.data.shutterValue, 'down');
+					if (choice === undefined) {
+						return;
 					}
-					else if (self.shutterIndex > 0) {
-						self.shutterIndex--
-					}
-					self.shutterValue = s.shutter.dropdown[self.shutterIndex].id
+					self.shutterIndex = s.shutter.dropdown.indexOf(choice);
+					self.shutterValue = choice.id
 					self.data.shutterValue = self.shutterValue;
 
 					if (self.shutterValue === 'auto') {
@@ -1344,22 +1391,13 @@ module.exports = {
 					}
 				],
 				callback: async (action) => {
-					if (self.irisIndex == s.iris.dropdown.length) {
-						self.irisIndex = s.iris.dropdown.length
+					//step from what the camera last reported, not a cached cursor
+					let choice = self.stepChoice(s.iris.dropdown, self.data.irisValue, 'up', action.options.steps);
+					if (choice === undefined) {
+						return;
 					}
-					else if (self.irisIndex < s.iris.dropdown.length) {
-						if (action.options.steps > 1) {
-							self.irisIndex = self.irisIndex + action.options.steps
-							//make sure we didn't exceed the bounds of the array
-							if (self.irisIndex > s.iris.dropdown.length) {
-								self.irisIndex = s.iris.dropdown.length;
-							}
-						}
-						else {
-							self.irisIndex++
-						}
-					}
-					self.irisValue = s.iris.dropdown[self.irisIndex].id
+					self.irisIndex = s.iris.dropdown.indexOf(choice);
+					self.irisValue = choice.id
 					self.data.irisValue = self.irisValue;
 
 					if (self.irisValue === 'auto') {
@@ -1387,22 +1425,13 @@ module.exports = {
 					}
 				],
 				callback: async (action) => {
-					if (self.irisIndex == 0) {
-						self.irisIndex = 0
+					//step from what the camera last reported, not a cached cursor
+					let choice = self.stepChoice(s.iris.dropdown, self.data.irisValue, 'down', action.options.steps);
+					if (choice === undefined) {
+						return;
 					}
-					else if (self.irisIndex > 0) {
-						if (action.options.steps > 1) {
-							self.irisIndex = self.irisIndex - action.options.steps
-							//make sure we didn't exceed the bounds of the array
-							if (self.irisIndex < 0) {
-								self.irisIndex = 0;
-							}
-						}
-						else {
-							self.irisIndex--;
-						}
-					}
-					self.irisValue = s.iris.dropdown[self.irisIndex].id
+					self.irisIndex = s.iris.dropdown.indexOf(choice);
+					self.irisValue = choice.id
 					self.data.irisValue = self.irisValue;
 
 					if (self.irisValue === 'auto') {
@@ -1502,12 +1531,13 @@ module.exports = {
 				name: 'Exposure - Gain Up',
 				options: [],
 				callback: async (action) => {
-					if (self.gainIndex == s.gain.dropdown.length) {
-						self.gainIndex = s.gain.dropdown.length
-					} else if (self.gainIndex < s.gain.dropdown.length) {
-						self.gainIndex++
+					//step from what the camera last reported, not a cached cursor
+					let choice = self.stepChoice(s.gain.dropdown, self.data.gainValue, 'up');
+					if (choice === undefined) {
+						return;
 					}
-					self.gainValue = s.gain.dropdown[self.gainIndex].id
+					self.gainIndex = s.gain.dropdown.indexOf(choice);
+					self.gainValue = choice.id
 					self.data.gainValue = self.gainValue;
 
 					if (self.gainValue === 'auto') {
@@ -1528,12 +1558,13 @@ module.exports = {
 				name: 'Exposure - Gain Down',
 				options: [],
 				callback: async (action) => {
-					if (self.gainIndex == 0) {
-						self.gainIndex = 0
-					} else if (self.gainIndex > 0) {
-						self.gainIndex--
+					//step from what the camera last reported, not a cached cursor
+					let choice = self.stepChoice(s.gain.dropdown, self.data.gainValue, 'down');
+					if (choice === undefined) {
+						return;
 					}
-					self.gainValue = s.gain.dropdown[self.gainIndex].id
+					self.gainIndex = s.gain.dropdown.indexOf(choice);
+					self.gainValue = choice.id
 					self.data.gainValue = self.gainValue;
 
 					if (self.gainValue === 'auto') {
@@ -1628,12 +1659,13 @@ module.exports = {
 				name: 'Exposure - ND Filter Up',
 				options: [],
 				callback: async (action) => {
-					if (self.ndfilterIndex == s.ndfilter.dropdown.length) {
-						self.ndfilterIndex = s.ndfilter.dropdown.length
-					} else if (self.ndfilterIndex < s.ndfilter.dropdown.length) {
-						self.ndfilterIndex++
+					//step from what the camera last reported, not a cached cursor
+					let choice = self.stepChoice(s.ndfilter.dropdown, self.data.ndfilterValue, 'up');
+					if (choice === undefined) {
+						return;
 					}
-					self.ndfilterValue = s.ndfilter.dropdown[self.ndfilterIndex].id
+					self.ndfilterIndex = s.ndfilter.dropdown.indexOf(choice);
+					self.ndfilterValue = choice.id
 					self.data.ndfilterValue = self.ndfilterValue;
 					cmd = s.ndfilter.cmd + self.ndfilterValue
 					self.sendPTZ(self.ptzCommand, cmd)
@@ -1645,12 +1677,13 @@ module.exports = {
 				name: 'Exposure - ND Filter Down',
 				options: [],
 				callback: async (action) => {
-					if (self.ndfilterIndex == 0) {
-						self.ndfilterIndex = 0
-					} else if (self.ndfilterIndex > 0) {
-						self.ndfilterIndex--
+					//step from what the camera last reported, not a cached cursor
+					let choice = self.stepChoice(s.ndfilter.dropdown, self.data.ndfilterValue, 'down');
+					if (choice === undefined) {
+						return;
 					}
-					self.ndfilterValue = s.ndfilter.dropdown[self.ndfilterIndex].id
+					self.ndfilterIndex = s.ndfilter.dropdown.indexOf(choice);
+					self.ndfilterValue = choice.id
 					self.data.ndfilterValue = self.ndfilterValue;
 					cmd = s.ndfilter.cmd + self.ndfilterValue
 					self.sendPTZ(self.ptzCommand, cmd)
@@ -1776,12 +1809,13 @@ module.exports = {
 				name: 'Exposure - Pedestal Up',
 				options: [],
 				callback: async (action) => {
-					if (self.pedestalIndex == s.pedestal.dropdown.length) {
-						self.pedestalIndex = s.pedestal.dropdown.length
-					} else if (self.pedestalIndex < s.pedestal.dropdown.length) {
-						self.pedestalIndex++
+					//step from what the camera last reported, not a cached cursor
+					let choice = self.stepChoice(s.pedestal.dropdown, self.data.pedestalValue, 'up');
+					if (choice === undefined) {
+						return;
 					}
-					self.pedestalValue = s.pedestal.dropdown[self.pedestalIndex].id
+					self.pedestalIndex = s.pedestal.dropdown.indexOf(choice);
+					self.pedestalValue = choice.id
 					self.data.pedestalValue = self.pedestalValue;
 					cmd = s.pedestal.cmd + self.pedestalValue
 					self.sendPTZ(self.ptzCommand, cmd)
@@ -1793,12 +1827,13 @@ module.exports = {
 				name: 'Exposure - Pedestal Down',
 				options: [],
 				callback: async (action) => {
-					if (self.pedestalIndex == 0) {
-						self.pedestalIndex = 0
-					} else if (self.pedestalIndex > 0) {
-						self.pedestalIndex--
+					//step from what the camera last reported, not a cached cursor
+					let choice = self.stepChoice(s.pedestal.dropdown, self.data.pedestalValue, 'down');
+					if (choice === undefined) {
+						return;
 					}
-					self.pedestalValue = s.pedestal.dropdown[self.pedestalIndex].id
+					self.pedestalIndex = s.pedestal.dropdown.indexOf(choice);
+					self.pedestalValue = choice.id
 					self.data.pedestalValue = self.pedestalValue;
 					cmd = s.pedestal.cmd + self.pedestalValue
 					self.sendPTZ(self.ptzCommand, cmd)
@@ -2168,40 +2203,107 @@ module.exports = {
 					},
 					{
 						type: 'checkbox',
+						label: 'Use variables for the save options below',
+						id: 'use_variables_save',
+						default: false,
+						tooltip: 'Drive each option from a variable so one set of switches can change what every camera saves.'
+					},
+					{
+						type: 'checkbox',
 						label: 'Save Position (PTZ)',
 						id: 'save_ptz',
-						default: true
+						default: true,
+						isVisible: (options) => !options['use_variables_save'],
+					},
+					{
+						type: 'textinput',
+						label: 'Save Position (PTZ)',
+						id: 'save_ptz_v',
+						default: 'true',
+						tooltip: 'true/false, 1/0, yes/no, on/off.',
+						useVariables: true,
+						isVisible: (options) => !!options['use_variables_save'],
 					},
 					{
 						type: 'checkbox',
 						label: 'Save Focus',
 						id: 'save_focus',
-						default: true
+						default: true,
+						isVisible: (options) => !options['use_variables_save'],
+					},
+					{
+						type: 'textinput',
+						label: 'Save Focus',
+						id: 'save_focus_v',
+						default: 'true',
+						tooltip: 'true/false, 1/0, yes/no, on/off.',
+						useVariables: true,
+						isVisible: (options) => !!options['use_variables_save'],
 					},
 					{
 						type: 'checkbox',
 						label: 'Save Exposure',
 						id: 'save_exposure',
-						default: true
+						default: true,
+						isVisible: (options) => !options['use_variables_save'],
+					},
+					{
+						type: 'textinput',
+						label: 'Save Exposure',
+						id: 'save_exposure_v',
+						default: 'true',
+						tooltip: 'true/false, 1/0, yes/no, on/off.',
+						useVariables: true,
+						isVisible: (options) => !!options['use_variables_save'],
 					},
 					{
 						type: 'checkbox',
 						label: 'Save White Balance',
 						id: 'save_whitebalance',
-						default: true
+						default: true,
+						isVisible: (options) => !options['use_variables_save'],
+					},
+					{
+						type: 'textinput',
+						label: 'Save White Balance',
+						id: 'save_whitebalance_v',
+						default: 'true',
+						tooltip: 'true/false, 1/0, yes/no, on/off.',
+						useVariables: true,
+						isVisible: (options) => !!options['use_variables_save'],
 					},
 					{
 						type: 'checkbox',
 						label: 'Save Image Stabilization (IS)',
 						id: 'save_is',
-						default: true
+						default: true,
+						isVisible: (options) => !options['use_variables_save'],
+					},
+					{
+						type: 'textinput',
+						label: 'Save Image Stabilization (IS)',
+						id: 'save_is_v',
+						default: 'true',
+						tooltip: 'true/false, 1/0, yes/no, on/off.',
+						useVariables: true,
+						isVisible: (options) => !!options['use_variables_save'],
 					},
 					{
 						type: 'checkbox',
 						label: 'Save CP',
 						id: 'save_cp',
-						default: true
-					}
+						default: true,
+						isVisible: (options) => !options['use_variables_save'],
+					},
+					{
+						type: 'textinput',
+						label: 'Save CP',
+						id: 'save_cp_v',
+						default: 'true',
+						tooltip: 'true/false, 1/0, yes/no, on/off.',
+						useVariables: true,
+						isVisible: (options) => !!options['use_variables_save'],
+					},
 				],
 				callback: async (action) => {
 					let presetName = await self.parseVariablesInString(action.options.name);
@@ -2216,42 +2318,53 @@ module.exports = {
 						return;
 					}
 
+					//each option is either its checkbox or a variable that resolves to one
+					let saveOptions = {};
+					for (const key of ['save_ptz', 'save_focus', 'save_exposure', 'save_whitebalance', 'save_is', 'save_cp']) {
+						if (action.options.use_variables_save) {
+							saveOptions[key] = self.parseBoolean(await self.parseVariablesInString(action.options[key + '_v']));
+						}
+						else {
+							saveOptions[key] = !!action.options[key];
+						}
+					}
+
 					cmd = 'p=' + presetNumber + '&name=' + presetName;
-					if ((action.options.save_ptz) && (action.options.save_focus) && (action.options.save_exposure) && (action.options.save_whitebalance) && (action.options.save_is) && (action.options.save_cp)) {
+					if ((saveOptions.save_ptz) && (saveOptions.save_focus) && (saveOptions.save_exposure) && (saveOptions.save_whitebalance) && (saveOptions.save_is) && (saveOptions.save_cp)) {
 						cmd += '&all=enabled';
 					}
 					else {
-						if (action.options.save_ptz) {
+						if (saveOptions.save_ptz) {
 							cmd += '&ptz=enabled';
 						}
 						else {
 							cmd += '&ptz=disabled';
 						}
-						if (action.options.save_focus) {
+						if (saveOptions.save_focus) {
 							cmd += '&focus=enabled';
 						}
 						else {
 							cmd += '&focus=disabled';
 						}
-						if (action.options.save_exposure) {
+						if (saveOptions.save_exposure) {
 							cmd += '&exp=enabled';
 						}
 						else {
 							cmd += '&exp=disabled';
 						}
-						if (action.options.save_whitebalance) {
+						if (saveOptions.save_whitebalance) {
 							cmd += '&wb=enabled';
 						}
 						else {
 							cmd += '&wb=disabled';
 						}
-						if (action.options.save_is) {
+						if (saveOptions.save_is) {
 							cmd += '&is=enabled';
 						}
 						else {
 							cmd += '&is=disabled';
 						}
-						if (action.options.save_cp) {
+						if (saveOptions.save_cp) {
 							cmd += '&cp=enabled';
 						}
 						else {
@@ -2415,98 +2528,90 @@ module.exports = {
 						type: 'textinput',
 						label: 'Loops',
 						id: 'loops',
-						default: 1
+						default: 1,
+						useVariables: true,
 					}
 				],
 				callback: async (action) => {
-					let preset1 = parseInt(await self.parseVariablesInString(action.options.preset1));
-					let preset2 = parseInt(await self.parseVariablesInString(action.options.preset2));
-					//make sure its a number and is between 1 and 100
-					if (isNaN(preset1)) {
-						preset1 = 1;
+					let preset1 = self.clampPreset(await self.parseVariablesInString(action.options.preset1), 1);
+					let preset2 = self.clampPreset(await self.parseVariablesInString(action.options.preset2), 2);
+
+					let seconds = parseInt(await self.parseVariablesInString(action.options.time));
+					if (isNaN(seconds) || seconds < 2) {
+						seconds = 2;
 					}
-					else if (preset1 < 1) {
-						preset1 = 1;
+					else if (seconds > 60) {
+						seconds = 60;
 					}
-					else if (preset1 > 100) {
-						preset1 = 100;
+					const time = seconds * 1000;
+
+					let loops = parseInt(await self.parseVariablesInString(action.options.loops));
+					if (isNaN(loops) || loops < 1) {
+						loops = 1;
+					}
+					else if (loops > 100) {
+						loops = 100;
 					}
 
-					// console.log(self.data.);
-
-					// this.setVariableValues({
-					// 	'custom:cam1_motion_preset': 1
-					// })
-
-					cmd = 'p=' + preset1;
-
-					cmd += '&p.ptzspeed=100';
-
+					//a motion already running would otherwise fight this one for the head
+					self.stopMotionPset();
 					self.stopCustomTrace();
-					console.log(`Set camera to preset ${preset1} now! ${cmd}`);
+
+					self.motionPsetRunning = true;
+
+					self.log('debug', `Motion between presets ${preset1} and ${preset2}, ${seconds}s per leg, ${loops} loop(s).`);
+
+					cmd = 'p=' + preset1 + '&p.ptzspeed=100';
 					self.sendPTZ(self.ptzCommand, cmd);
+					self.data.presetLastUsed = preset1;
 					self.checkVariables();
 					self.checkFeedbacks();
-					if (action.options.loops < 1) action.options.loops = 1;
-					if (action.options.loops > 100) action.options.loops = 100;
 
-					const time = action.options.time * 1000;
-
-					setTimeout(async () => {
-						loopPTZ(preset1, preset2, time, action.options.loops);
+					//let the head reach the starting preset before timing the first leg
+					self.motionPsetTimer = setTimeout(() => {
+						leg(preset2, loops);
 					}, 1000);
 
-
-					function loopPTZ(preset1, preset2, time, count) {
-						console.log(`Looping PTZ from ${preset1} to ${preset2} for ${time}ms. ${count} loops left.`);
-						if (count <= 0) {
-							console.log("DONE!");
-							// this.setVariableValues({
-							// 	'custom:cam1_motion_preset': undefined
-							// })
+					//One leg of the swing. Each leg is scheduled only after the
+					//previous one has been sent, so a stop between legs ends it.
+					function leg(preset, remaining) {
+						if (self.motionPsetRunning !== true) {
 							return;
 						}
 
-
-						let cmd = 'p=' + preset2;
-						cmd += '&p.ptztime=' + time;
-						console.log(`Set camera to preset ${preset2} now! ${cmd}`);
-
-						self.stopCustomTrace();
-						// CHECK A GLOBAL VARIABLE TO SEE IF WE SHOULD STOP THE LOOP
-						// if(this.getVariableValue('custom:cam1_motion_preset') != 1) {
-						// 	console.log("DONE!");
-						// 	return;
-						// }
+						let cmd = 'p=' + preset + '&p.ptztime=' + time;
 						self.sendPTZ(self.ptzCommand, cmd);
+						self.data.presetLastUsed = preset;
 						self.checkVariables();
 						self.checkFeedbacks();
 
-						setTimeout(() => {
-							let cmd = 'p=' + preset1;
-							cmd += '&p.ptztime=' + time;
-							console.log(`Set camera to preset ${preset1} now! ${cmd}`);
-							// CHECK A GLOBAL VARIABLE TO SEE IF WE SHOULD STOP THE LOOP
-							// if(this.getVariableValue('cam1_motion_preset') != 1) {
-							// 	console.log("DONE!");
-							// 	return;
-							// }
-							self.stopCustomTrace();
+						const next = (preset === preset2) ? preset1 : preset2;
+						//a loop is one full there-and-back, so only count down
+						//when we are heading back to the first preset
+						const left = (preset === preset2) ? remaining : remaining - 1;
 
-							self.sendPTZ(self.ptzCommand, cmd);
-							self.checkVariables();
-							self.checkFeedbacks();
+						if (left <= 0 && preset === preset1) {
+							self.motionPsetRunning = false;
+							self.log('debug', 'Motion between presets finished.');
+							return;
+						}
 
-							// Call the function again to loop
-							setTimeout(() => loopPTZ(preset1, preset2, time, (count - 1)),time);
-
+						self.motionPsetTimer = setTimeout(() => {
+							leg(next, left);
 						}, time);
 					}
-
 				}
 			}
 
-			actions.recallPsetFast = {
+			actions.stopMotionPset = {
+				name: 'Preset - Stop Motion Between Two Presets',
+				options: [],
+				callback: async (action) => {
+					self.stopMotionPset();
+				}
+			}
+
+						actions.recallPsetFast = {
 				name: 'Preset - Recall Fast (by number)',
 				options: [
 					{

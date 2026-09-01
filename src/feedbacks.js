@@ -188,6 +188,51 @@ module.exports = {
 			}
 		}
 
+		//A generic escape hatch to match the Send Custom Command action: the
+		//camera reports far more in info.cgi than the module has dedicated
+		//feedbacks for, and requests for one more of them keep arriving (#68
+		//wanted crop output). This covers any of them without a code change.
+		feedbacks.customParameter = {
+			type: 'boolean',
+			name: 'Custom - Parameter Matches Value',
+			description: 'Compare any parameter reported by the camera against a value',
+			defaultStyle: {
+				color: foregroundColor,
+				bgcolor: backgroundColorRed,
+			},
+			options: [
+				{
+					type: 'textinput',
+					label: 'Parameter',
+					id: 'parameter',
+					default: '',
+					tooltip: 'The parameter name as info.cgi reports it, for example k.output2.crop',
+				},
+				{
+					type: 'textinput',
+					label: 'Value',
+					id: 'value',
+					default: '',
+					tooltip: 'Matches when the camera reports this value for the parameter above',
+				}
+			],
+			callback: function (feedback, bank) {
+				let opt = feedback.options
+
+				if (!opt.parameter) {
+					return false
+				}
+
+				const current = self.parameterValue(opt.parameter)
+
+				if (current === undefined) {
+					return false
+				}
+
+				return String(current) === String(opt.value).trim()
+			}
+		}
+
 		if (SERIES.feedbacks.digitalMagnification == true && SERIES.actions.digitalMagnification) {
 			feedbacks.digitalMagnification = {
 				type: 'boolean',
