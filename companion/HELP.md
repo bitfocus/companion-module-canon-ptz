@@ -206,3 +206,7 @@ A list of all the available Feedbacks in this module sorted into the following c
 
 - Preset Last Used
 - Preset Recall Mode
+
+**Custom**
+
+- Parameter Matches Value — compare any parameter the camera reports in `info.cgi` against a value, for things the module has no dedicated feedback for (for example `k.output2.crop`)

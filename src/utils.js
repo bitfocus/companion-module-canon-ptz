@@ -202,6 +202,29 @@ module.exports = {
 
 	//Variables arrive as strings, so a checkbox driven by one has to accept
 	//whatever a user is likely to put in a custom variable
+	//Look up any parameter from the last info.cgi response by name. The poll
+	//stores every line it received, so anything the camera reports can be read
+	//back without the module needing a dedicated field for it.
+	parameterValue: function (name) {
+		let self = this;
+
+		if (!Array.isArray(self.data.info)) {
+			return undefined;
+		}
+
+		const wanted = String(name).trim();
+
+		for (let i = 0; i < self.data.info.length; i++) {
+			const entry = self.data.info[i];
+
+			if (Array.isArray(entry) && entry[0] === wanted) {
+				return entry[1];
+			}
+		}
+
+		return undefined;
+	},
+
 	parseBoolean: function (value) {
 		if (typeof value === 'boolean') {
 			return value;

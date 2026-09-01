@@ -42,7 +42,7 @@ module.exports = {
 				style: {
 					text: 'Power\\nOFF',
 					size: '18',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -77,7 +77,7 @@ module.exports = {
 				style: {
 					text: 'Power\\nON',
 					size: '18',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -112,7 +112,7 @@ module.exports = {
 				style: {
 					text: 'Power\\nTOGGLE',
 					size: '18',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -149,7 +149,7 @@ module.exports = {
 				style: {
 					text: '$(canon-ptz:cameraName)',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0)
 				},
 				steps: [],
@@ -165,7 +165,7 @@ module.exports = {
 				style: {
 					text: 'Tally\\nPGM\\nON/OFF',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -207,7 +207,7 @@ module.exports = {
 				style: {
 					text: 'Tally\\nPVW\\nON/OFF',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -247,7 +247,7 @@ module.exports = {
 				style: {
 					text: 'Tally\\nTOGGLE',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -294,7 +294,7 @@ module.exports = {
 				style: {
 					text: 'DZOOM\\n$(canon-ptz:digitalZoom)',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -340,7 +340,7 @@ module.exports = {
 				style: {
 					text: 'DMAG\\n$(canon-ptz:digitalZoom)',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -385,7 +385,7 @@ module.exports = {
 					style: {
 						text: 'DMAG\n' + s.digitalMagnification.dropdown[x].label,
 						size: '18',
-						color: '16777215',
+						color: foregroundColor,
 						bgcolor: combineRgb(0, 0, 0)
 					},
 					steps: [
@@ -425,7 +425,7 @@ module.exports = {
 				style: {
 					text: 'IS\\n$(canon-ptz:imageStabilization)',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -478,7 +478,7 @@ module.exports = {
 					png64: ICONS.UP,
 					pngalignment: 'center:center',
 					size: '18',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -510,7 +510,7 @@ module.exports = {
 					png64: ICONS.DOWN,
 					pngalignment: 'center:center',
 					size: '18',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -542,7 +542,7 @@ module.exports = {
 					png64: ICONS.LEFT,
 					pngalignment: 'center:center',
 					size: '18',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -574,7 +574,7 @@ module.exports = {
 					png64: ICONS.RIGHT,
 					pngalignment: 'center:center',
 					size: '18',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -606,7 +606,7 @@ module.exports = {
 					png64: ICONS.UP_RIGHT,
 					pngalignment: 'center:center',
 					size: '18',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -638,7 +638,7 @@ module.exports = {
 					png64: ICONS.UP_LEFT,
 					pngalignment: 'center:center',
 					size: '18',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -670,7 +670,7 @@ module.exports = {
 					png64: ICONS.DOWN_LEFT,
 					pngalignment: 'center:center',
 					size: '18',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -702,7 +702,7 @@ module.exports = {
 					png64: ICONS.DOWN_RIGHT,
 					pngalignment: 'center:center',
 					size: '18',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -731,7 +731,7 @@ module.exports = {
 				style: {
 					text: 'HOME',
 					size: '18',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -757,7 +757,7 @@ module.exports = {
 				style: {
 					text: 'SPEED\\nUP\\n$(canon-ptz:panTiltSpeedValue)',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -781,7 +781,7 @@ module.exports = {
 				style: {
 					text: 'SPEED\\nDOWN\\n$(canon-ptz:panTiltSpeedValue)',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -805,7 +805,7 @@ module.exports = {
 				style: {
 					text: 'SET\\nSPEED\\nHIGH',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -831,7 +831,7 @@ module.exports = {
 				style: {
 					text: 'SET\\nSPEED\\nMID',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -857,7 +857,7 @@ module.exports = {
 				style: {
 					text: 'SET\\nSPEED\\nLOW',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -889,7 +889,7 @@ module.exports = {
 				style: {
 					text: 'ZOOM\\nIN',
 					size: '18',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -918,7 +918,7 @@ module.exports = {
 				style: {
 					text: 'ZOOM\\nOUT',
 					size: '18',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -949,7 +949,7 @@ module.exports = {
 				style: {
 					text: 'ZOOM\\nSPEED\\nUP\\n$(canon-ptz:zoomSpeed)',
 					size: '7',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -973,7 +973,7 @@ module.exports = {
 				style: {
 					text: 'ZOOM\\nSPEED\\nDOWN\\n$(canon-ptz:zoomSpeed)',
 					size: '7',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -997,7 +997,7 @@ module.exports = {
 				style: {
 					text: 'ZOOM\\nSPEED\\nHIGH',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -1023,7 +1023,7 @@ module.exports = {
 				style: {
 					text: 'ZOOM\\nSPEED\\nMID',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -1049,7 +1049,7 @@ module.exports = {
 				style: {
 					text: 'ZOOM\\nSPEED\\nLOW',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -1077,7 +1077,7 @@ module.exports = {
 				style: {
 					text: 'FOCUS\\nNEAR',
 					size: '18',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -1106,7 +1106,7 @@ module.exports = {
 				style: {
 					text: 'FOCUS\\nFAR',
 					size: '18',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -1137,7 +1137,7 @@ module.exports = {
 				style: {
 					text: 'FOCUS\\nSPEED\\nUP\\n$(canon-ptz:focusSpeed)',
 					size: '7',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -1161,7 +1161,7 @@ module.exports = {
 				style: {
 					text: 'FOCUS\\nSPEED\\nDOWN\\n$(canon-ptz:focusSpeed)',
 					size: '7',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -1185,7 +1185,7 @@ module.exports = {
 				style: {
 					text: 'FOCUS\\nSPEED\\nHIGH',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -1211,7 +1211,7 @@ module.exports = {
 				style: {
 					text: 'FOCUS\\nSPEED\\nMID',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -1237,7 +1237,7 @@ module.exports = {
 				style: {
 					text: 'FOCUS\\nSPEED\\nLOW',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -1263,7 +1263,7 @@ module.exports = {
 				style: {
 					text: 'FOCUS\\nSPEED\\nTOGGLE\\n$(canon-ptz:focusSpeed)',
 					size: '7',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -1289,7 +1289,7 @@ module.exports = {
 				style: {
 					text: 'MANUAL\\nFOCUS',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -1326,7 +1326,7 @@ module.exports = {
 				style: {
 					text: 'AUTO\\nFOCUS',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -1363,7 +1363,7 @@ module.exports = {
 				style: {
 					text: 'TOGGLE\\nFOCUS MODE',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -1400,7 +1400,7 @@ module.exports = {
 				style: {
 					text: 'One Shot\\nAF',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -1442,7 +1442,7 @@ module.exports = {
 					style: {
 						text: s.exposureShootingMode.dropdown[x].label,
 						size: '18',
-						color: '16777215',
+						color: foregroundColor,
 						bgcolor: combineRgb(0, 0, 0)
 					},
 					steps: [
@@ -1482,7 +1482,7 @@ module.exports = {
 				style: {
 					text: 'TOGGLE\\nEXPOSURE',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0)
 				},
 				steps: [
@@ -1507,7 +1507,7 @@ module.exports = {
 					style: {
 						text: s.exposureMode.dropdown[x].label,
 						size: '18',
-						color: '16777215',
+						color: foregroundColor,
 						bgcolor: combineRgb(0, 0, 0)
 					},
 					steps: [
@@ -1547,7 +1547,7 @@ module.exports = {
 				style: {
 					text: 'SHUTTER\\nUP',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0)
 				},
 				steps: [
@@ -1571,7 +1571,7 @@ module.exports = {
 				style: {
 					text: 'SHUTTER\\nDOWN',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0)
 				},
 				steps: [
@@ -1595,7 +1595,7 @@ module.exports = {
 				style: {
 					text: 'MANUAL\\nSHUTTER',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -1632,7 +1632,7 @@ module.exports = {
 				style: {
 					text: 'AUTO\\nSHUTTER',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -1669,7 +1669,7 @@ module.exports = {
 				style: {
 					text: 'TOGGLE\\nSHUTTER MODE',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0)
 				},
 				steps: [
@@ -1706,7 +1706,7 @@ module.exports = {
 				style: {
 					text: '$(canon-ptz:shutterValue)',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0)
 				},
 				steps: [],
@@ -1722,7 +1722,7 @@ module.exports = {
 				style: {
 					text: 'IRIS\\nUP',
 					size: '18',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -1746,7 +1746,7 @@ module.exports = {
 				style: {
 					text: 'IRIS\\nDOWN',
 					size: '18',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -1770,7 +1770,7 @@ module.exports = {
 				style: {
 					text: 'MANUAL\\nIRIS',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -1807,7 +1807,7 @@ module.exports = {
 				style: {
 					text: 'AUTO\\nIRIS',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -1844,7 +1844,7 @@ module.exports = {
 				style: {
 					text: 'TOGGLE\\nIRIS MODE',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -1879,7 +1879,7 @@ module.exports = {
 				style: {
 					text: '$(canon-ptz:irisValue)',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0)
 				},
 				steps: [],
@@ -1895,7 +1895,7 @@ module.exports = {
 				style: {
 					text: 'GAIN\\nUP',
 					size: '18',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -1919,7 +1919,7 @@ module.exports = {
 				style: {
 					text: 'GAIN\\nDOWN',
 					size: '18',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -1943,7 +1943,7 @@ module.exports = {
 				style: {
 					text: 'TOGGLE\\nGAIN MODE',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -1978,7 +1978,7 @@ module.exports = {
 				style: {
 					text: '$(canon-ptz:gainValue)',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0)
 				},
 				steps: [],
@@ -1994,7 +1994,7 @@ module.exports = {
 				style: {
 					text: 'ND Filter\\nUP',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -2018,7 +2018,7 @@ module.exports = {
 				style: {
 					text: 'ND Filter\\nDOWN',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -2043,7 +2043,7 @@ module.exports = {
 					style: {
 						text: 'ND FILTER\\nSET\\n' + s.ndfilter.dropdown[x].label,
 						size: '14',
-						color: '16777215',
+						color: foregroundColor,
 						bgcolor: combineRgb(0, 0, 0),
 					},
 					steps: [
@@ -2070,7 +2070,7 @@ module.exports = {
 				style: {
 					text: '$(canon-ptz:ndfilterValue)',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0)
 				},
 				steps: [],
@@ -2086,7 +2086,7 @@ module.exports = {
 				style: {
 					text: 'Pedestal\\nUP',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -2110,7 +2110,7 @@ module.exports = {
 				style: {
 					text: 'Pedestal\\nDOWN',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0)
 				},
 				steps: [
@@ -2134,7 +2134,7 @@ module.exports = {
 				style: {
 					text: '$(canon-ptz:pedestalValue)',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0)
 				},
 				steps: [],
@@ -2154,7 +2154,7 @@ module.exports = {
 				style: {
 					text: 'TOGGLE\\nWB:$(canon-ptz:whitebalanceMode)',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0)
 				},
 				steps: [
@@ -2178,7 +2178,7 @@ module.exports = {
 				style: {
 					text: 'WB CALIB A',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0)
 				},
 				steps: [
@@ -2204,7 +2204,7 @@ module.exports = {
 				style: {
 					text: 'WB CALIB B',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0)
 				},
 				steps: [
@@ -2230,7 +2230,7 @@ module.exports = {
 				style: {
 					text: '$(canon-ptz:whitebalanceMode)',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0)
 				},
 				steps: [
@@ -2255,7 +2255,7 @@ module.exports = {
 					style: {
 						text: 'WB MODE\\nSET\\n' + s.whitebalanceMode.dropdown[x].label,
 						size: '14',
-						color: '16777215',
+						color: foregroundColor,
 						bgcolor: combineRgb(0, 0, 0),
 					},
 					steps: [
@@ -2295,7 +2295,7 @@ module.exports = {
 				style: {
 					text: 'KELVIN\\nUP',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -2319,7 +2319,7 @@ module.exports = {
 				style: {
 					text: 'KELVIN\\nDOWN',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -2343,7 +2343,7 @@ module.exports = {
 				style: {
 					text: '$(canon-ptz:kelvinValue)',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0)
 				},
 				steps: [],
@@ -2359,7 +2359,7 @@ module.exports = {
 				style: {
 					text: 'RED\\nGAIN\\nUP',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -2383,7 +2383,7 @@ module.exports = {
 				style: {
 					text: 'RED\\nGAIN\\nDOWN',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -2407,7 +2407,7 @@ module.exports = {
 				style: {
 					text: '$(canon-ptz:rGainValue)',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0)
 				},
 				steps: [],
@@ -2423,7 +2423,7 @@ module.exports = {
 				style: {
 					text: 'BLUE\\nGAIN\\nUP',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -2447,7 +2447,7 @@ module.exports = {
 				style: {
 					text: 'BLUE\\nGAIN\\nDOWN',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -2471,7 +2471,7 @@ module.exports = {
 				style: {
 					text: '$(canon-ptz:bGainValue)',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0)
 				},
 				steps: [],
@@ -2487,7 +2487,7 @@ module.exports = {
 				style: {
 					text: 'Color Bars\\nON/OFF',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -2533,7 +2533,7 @@ module.exports = {
 				style: {					
 					text: 'TOGGLE PSET MODE:\\n$(canon-ptz:presetRecallMode)',
 					size: '7',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -2557,7 +2557,7 @@ module.exports = {
 				style: {
 					text: 'PRESET\\nMODE NORMAL',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0),
 				},
 				steps: [
@@ -2596,7 +2596,7 @@ module.exports = {
 				style: {
 					text: 'PRESET\\nMODE\\nTIME',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0)
 				},
 				steps: [
@@ -2624,7 +2624,7 @@ module.exports = {
 				style: {
 					text: 'PRESET\\nMODE\\nSPEED',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0)
 				},
 				steps: [
@@ -2652,7 +2652,7 @@ module.exports = {
 				style: {
 					text: '$(canon-ptz:presetRecallMode)',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0)
 				},
 				steps: [],
@@ -2668,7 +2668,7 @@ module.exports = {
 				style: {
 					text: 'RECALL\\nTIME\\nUP',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0)
 				},
 				steps: [
@@ -2691,7 +2691,7 @@ module.exports = {
 				style: {
 					text: 'RECALL\\nTIME\\nDOWN',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0)
 				},
 				steps: [
@@ -2714,7 +2714,7 @@ module.exports = {
 				style: {
 					text: 'TIME:\\n$(canon-ptz:presetTimeValue)',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0)
 				},
 				steps: [],
@@ -2730,7 +2730,7 @@ module.exports = {
 				style: {
 					text: 'RECALL\\nSPEED\\nUP',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0)
 				},
 				steps: [
@@ -2753,7 +2753,7 @@ module.exports = {
 				style: {
 					text: 'RECALL\\nSPEED\\nDOWN',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0)
 				},
 				steps: [
@@ -2776,7 +2776,7 @@ module.exports = {
 				style: {
 					text: 'SPEED:\\n$(canon-ptz:presetSpeedValue)',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0)
 				},
 				steps: [],
@@ -2793,7 +2793,7 @@ module.exports = {
 					style: {
 						text: 'SAVE\\nPSET\\n' + save,
 						size: '14',
-						color: '16777215',
+						color: foregroundColor,
 						bgcolor: combineRgb(0, 0, 0)
 					},
 					steps: [
@@ -2828,7 +2828,7 @@ module.exports = {
 					style: {						
 						text: 'Recall\\nPSET ' + recall + ':\\n$(canon-ptz:presetname_' + recall + ')',
 						size: '14',
-						color: '16777215',
+						color: foregroundColor,
 						bgcolor: combineRgb(0, 0, 0)
 					},
 					steps: [
@@ -2866,7 +2866,7 @@ module.exports = {
 				style: {
 					text: '$(canon-ptz:presetLastUsed)',
 					size: '14',
-					color: '16777215',
+					color: foregroundColor,
 					bgcolor: combineRgb(0, 0, 0)
 				},
 				steps: [],
