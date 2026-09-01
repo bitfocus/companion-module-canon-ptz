@@ -1126,6 +1126,52 @@ module.exports = {
 					self.getCameraInformation_Delayed();
 				}
 			}
+
+			//Exposure compensation is what most cameras are riding on in P mode,
+			//so it wants a step control for an encoder, not just a set (#51, #54)
+			actions.aeBrightnessU = {
+				name: 'AE Brightness Up',
+				options: [
+					{
+						type: 'number',
+						label: 'Steps',
+						id: 'steps',
+						default: 1
+					}
+				],
+				callback: async (action) => {
+					let choice = self.stepChoice(s.aeBrightness.dropdown, self.data.aeBrightness, 'up', action.options.steps);
+					if (choice === undefined) {
+						return;
+					}
+					cmd = 'c.1.ae.brightness=' + choice.id;
+					self.sendPTZ(self.ptzCommand, cmd);
+					self.data.aeBrightness = choice.id;
+					self.getCameraInformation_Delayed();
+				}
+			}
+
+			actions.aeBrightnessD = {
+				name: 'AE Brightness Down',
+				options: [
+					{
+						type: 'number',
+						label: 'Steps',
+						id: 'steps',
+						default: 1
+					}
+				],
+				callback: async (action) => {
+					let choice = self.stepChoice(s.aeBrightness.dropdown, self.data.aeBrightness, 'down', action.options.steps);
+					if (choice === undefined) {
+						return;
+					}
+					cmd = 'c.1.ae.brightness=' + choice.id;
+					self.sendPTZ(self.ptzCommand, cmd);
+					self.data.aeBrightness = choice.id;
+					self.getCameraInformation_Delayed();
+				}
+			}
 		}
 
 		if (s.aePhotometry.cmd) {
@@ -1247,12 +1293,13 @@ module.exports = {
 				name: 'Exposure - Shutter Up',
 				options: [],
 				callback: async (action) => {
-					if (self.shutterIndex == s.shutter.dropdown.length) {
-						self.shutterIndex = s.shutter.dropdown.length
-					} else if (self.shutterIndex < s.shutter.dropdown.length) {
-						self.shutterIndex++
+					//step from what the camera last reported, not a cached cursor
+					let choice = self.stepChoice(s.shutter.dropdown, self.data.shutterValue, 'up');
+					if (choice === undefined) {
+						return;
 					}
-					self.shutterValue = s.shutter.dropdown[self.shutterIndex].id
+					self.shutterIndex = s.shutter.dropdown.indexOf(choice);
+					self.shutterValue = choice.id
 					self.data.shutterValue = self.shutterValue;
 
 					if (self.shutterValue === 'auto') {
@@ -1273,13 +1320,13 @@ module.exports = {
 				name: 'Exposure - Shutter Down',
 				options: [],
 				callback: async (action) => {
-					if (self.shutterIndex == 0) {
-						self.shutterIndex = 0
+					//step from what the camera last reported, not a cached cursor
+					let choice = self.stepChoice(s.shutter.dropdown, self.data.shutterValue, 'down');
+					if (choice === undefined) {
+						return;
 					}
-					else if (self.shutterIndex > 0) {
-						self.shutterIndex--
-					}
-					self.shutterValue = s.shutter.dropdown[self.shutterIndex].id
+					self.shutterIndex = s.shutter.dropdown.indexOf(choice);
+					self.shutterValue = choice.id
 					self.data.shutterValue = self.shutterValue;
 
 					if (self.shutterValue === 'auto') {
@@ -1344,22 +1391,13 @@ module.exports = {
 					}
 				],
 				callback: async (action) => {
-					if (self.irisIndex == s.iris.dropdown.length) {
-						self.irisIndex = s.iris.dropdown.length
+					//step from what the camera last reported, not a cached cursor
+					let choice = self.stepChoice(s.iris.dropdown, self.data.irisValue, 'up', action.options.steps);
+					if (choice === undefined) {
+						return;
 					}
-					else if (self.irisIndex < s.iris.dropdown.length) {
-						if (action.options.steps > 1) {
-							self.irisIndex = self.irisIndex + action.options.steps
-							//make sure we didn't exceed the bounds of the array
-							if (self.irisIndex > s.iris.dropdown.length) {
-								self.irisIndex = s.iris.dropdown.length;
-							}
-						}
-						else {
-							self.irisIndex++
-						}
-					}
-					self.irisValue = s.iris.dropdown[self.irisIndex].id
+					self.irisIndex = s.iris.dropdown.indexOf(choice);
+					self.irisValue = choice.id
 					self.data.irisValue = self.irisValue;
 
 					if (self.irisValue === 'auto') {
@@ -1387,22 +1425,13 @@ module.exports = {
 					}
 				],
 				callback: async (action) => {
-					if (self.irisIndex == 0) {
-						self.irisIndex = 0
+					//step from what the camera last reported, not a cached cursor
+					let choice = self.stepChoice(s.iris.dropdown, self.data.irisValue, 'down', action.options.steps);
+					if (choice === undefined) {
+						return;
 					}
-					else if (self.irisIndex > 0) {
-						if (action.options.steps > 1) {
-							self.irisIndex = self.irisIndex - action.options.steps
-							//make sure we didn't exceed the bounds of the array
-							if (self.irisIndex < 0) {
-								self.irisIndex = 0;
-							}
-						}
-						else {
-							self.irisIndex--;
-						}
-					}
-					self.irisValue = s.iris.dropdown[self.irisIndex].id
+					self.irisIndex = s.iris.dropdown.indexOf(choice);
+					self.irisValue = choice.id
 					self.data.irisValue = self.irisValue;
 
 					if (self.irisValue === 'auto') {
@@ -1502,12 +1531,13 @@ module.exports = {
 				name: 'Exposure - Gain Up',
 				options: [],
 				callback: async (action) => {
-					if (self.gainIndex == s.gain.dropdown.length) {
-						self.gainIndex = s.gain.dropdown.length
-					} else if (self.gainIndex < s.gain.dropdown.length) {
-						self.gainIndex++
+					//step from what the camera last reported, not a cached cursor
+					let choice = self.stepChoice(s.gain.dropdown, self.data.gainValue, 'up');
+					if (choice === undefined) {
+						return;
 					}
-					self.gainValue = s.gain.dropdown[self.gainIndex].id
+					self.gainIndex = s.gain.dropdown.indexOf(choice);
+					self.gainValue = choice.id
 					self.data.gainValue = self.gainValue;
 
 					if (self.gainValue === 'auto') {
@@ -1528,12 +1558,13 @@ module.exports = {
 				name: 'Exposure - Gain Down',
 				options: [],
 				callback: async (action) => {
-					if (self.gainIndex == 0) {
-						self.gainIndex = 0
-					} else if (self.gainIndex > 0) {
-						self.gainIndex--
+					//step from what the camera last reported, not a cached cursor
+					let choice = self.stepChoice(s.gain.dropdown, self.data.gainValue, 'down');
+					if (choice === undefined) {
+						return;
 					}
-					self.gainValue = s.gain.dropdown[self.gainIndex].id
+					self.gainIndex = s.gain.dropdown.indexOf(choice);
+					self.gainValue = choice.id
 					self.data.gainValue = self.gainValue;
 
 					if (self.gainValue === 'auto') {
@@ -1628,12 +1659,13 @@ module.exports = {
 				name: 'Exposure - ND Filter Up',
 				options: [],
 				callback: async (action) => {
-					if (self.ndfilterIndex == s.ndfilter.dropdown.length) {
-						self.ndfilterIndex = s.ndfilter.dropdown.length
-					} else if (self.ndfilterIndex < s.ndfilter.dropdown.length) {
-						self.ndfilterIndex++
+					//step from what the camera last reported, not a cached cursor
+					let choice = self.stepChoice(s.ndfilter.dropdown, self.data.ndfilterValue, 'up');
+					if (choice === undefined) {
+						return;
 					}
-					self.ndfilterValue = s.ndfilter.dropdown[self.ndfilterIndex].id
+					self.ndfilterIndex = s.ndfilter.dropdown.indexOf(choice);
+					self.ndfilterValue = choice.id
 					self.data.ndfilterValue = self.ndfilterValue;
 					cmd = s.ndfilter.cmd + self.ndfilterValue
 					self.sendPTZ(self.ptzCommand, cmd)
@@ -1645,12 +1677,13 @@ module.exports = {
 				name: 'Exposure - ND Filter Down',
 				options: [],
 				callback: async (action) => {
-					if (self.ndfilterIndex == 0) {
-						self.ndfilterIndex = 0
-					} else if (self.ndfilterIndex > 0) {
-						self.ndfilterIndex--
+					//step from what the camera last reported, not a cached cursor
+					let choice = self.stepChoice(s.ndfilter.dropdown, self.data.ndfilterValue, 'down');
+					if (choice === undefined) {
+						return;
 					}
-					self.ndfilterValue = s.ndfilter.dropdown[self.ndfilterIndex].id
+					self.ndfilterIndex = s.ndfilter.dropdown.indexOf(choice);
+					self.ndfilterValue = choice.id
 					self.data.ndfilterValue = self.ndfilterValue;
 					cmd = s.ndfilter.cmd + self.ndfilterValue
 					self.sendPTZ(self.ptzCommand, cmd)
@@ -1776,12 +1809,13 @@ module.exports = {
 				name: 'Exposure - Pedestal Up',
 				options: [],
 				callback: async (action) => {
-					if (self.pedestalIndex == s.pedestal.dropdown.length) {
-						self.pedestalIndex = s.pedestal.dropdown.length
-					} else if (self.pedestalIndex < s.pedestal.dropdown.length) {
-						self.pedestalIndex++
+					//step from what the camera last reported, not a cached cursor
+					let choice = self.stepChoice(s.pedestal.dropdown, self.data.pedestalValue, 'up');
+					if (choice === undefined) {
+						return;
 					}
-					self.pedestalValue = s.pedestal.dropdown[self.pedestalIndex].id
+					self.pedestalIndex = s.pedestal.dropdown.indexOf(choice);
+					self.pedestalValue = choice.id
 					self.data.pedestalValue = self.pedestalValue;
 					cmd = s.pedestal.cmd + self.pedestalValue
 					self.sendPTZ(self.ptzCommand, cmd)
@@ -1793,12 +1827,13 @@ module.exports = {
 				name: 'Exposure - Pedestal Down',
 				options: [],
 				callback: async (action) => {
-					if (self.pedestalIndex == 0) {
-						self.pedestalIndex = 0
-					} else if (self.pedestalIndex > 0) {
-						self.pedestalIndex--
+					//step from what the camera last reported, not a cached cursor
+					let choice = self.stepChoice(s.pedestal.dropdown, self.data.pedestalValue, 'down');
+					if (choice === undefined) {
+						return;
 					}
-					self.pedestalValue = s.pedestal.dropdown[self.pedestalIndex].id
+					self.pedestalIndex = s.pedestal.dropdown.indexOf(choice);
+					self.pedestalValue = choice.id
 					self.data.pedestalValue = self.pedestalValue;
 					cmd = s.pedestal.cmd + self.pedestalValue
 					self.sendPTZ(self.ptzCommand, cmd)

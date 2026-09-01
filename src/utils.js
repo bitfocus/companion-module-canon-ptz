@@ -128,6 +128,78 @@ module.exports = {
 
 	//Preset numbers arrive from text inputs that may contain variables, so they
 	//can be anything at all by the time they get here
+	//Step one place through an action's dropdown, starting from the value the
+	//camera last reported rather than from a cached cursor position.
+	//
+	//The cursor approach this replaces drifted: it only resynced when polling
+	//came round (5s by default), so held or rapid presses walked it past what
+	//the camera had actually reached, and anything that moved the camera from
+	//elsewhere -- the camera's own controls, Canon's app, a preset recall --
+	//left it pointing at the wrong entry entirely.
+	stepChoice: function (dropdown, currentValue, direction, steps) {
+		let self = this;
+
+		if (!Array.isArray(dropdown) || dropdown.length === 0) {
+			return undefined;
+		}
+
+		let index = dropdown.findIndex((CHOICE) => CHOICE.id == currentValue);
+
+		if (index === -1) {
+			//The camera can report a value the hard-coded list doesn't hold:
+			//firmware shifts the ranges, and modes like 'auto' sit outside the
+			//numeric run. Snapping to the nearest entry keeps the next press
+			//sensible. Leaving findIndex's -1 in place is what made the next
+			//press jump to index 0 -- the gain dropping to 0 dB in #57.
+			index = self.nearestChoice(dropdown, currentValue);
+		}
+
+		let distance = parseInt(steps);
+		if (isNaN(distance) || distance < 1) {
+			distance = 1;
+		}
+
+		let next = index + (direction === 'up' ? distance : -distance);
+
+		if (next < 0) {
+			next = 0;
+		}
+		else if (next > dropdown.length - 1) {
+			next = dropdown.length - 1;
+		}
+
+		return dropdown[next];
+	},
+
+	//Index of the numerically closest entry, or 0 when nothing compares
+	nearestChoice: function (dropdown, value) {
+		const target = parseFloat(value);
+
+		if (isNaN(target)) {
+			return 0;
+		}
+
+		let best = 0;
+		let bestDistance = Infinity;
+
+		for (let i = 0; i < dropdown.length; i++) {
+			const candidate = parseFloat(dropdown[i].id);
+
+			if (isNaN(candidate)) {
+				continue;
+			}
+
+			const distance = Math.abs(candidate - target);
+
+			if (distance < bestDistance) {
+				bestDistance = distance;
+				best = i;
+			}
+		}
+
+		return best;
+	},
+
 	clampPreset: function (value, fallback) {
 		let preset = parseInt(value);
 
