@@ -103,6 +103,9 @@ module.exports = {
 		return {
 			//cleared here so swapping cameras re-reports an unknown model once
 			unknownModelLogged: false,
+			//Motion Between Two Presets, so a stop action can end a running loop
+			motionPsetRunning: false,
+			motionPsetTimer: undefined,
 			ptSpeed: 625,
 			ptSpeedIndex: 4,
 			zSpeed: 8,

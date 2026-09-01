@@ -2415,98 +2415,90 @@ module.exports = {
 						type: 'textinput',
 						label: 'Loops',
 						id: 'loops',
-						default: 1
+						default: 1,
+						useVariables: true,
 					}
 				],
 				callback: async (action) => {
-					let preset1 = parseInt(await self.parseVariablesInString(action.options.preset1));
-					let preset2 = parseInt(await self.parseVariablesInString(action.options.preset2));
-					//make sure its a number and is between 1 and 100
-					if (isNaN(preset1)) {
-						preset1 = 1;
+					let preset1 = self.clampPreset(await self.parseVariablesInString(action.options.preset1), 1);
+					let preset2 = self.clampPreset(await self.parseVariablesInString(action.options.preset2), 2);
+
+					let seconds = parseInt(await self.parseVariablesInString(action.options.time));
+					if (isNaN(seconds) || seconds < 2) {
+						seconds = 2;
 					}
-					else if (preset1 < 1) {
-						preset1 = 1;
+					else if (seconds > 60) {
+						seconds = 60;
 					}
-					else if (preset1 > 100) {
-						preset1 = 100;
+					const time = seconds * 1000;
+
+					let loops = parseInt(await self.parseVariablesInString(action.options.loops));
+					if (isNaN(loops) || loops < 1) {
+						loops = 1;
+					}
+					else if (loops > 100) {
+						loops = 100;
 					}
 
-					// console.log(self.data.);
-
-					// this.setVariableValues({
-					// 	'custom:cam1_motion_preset': 1
-					// })
-
-					cmd = 'p=' + preset1;
-
-					cmd += '&p.ptzspeed=100';
-
+					//a motion already running would otherwise fight this one for the head
+					self.stopMotionPset();
 					self.stopCustomTrace();
-					console.log(`Set camera to preset ${preset1} now! ${cmd}`);
+
+					self.motionPsetRunning = true;
+
+					self.log('debug', `Motion between presets ${preset1} and ${preset2}, ${seconds}s per leg, ${loops} loop(s).`);
+
+					cmd = 'p=' + preset1 + '&p.ptzspeed=100';
 					self.sendPTZ(self.ptzCommand, cmd);
+					self.data.presetLastUsed = preset1;
 					self.checkVariables();
 					self.checkFeedbacks();
-					if (action.options.loops < 1) action.options.loops = 1;
-					if (action.options.loops > 100) action.options.loops = 100;
 
-					const time = action.options.time * 1000;
-
-					setTimeout(async () => {
-						loopPTZ(preset1, preset2, time, action.options.loops);
+					//let the head reach the starting preset before timing the first leg
+					self.motionPsetTimer = setTimeout(() => {
+						leg(preset2, loops);
 					}, 1000);
 
-
-					function loopPTZ(preset1, preset2, time, count) {
-						console.log(`Looping PTZ from ${preset1} to ${preset2} for ${time}ms. ${count} loops left.`);
-						if (count <= 0) {
-							console.log("DONE!");
-							// this.setVariableValues({
-							// 	'custom:cam1_motion_preset': undefined
-							// })
+					//One leg of the swing. Each leg is scheduled only after the
+					//previous one has been sent, so a stop between legs ends it.
+					function leg(preset, remaining) {
+						if (self.motionPsetRunning !== true) {
 							return;
 						}
 
-
-						let cmd = 'p=' + preset2;
-						cmd += '&p.ptztime=' + time;
-						console.log(`Set camera to preset ${preset2} now! ${cmd}`);
-
-						self.stopCustomTrace();
-						// CHECK A GLOBAL VARIABLE TO SEE IF WE SHOULD STOP THE LOOP
-						// if(this.getVariableValue('custom:cam1_motion_preset') != 1) {
-						// 	console.log("DONE!");
-						// 	return;
-						// }
+						let cmd = 'p=' + preset + '&p.ptztime=' + time;
 						self.sendPTZ(self.ptzCommand, cmd);
+						self.data.presetLastUsed = preset;
 						self.checkVariables();
 						self.checkFeedbacks();
 
-						setTimeout(() => {
-							let cmd = 'p=' + preset1;
-							cmd += '&p.ptztime=' + time;
-							console.log(`Set camera to preset ${preset1} now! ${cmd}`);
-							// CHECK A GLOBAL VARIABLE TO SEE IF WE SHOULD STOP THE LOOP
-							// if(this.getVariableValue('cam1_motion_preset') != 1) {
-							// 	console.log("DONE!");
-							// 	return;
-							// }
-							self.stopCustomTrace();
+						const next = (preset === preset2) ? preset1 : preset2;
+						//a loop is one full there-and-back, so only count down
+						//when we are heading back to the first preset
+						const left = (preset === preset2) ? remaining : remaining - 1;
 
-							self.sendPTZ(self.ptzCommand, cmd);
-							self.checkVariables();
-							self.checkFeedbacks();
+						if (left <= 0 && preset === preset1) {
+							self.motionPsetRunning = false;
+							self.log('debug', 'Motion between presets finished.');
+							return;
+						}
 
-							// Call the function again to loop
-							setTimeout(() => loopPTZ(preset1, preset2, time, (count - 1)),time);
-
+						self.motionPsetTimer = setTimeout(() => {
+							leg(next, left);
 						}, time);
 					}
-
 				}
 			}
 
-			actions.recallPsetFast = {
+			actions.stopMotionPset = {
+				name: 'Preset - Stop Motion Between Two Presets',
+				options: [],
+				callback: async (action) => {
+					self.stopMotionPset();
+				}
+			}
+
+						actions.recallPsetFast = {
 				name: 'Preset - Recall Fast (by number)',
 				options: [
 					{

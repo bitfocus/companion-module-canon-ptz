@@ -46,14 +46,20 @@ function makeInstance(model) {
 
 		updateStatus() {},
 		log() {},
+	}
+
+	Object.assign(self, actions, feedbacks, variables, presets, tracking, utils)
+
+	//After the mixin, not before: actions.js defines sendPTZ and the polling
+	//helpers itself, so stubbing them in the literal above would just be
+	//overwritten and the test would reach for the network.
+	Object.assign(self, {
 		checkFeedbacks() {},
 		sendPTZ() {},
 		sendTrackingCommand() {},
 		getCameraInformation() {},
 		getCameraInformation_Delayed() {},
-	}
-
-	Object.assign(self, actions, feedbacks, variables, presets, tracking, utils)
+	})
 	Object.assign(self, state.defaultIndexes())
 
 	for (let i = 1; i <= self.data.presetCount; i++) {

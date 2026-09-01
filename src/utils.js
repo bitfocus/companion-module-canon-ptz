@@ -60,18 +60,28 @@ module.exports = {
 				position = 0;
 			}
 			else if (loopMode == 'pendulum') {
-				//which bound did we hit, swap direction depending on that
-				if (position >= self.customTracePresetArray.length - 1) {
+				//which bound did we hit, swap direction depending on that.
+				//Stepping one back from the bound is what reverses the swing.
+				let last = self.customTracePresetArray.length - 1;
+
+				if (position > last) {
 					direction = 'backward';
-					position = self.customTracePresetArray.length - 2;
-					if (position == 0) {
-						direction = 'forward';
-						position = 1;
-					}
+					position = last - 1;
 				}
 				else if (position < 0) {
 					direction = 'forward';
 					position = 1;
+				}
+
+				//With two presets the turn lands on the opposite end, which is
+				//correct; with one there is nowhere to swing to, so stay put.
+				//Clamping here rather than special-casing the two-preset turn,
+				//which is what used to send it straight back out again (#33).
+				if (position > last) {
+					position = last;
+				}
+				else if (position < 0) {
+					position = 0;
 				}
 			}
 		}
@@ -114,6 +124,37 @@ module.exports = {
 		else {
 			//undefined for some reason
 		}
+	},
+
+	//Preset numbers arrive from text inputs that may contain variables, so they
+	//can be anything at all by the time they get here
+	clampPreset: function (value, fallback) {
+		let preset = parseInt(value);
+
+		if (isNaN(preset)) {
+			return fallback;
+		}
+
+		if (preset < 1) {
+			return 1;
+		}
+
+		if (preset > 100) {
+			return 100;
+		}
+
+		return preset;
+	},
+
+	stopMotionPset: function() {
+		let self = this;
+
+		if (self.motionPsetRunning == true) {
+			self.log('info', 'Stopping Motion Between Two Presets.');
+		}
+
+		self.motionPsetRunning = false;
+		clearTimeout(self.motionPsetTimer);
 	},
 
 	stopCustomTrace: function() {
