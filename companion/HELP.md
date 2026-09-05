@@ -124,6 +124,7 @@ The actions are separated into the following categories:
 **Recall Presets**
 
 - Recall Preset 1-100
+- Preset number, preset name, and the custom trace preset and drive time fields accept variables, including **local variables**.
 - Set Preset Playback Mode Normal
 - Set Preset Playback Time
 - Set Preset Playback Speed

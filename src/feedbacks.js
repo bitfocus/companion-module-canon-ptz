@@ -652,20 +652,41 @@ module.exports = {
 				},
 				options: [
 					{
+						type: 'checkbox',
+						label: 'Use variables as Preset Number',
+						id: 'use_variables',
+						default: false
+					},
+					{
 						type: 'dropdown',
 						label: 'Select Preset',
 						id: 'preset',
 						default: 1,
-						choices: c.CHOICES_PRESETS()
+						choices: c.CHOICES_PRESETS(),
+						isVisible: (options) => !options['use_variables'],
+					},
+					{
+						type: 'textinput',
+						label: 'Preset Number',
+						id: 'preset_v',
+						default: '1',
+						tooltip: 'A variable holding the preset number. Local variables are supported.',
+						useVariables: { local: true },
+						isVisible: (options) => !!options['use_variables'],
 					}
 				],
-				callback: function (feedback, bank) {
+				//async so the variable resolves through the feedback's own context,
+				//which is also what registers the dependency -- the feedback
+				//re-evaluates when the variable changes
+				callback: async function (feedback, context) {
 					let opt = feedback.options
+					let preset = opt.preset
 
-					if (self.data.presetLastUsed == opt.preset) {
-						return true
+					if (opt.use_variables) {
+						preset = await context.parseVariablesInString(opt.preset_v)
 					}
-					return false
+
+					return self.data.presetLastUsed == preset
 				}
 			}
 		}
