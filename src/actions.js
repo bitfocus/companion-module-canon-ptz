@@ -123,8 +123,8 @@ module.exports = {
 					choices: MODELS,
 				}
 			],
-			callback: async (action) => {
-				let host = await self.parseVariablesInString(action.options.host);
+			callback: async (action, context) => {
+				let host = await context.parseVariablesInString(action.options.host);
 				let model = action.options.model;
 
 				self.config.host = host;
@@ -194,8 +194,8 @@ module.exports = {
 						tooltip: 'Set the name of the camera.'
 					}
 				],
-				callback: async (action) => {
-					let cameraName = await self.parseVariablesInString(action.options.name);
+				callback: async (action, context) => {
+					let cameraName = await context.parseVariablesInString(action.options.name);
 					cmd = 'c.1.name.utf8=' + cameraName;
 					if (cmd !== '') {
 						self.sendPTZ(self.ptzCommand, cmd)
@@ -432,8 +432,8 @@ module.exports = {
 						tooltip: 'Send a custom command. If it is not a supported command, the device may reject it.'
 					}
 				],
-				callback: async (action) => {
-					cmd = await self.parseVariablesInString(action.options.command);
+				callback: async (action, context) => {
+					cmd = await context.parseVariablesInString(action.options.command);
 					if (cmd !== '') {
 						self.sendPTZ(self.ptzCommand, cmd)
 						self.getCameraInformation_Delayed();
@@ -707,8 +707,8 @@ module.exports = {
 						tooltip: 'Set a custom zoom level. If it is not within range, the device may reject it.'
 					}
 				],
-				callback: async (action) => {
-					let zoomValue = await self.parseVariablesInString(action.options.value);
+				callback: async (action, context) => {
+					let zoomValue = await context.parseVariablesInString(action.options.value);
 					cmd = 'zoom=' + zoomValue;
 					self.sendPTZ(self.ptzCommand, cmd)
 				}
@@ -2286,7 +2286,7 @@ module.exports = {
 						id: 'val_v',
 						default: '$(canon-ptz:presetLastUsedNumber)',
 						tooltip: 'Use variable to select preset.',
-						useVariables: true,
+						useVariables: { local: true },
 						isVisible: (options) => !!options['use_variables'],
 					},
 					{
@@ -2295,7 +2295,7 @@ module.exports = {
 						id: 'name',
 						default: '$(canon-ptz:presetLastUsed)',
 						tooltip: 'Set the name of the preset.',
-						useVariables: true
+						useVariables: { local: true }
 					},
 					{
 						type: 'dropdown',
@@ -2332,17 +2332,17 @@ module.exports = {
 							id: option.id + '_v',
 							default: 'true',
 							tooltip: 'true/false, 1/0, yes/no, on/off.',
-							useVariables: true,
+							useVariables: { local: true },
 							isVisible: (options) => options['save_source'] === 'variables',
 						},
 					])),
 				],
-				callback: async (action) => {
-					let presetName = await self.parseVariablesInString(action.options.name);
+				callback: async (action, context) => {
+					let presetName = await context.parseVariablesInString(action.options.name);
 					let presetNumber = action.options.val;
 
 					if (action.options.use_variables) {
-						presetNumber = await self.parseVariablesInString(action.options.val_v);
+						presetNumber = await context.parseVariablesInString(action.options.val_v);
 					}
 
 					if (isNaN(presetNumber) || presetNumber < 1 || presetNumber > 100) {
@@ -2358,7 +2358,7 @@ module.exports = {
 					let saveOptions = {};
 					for (const option of c.SAVE_PRESET_OPTIONS) {
 						if (source === 'variables') {
-							saveOptions[option.key] = self.parseBoolean(await self.parseVariablesInString(action.options[option.id + '_v']));
+							saveOptions[option.key] = self.parseBoolean(await context.parseVariablesInString(action.options[option.id + '_v']));
 						}
 						else if (source === 'module') {
 							saveOptions[option.key] = self.data.savePresetOptions[option.key] == true;
@@ -2422,11 +2422,11 @@ module.exports = {
 			actions.setMultiplePresetNames = {
 				name: 'Preset - Set Multiple Preset Names',
 				options: [],
-				callback: async (action) => {
+				callback: async (action, context) => {
 					let opt = action.options;
 
 					for (let i = 1; i <= 30; i++) {
-						let presetName = await self.parseVariablesInString(opt[`preset${i}_name`]);
+						let presetName = await context.parseVariablesInString(opt[`preset${i}_name`]);
 						cmd = `p=${i}&name=${presetName}`;
 						self.sendPTZ(self.savePresetCommand, cmd);
 					}
@@ -2443,7 +2443,7 @@ module.exports = {
 					id: `preset${i}_name`,
 					default: `${i}`,
 					tooltip: `Set the name of Preset ${i}.`,
-					useVariables: true
+					useVariables: { local: true }
 				};
 
 				actions.setMultiplePresetNames.options.push(optionObj);
@@ -2495,17 +2495,17 @@ module.exports = {
 						label: 'Preset Number',
 						id: 'val',
 						default: 1,
-						useVariables: true
+						useVariables: { local: true }
 					},
 				],
-				callback: async (action) => {
+				callback: async (action, context) => {
 					//need to determine drive mode first (normal, time, speed) and then recall with appropriate command
 					if (!self.presetRecallMode) {
 						self.presetRecallMode = 'normal';
 						self.data.presetRecallMode = 'normal';
 					}
 
-					let val = parseInt(await self.parseVariablesInString(action.options.val));
+					let val = parseInt(await context.parseVariablesInString(action.options.val));
 
 					//make sure its a number and is between 1 and 100
 					if (isNaN(val)) {
@@ -2546,35 +2546,35 @@ module.exports = {
 						label: 'First Preset',
 						id: 'preset1',
 						default: 1,
-						useVariables: true,
+						useVariables: { local: true },
 					},
 					{
 						type: 'textinput',
 						label: 'Second Preset',
 						id: 'preset2',
 						default: 2,
-						useVariables: true,
+						useVariables: { local: true },
 					},
 					{
 						type: 'textinput',
 						label: 'Time (in seconds 2-60)',
 						id: 'time',
 						default: 10,
-						useVariables: true,
+						useVariables: { local: true },
 					},
 					{
 						type: 'textinput',
 						label: 'Loops',
 						id: 'loops',
 						default: 1,
-						useVariables: true,
+						useVariables: { local: true },
 					}
 				],
-				callback: async (action) => {
-					let preset1 = self.clampPreset(await self.parseVariablesInString(action.options.preset1), 1);
-					let preset2 = self.clampPreset(await self.parseVariablesInString(action.options.preset2), 2);
+				callback: async (action, context) => {
+					let preset1 = self.clampPreset(await context.parseVariablesInString(action.options.preset1), 1);
+					let preset2 = self.clampPreset(await context.parseVariablesInString(action.options.preset2), 2);
 
-					let seconds = parseInt(await self.parseVariablesInString(action.options.time));
+					let seconds = parseInt(await context.parseVariablesInString(action.options.time));
 					if (isNaN(seconds) || seconds < 2) {
 						seconds = 2;
 					}
@@ -2583,7 +2583,7 @@ module.exports = {
 					}
 					const time = seconds * 1000;
 
-					let loops = parseInt(await self.parseVariablesInString(action.options.loops));
+					let loops = parseInt(await context.parseVariablesInString(action.options.loops));
 					if (isNaN(loops) || loops < 1) {
 						loops = 1;
 					}
@@ -2657,12 +2657,14 @@ module.exports = {
 						label: 'Preset Number',
 						id: 'val',
 						default: 1,
-						useVariables: true,
+						useVariables: { local: true },
+						//useExpressions is not part of @companion-module/base 1.11.0 and is
+						//currently ignored; it needs a base version that defines it
 						useExpressions: true
 					},
 				],
-				callback: async (action) => {
-					let val = parseInt(await self.parseVariablesInString(action.options.val));
+				callback: async (action, context) => {
+					let val = parseInt(await context.parseVariablesInString(action.options.val));
 
 					//make sure its a number and is between 1 and 100
 					if (isNaN(val)) {
@@ -2694,11 +2696,11 @@ module.exports = {
 						label: 'Preset Number',
 						id: 'val',
 						default: 1,
-						useVariables: true
+						useVariables: { local: true }
 					},
 				],
-				callback: async (action) => {
-					let val = parseInt(await self.parseVariablesInString(action.options.val));
+				callback: async (action, context) => {
+					let val = parseInt(await context.parseVariablesInString(action.options.val));
 
 					cmd = `p=${val}&all=disabled`;
 
@@ -2828,11 +2830,11 @@ module.exports = {
 						label: 'Time Seconds (between 2-99)',
 						id: 'time',
 						default: '2',
-						useVariables: true
+						useVariables: { local: true }
 					},
 				],
-				callback: async (action) => {
-					let recallTime = await self.parseVariablesInString(action.options.time);
+				callback: async (action, context) => {
+					let recallTime = await context.parseVariablesInString(action.options.time);
 					//make sure it is in a valid range and is an integer
 					recallTime = parseInt(recallTime);
 					if (!isNaN(recallTime) && recallTime > 1 && recallTime <= 99) {
@@ -2922,11 +2924,11 @@ module.exports = {
 						label: 'Speed Setting (between 1-100)',
 						id: 'speed',
 						default: '100',
-						useVariables: true
+						useVariables: { local: true }
 					},
 				],
-				callback: async (action) => {
-					let recallSpeed = await self.parseVariablesInString(action.options.speed);
+				callback: async (action, context) => {
+					let recallSpeed = await context.parseVariablesInString(action.options.speed);
 					//make sure it is in a valid range and is an integer
 					recallSpeed = parseInt(recallSpeed);
 					if (!isNaN(recallSpeed) && recallSpeed > 0 && recallSpeed <= 100) {
@@ -2970,7 +2972,7 @@ module.exports = {
 						label: 'Preset 1',
 						id: 'preset1',
 						default: '1',
-						useVariables: true,
+						useVariables: { local: true },
 						isVisible: (options) => options.presetCount >= 1
 					},
 					{
@@ -2978,7 +2980,7 @@ module.exports = {
 						label: 'Preset 1 Drive Time (seconds)',
 						id: 'preset1_time',
 						default: '30',
-						useVariables: true,
+						useVariables: { local: true },
 						isVisible: (options) => options.presetCount >= 1
 					},
 					{
@@ -2986,7 +2988,7 @@ module.exports = {
 						label: 'Preset 2',
 						id: 'preset2',
 						default: '2',
-						useVariables: true,
+						useVariables: { local: true },
 						isVisible: (options) => options.presetCount >= 2
 					},
 					{
@@ -2994,7 +2996,7 @@ module.exports = {
 						label: 'Preset 2 Drive Time (seconds)',
 						id: 'preset2_time',
 						default: '30',
-						useVariables: true,
+						useVariables: { local: true },
 						isVisible: (options) => options.presetCount >= 2
 					},
 					{
@@ -3002,7 +3004,7 @@ module.exports = {
 						label: 'Preset 3',
 						id: 'preset3',
 						default: '3',
-						useVariables: true,
+						useVariables: { local: true },
 						isVisible: (options) => options.presetCount >= 3
 					},
 					{
@@ -3010,7 +3012,7 @@ module.exports = {
 						label: 'Preset 3 Drive Time (seconds)',
 						id: 'preset3_time',
 						default: '30',
-						useVariables: true,
+						useVariables: { local: true },
 						isVisible: (options) => options.presetCount >= 3
 					},
 					{
@@ -3018,7 +3020,7 @@ module.exports = {
 						label: 'Preset 4',
 						id: 'preset4',
 						default: '4',
-						useVariables: true,
+						useVariables: { local: true },
 						isVisible: (options) => options.presetCount >= 4
 					},
 					{
@@ -3026,7 +3028,7 @@ module.exports = {
 						label: 'Preset 4 Drive Time (seconds)',
 						id: 'preset4_time',
 						default: '30',
-						useVariables: true,
+						useVariables: { local: true },
 						isVisible: (options) => options.presetCount >= 4
 					},
 					{
@@ -3034,7 +3036,7 @@ module.exports = {
 						label: 'Preset 5',
 						id: 'preset5',
 						default: '5',
-						useVariables: true,
+						useVariables: { local: true },
 						isVisible: (options) => options.presetCount >= 5
 					},
 					{
@@ -3042,7 +3044,7 @@ module.exports = {
 						label: 'Preset 5 Drive Time (seconds)',
 						id: 'preset5_time',
 						default: '30',
-						useVariables: true,
+						useVariables: { local: true },
 						isVisible: (options) => options.presetCount >= 5
 					},
 					{
@@ -3066,7 +3068,7 @@ module.exports = {
 						label: 'Delay before starting trace (seconds)',
 						id: 'trace_delay',
 						default: '2',
-						useVariables: true,
+						useVariables: { local: true },
 						isVisible: (options) => options.move_to_start_max == true
 					},
 					{
@@ -3091,11 +3093,11 @@ module.exports = {
 						label: 'Repeat Count',
 						id: 'repeat_count',
 						default: '1',
-						useVariables: true,
+						useVariables: { local: true },
 						isVisible: (options) => options.loop == false
 					}
 				],
-				callback: async (action) => {
+				callback: async (action, context) => {
 					let opt = action.options;
 
 					let presetCount = parseInt(opt.presetCount);
@@ -3103,14 +3105,14 @@ module.exports = {
 					self.customTracePresetArray = [];
 
 					for (let i = 1; i <= presetCount; i++) {
-						let presetNumber = parseInt(await self.parseVariablesInString(opt['preset' + i]));
+						let presetNumber = parseInt(await context.parseVariablesInString(opt['preset' + i]));
 
 						if (isNaN(presetNumber) || presetNumber < 1 || presetNumber > 100) {
 							self.log('info', `Preset ${i} must be a number between 1 and 100. Value entered: ${presetNumber}`);
 							return;
 						}
 
-						let presetTime = parseInt(await self.parseVariablesInString(opt['preset' + i + '_time']));
+						let presetTime = parseInt(await context.parseVariablesInString(opt['preset' + i + '_time']));
 
 						if (!isNaN(presetTime) && presetTime > 1 && presetTime <= 99) {
 							presetTime = presetTime * 1000;
@@ -3126,7 +3128,7 @@ module.exports = {
 					let loop = opt.loop;
 					let loopMode = opt.loopmode;
 
-					let repeatCount = parseInt(await self.parseVariablesInString(opt.repeat_count));
+					let repeatCount = parseInt(await context.parseVariablesInString(opt.repeat_count));
 
 					if (!loop) {
 						self.customTraceLoopCount = repeatCount;
@@ -3162,7 +3164,7 @@ module.exports = {
 						//go ahead and move to the start position without setting the drive time, then advance the position to the next preset in the array before beginning trace
 						self.sendPTZ(self.ptzCommand, 'p=' + self.customTracePresetArray[position].preset);
 
-						delay = parseInt(await self.parseVariablesInString(opt.trace_delay)); //give it time to get there before starting trace
+						delay = parseInt(await context.parseVariablesInString(opt.trace_delay)); //give it time to get there before starting trace
 						if (isNaN(delay)) {
 							delay = 2;
 						}
@@ -3385,7 +3387,7 @@ module.exports = {
 						id: 'sensitivity',
 						label: 'Sensitivity (1-10)',
 						default: 5,
-						useVariables: true
+						useVariables: { local: true }
 					}
 				],
 				learn: (action) => {
@@ -3402,9 +3404,9 @@ module.exports = {
 						return undefined
 					}
 				},
-				callback: async (action) => {
+				callback: async (action, context) => {
 					let base = 'update_config.cgi'
-					let sensitivity = parseInt(await self.parseVariablesInString(action.options.sensitivity));
+					let sensitivity = parseInt(await context.parseVariablesInString(action.options.sensitivity));
 					//make sure it is a number and not nan
 					if (isNaN(sensitivity) || sensitivity < 1 || sensitivity > 10) {
 						self.log('error', 'Tracking Sensitivity must be a number from 1-10.')
@@ -3516,17 +3518,17 @@ module.exports = {
 						id: 'recoveryControlTime',
 						label: 'Recovery Control Time (1 - 30 seconds)',
 						default: 5,
-						useVariables: true,
+						useVariables: { local: true },
 						isVisible: (options) => options.recoveryControl == '1'
 					}
 				],
-				callback: async (action) => {
+				callback: async (action, context) => {
 					let base = 'update_config.cgi'
 					let cmd = `recoveryControl=${action.options.recoveryControl}`
 					self.sendTrackingCommand(base, cmd);
 
 					if (action.options.recoveryControl == '1') {
-						let recoveryControlTime = parseInt(await self.parseVariablesInString(action.options.recoveryControlTime));
+						let recoveryControlTime = parseInt(await context.parseVariablesInString(action.options.recoveryControlTime));
 
 						if (isNaN(recoveryControlTime) || recoveryControlTime < 1 || recoveryControlTime > 30) {
 							self.log('error', 'Recovery Control Time must be a number from 1-30.')
@@ -3647,7 +3649,7 @@ module.exports = {
 						id: 'trackingStartTime',
 						label: 'Tracking Start Time (0-10)',
 						default: 5,
-						useVariables: true
+						useVariables: { local: true }
 					}
 				],
 				learn: (action) => {
@@ -3664,9 +3666,9 @@ module.exports = {
 						return undefined
 					}
 				},
-				callback: async (action) => {
+				callback: async (action, context) => {
 					let base = 'update_config.cgi'
-					let trackingStartTime = parseInt(await self.parseVariablesInString(action.options.trackingStartTime));
+					let trackingStartTime = parseInt(await context.parseVariablesInString(action.options.trackingStartTime));
 					//make sure it is a number and not nan
 					if (isNaN(trackingStartTime) || trackingStartTime < 0 || trackingStartTime > 10) {
 						self.log('error', 'Tracking Start Time must be a number from 0-10.')
@@ -3768,84 +3770,84 @@ module.exports = {
 						id: 'upper_x',
 						label: 'Upper Limit X',
 						default: 5,
-						useVariables: true
+						useVariables: { local: true }
 					},
 					{
 						type: 'textinput',
 						id: 'upper_y',
 						label: 'Upper Limit Y',
 						default: 5,
-						useVariables: true
+						useVariables: { local: true }
 					},
 					{
 						type: 'textinput',
 						id: 'upper_z',
 						label: 'Upper Limit Z',
 						default: 5,
-						useVariables: true
+						useVariables: { local: true }
 					},
 					{
 						type: 'textinput',
 						id: 'left_x',
 						label: 'Left Limit X',
 						default: 5,
-						useVariables: true
+						useVariables: { local: true }
 					},
 					{
 						type: 'textinput',
 						id: 'left_y',
 						label: 'Left Limit Y',
 						default: 5,
-						useVariables: true
+						useVariables: { local: true }
 					},
 					{
 						type: 'textinput',
 						id: 'left_z',
 						label: 'Left Limit Z',
 						default: 5,
-						useVariables: true
+						useVariables: { local: true }
 					},
 					{
 						type: 'textinput',
 						id: 'right_x',
 						label: 'Right Limit X',
 						default: 5,
-						useVariables: true
+						useVariables: { local: true }
 					},
 					{
 						type: 'textinput',
 						id: 'right_y',
 						label: 'Right Limit Y',
 						default: 5,
-						useVariables: true
+						useVariables: { local: true }
 					},
 					{
 						type: 'textinput',
 						id: 'right_z',
 						label: 'Right Limit Z',
 						default: 5,
-						useVariables: true
+						useVariables: { local: true }
 					},
 					{
 						type: 'textinput',
 						id: 'lower_x',
 						label: 'Lower Limit X',
 						default: 5,
-						useVariables: true
+						useVariables: { local: true }
 					},
 					{
 						type: 'textinput',
 						id: 'lower_y',
 						label: 'Lower Limit Y',
 						default: 5,
-						useVariables: true
+						useVariables: { local: true }
 					},
 					{
 						type: 'textinput',
 						id: 'lower_z',
 						label: 'Lower Limit Z',
 						default: 5,
-						useVariables: true
+						useVariables: { local: true }
 					}
 				],
 				learn: (action) => {
@@ -3880,24 +3882,24 @@ module.exports = {
 						return undefined
 					}
 				},
-				callback: async (action) => {
+				callback: async (action, context) => {
 					let base = 'update_config.cgi'
 
-					let upper_x = parseInt(await self.parseVariablesInString(action.options.upper_x));
-					let upper_y = parseInt(await self.parseVariablesInString(action.options.upper_y));
-					let upper_z = parseInt(await self.parseVariablesInString(action.options.upper_z));
+					let upper_x = parseInt(await context.parseVariablesInString(action.options.upper_x));
+					let upper_y = parseInt(await context.parseVariablesInString(action.options.upper_y));
+					let upper_z = parseInt(await context.parseVariablesInString(action.options.upper_z));
 
-					let left_x = parseInt(await self.parseVariablesInString(action.options.left_x));
-					let left_y = parseInt(await self.parseVariablesInString(action.options.left_y));
-					let left_z = parseInt(await self.parseVariablesInString(action.options.left_z));
+					let left_x = parseInt(await context.parseVariablesInString(action.options.left_x));
+					let left_y = parseInt(await context.parseVariablesInString(action.options.left_y));
+					let left_z = parseInt(await context.parseVariablesInString(action.options.left_z));
 
-					let right_x = parseInt(await self.parseVariablesInString(action.options.right_x));
-					let right_y = parseInt(await self.parseVariablesInString(action.options.right_y));
-					let right_z = parseInt(await self.parseVariablesInString(action.options.right_z));
+					let right_x = parseInt(await context.parseVariablesInString(action.options.right_x));
+					let right_y = parseInt(await context.parseVariablesInString(action.options.right_y));
+					let right_z = parseInt(await context.parseVariablesInString(action.options.right_z));
 
-					let lower_x = parseInt(await self.parseVariablesInString(action.options.lower_x));
-					let lower_y = parseInt(await self.parseVariablesInString(action.options.lower_y));
-					let lower_z = parseInt(await self.parseVariablesInString(action.options.lower_z));
+					let lower_x = parseInt(await context.parseVariablesInString(action.options.lower_x));
+					let lower_y = parseInt(await context.parseVariablesInString(action.options.lower_y));
+					let lower_z = parseInt(await context.parseVariablesInString(action.options.lower_z));
 
 					//make sure it is a number and not nan
 					if (isNaN(upper_x) || isNaN(upper_y) || isNaN(upper_z) || isNaN(left_x) || isNaN(left_y) || isNaN(left_z) || isNaN(right_x) || isNaN(right_y) || isNaN(right_z) || isNaN(lower_x) || isNaN(lower_y) || isNaN(lower_z)) {
@@ -3918,21 +3920,21 @@ module.exports = {
 						id: 'x',
 						label: 'Limit X',
 						default: 5,
-						useVariables: true
+						useVariables: { local: true }
 					},
 					{
 						type: 'textinput',
 						id: 'y',
 						label: 'Limit Y',
 						default: 5,
-						useVariables: true
+						useVariables: { local: true }
 					},
 					{
 						type: 'textinput',
 						id: 'z',
 						label: 'Limit Z',
 						default: 5,
-						useVariables: true
+						useVariables: { local: true }
 					}
 				],
 				learn: (action) => {
@@ -3951,12 +3953,12 @@ module.exports = {
 						return undefined
 					}
 				},
-				callback: async (action) => {
+				callback: async (action, context) => {
 					let base = 'update_config.cgi'
 
-					let x = parseInt(await self.parseVariablesInString(action.options.x));
-					let y = parseInt(await self.parseVariablesInString(action.options.y));
-					let z = parseInt(await self.parseVariablesInString(action.options.z));
+					let x = parseInt(await context.parseVariablesInString(action.options.x));
+					let y = parseInt(await context.parseVariablesInString(action.options.y));
+					let z = parseInt(await context.parseVariablesInString(action.options.z));
 
 					//make sure it is a number and not nan
 					if (isNaN(x) || isNaN(y) || isNaN(z)) {
@@ -3977,21 +3979,21 @@ module.exports = {
 						id: 'x',
 						label: 'Limit X',
 						default: 5,
-						useVariables: true
+						useVariables: { local: true }
 					},
 					{
 						type: 'textinput',
 						id: 'y',
 						label: 'Limit Y',
 						default: 5,
-						useVariables: true
+						useVariables: { local: true }
 					},
 					{
 						type: 'textinput',
 						id: 'z',
 						label: 'Limit Z',
 						default: 5,
-						useVariables: true
+						useVariables: { local: true }
 					}
 				],
 				learn: (action) => {
@@ -4010,12 +4012,12 @@ module.exports = {
 						return undefined
 					}
 				},
-				callback: async (action) => {
+				callback: async (action, context) => {
 					let base = 'update_config.cgi'
 
-					let x = parseInt(await self.parseVariablesInString(action.options.x));
-					let y = parseInt(await self.parseVariablesInString(action.options.y));
-					let z = parseInt(await self.parseVariablesInString(action.options.z));
+					let x = parseInt(await context.parseVariablesInString(action.options.x));
+					let y = parseInt(await context.parseVariablesInString(action.options.y));
+					let z = parseInt(await context.parseVariablesInString(action.options.z));
 
 					//make sure it is a number and not nan
 					if (isNaN(x) || isNaN(y) || isNaN(z)) {
@@ -4036,21 +4038,21 @@ module.exports = {
 						id: 'x',
 						label: 'Limit X',
 						default: 5,
-						useVariables: true
+						useVariables: { local: true }
 					},
 					{
 						type: 'textinput',
 						id: 'y',
 						label: 'Limit Y',
 						default: 5,
-						useVariables: true
+						useVariables: { local: true }
 					},
 					{
 						type: 'textinput',
 						id: 'z',
 						label: 'Limit Z',
 						default: 5,
-						useVariables: true
+						useVariables: { local: true }
 					}
 				],
 				learn: (action) => {
@@ -4069,12 +4071,12 @@ module.exports = {
 						return undefined
 					}
 				},
-				callback: async (action) => {
+				callback: async (action, context) => {
 					let base = 'update_config.cgi'
 
-					let x = parseInt(await self.parseVariablesInString(action.options.x));
-					let y = parseInt(await self.parseVariablesInString(action.options.y));
-					let z = parseInt(await self.parseVariablesInString(action.options.z));
+					let x = parseInt(await context.parseVariablesInString(action.options.x));
+					let y = parseInt(await context.parseVariablesInString(action.options.y));
+					let z = parseInt(await context.parseVariablesInString(action.options.z));
 
 					//make sure it is a number and not nan
 					if (isNaN(x) || isNaN(y) || isNaN(z)) {
@@ -4095,21 +4097,21 @@ module.exports = {
 						id: 'x',
 						label: 'Limit X',
 						default: 5,
-						useVariables: true
+						useVariables: { local: true }
 					},
 					{
 						type: 'textinput',
 						id: 'y',
 						label: 'Limit Y',
 						default: 5,
-						useVariables: true
+						useVariables: { local: true }
 					},
 					{
 						type: 'textinput',
 						id: 'z',
 						label: 'Limit Z',
 						default: 5,
-						useVariables: true
+						useVariables: { local: true }
 					}
 				],
 				learn: (action) => {
@@ -4128,12 +4130,12 @@ module.exports = {
 						return undefined
 					}
 				},
-				callback: async (action) => {
+				callback: async (action, context) => {
 					let base = 'update_config.cgi'
 
-					let x = parseInt(await self.parseVariablesInString(action.options.x));
-					let y = parseInt(await self.parseVariablesInString(action.options.y));
-					let z = parseInt(await self.parseVariablesInString(action.options.z));
+					let x = parseInt(await context.parseVariablesInString(action.options.x));
+					let y = parseInt(await context.parseVariablesInString(action.options.y));
+					let z = parseInt(await context.parseVariablesInString(action.options.z));
 
 					//make sure it is a number and not nan
 					if (isNaN(x) || isNaN(y) || isNaN(z)) {
@@ -4248,21 +4250,21 @@ module.exports = {
 						id: 'x',
 						label: 'X',
 						default: 0,
-						useVariables: true
+						useVariables: { local: true }
 					},
 					{
 						type: 'textinput',
 						id: 'y',
 						label: 'Y',
 						default: 0,
-						useVariables: true
+						useVariables: { local: true }
 					},
 					{
 						type: 'textinput',
 						id: 'z',
 						label: 'Z',
 						default: 0,
-						useVariables: true
+						useVariables: { local: true }
 					}
 				],
 				learn: (action) => {
@@ -4280,12 +4282,12 @@ module.exports = {
 						return undefined
 					}
 				},
-				callback: async (action) => {
+				callback: async (action, context) => {
 					let base = 'update_config.cgi';
 					let currentPosition = {};
-					currentPosition.x = parseInt(await self.parseVariablesInString(action.options.x));
-					currentPosition.y = parseInt(await self.parseVariablesInString(action.options.y));
-					currentPosition.z = parseInt(await self.parseVariablesInString(action.options.z));
+					currentPosition.x = parseInt(await context.parseVariablesInString(action.options.x));
+					currentPosition.y = parseInt(await context.parseVariablesInString(action.options.y));
+					currentPosition.z = parseInt(await context.parseVariablesInString(action.options.z));
 
 					//make sure it is a number and not nan
 					if (isNaN(currentPosition.x) || isNaN(currentPosition.y) || isNaN(currentPosition.z)) {
@@ -4383,14 +4385,14 @@ module.exports = {
 						id: 'x',
 						label: 'X',
 						default: 0,
-						useVariables: true
+						useVariables: { local: true }
 					},
 					{
 						type: 'textinput',
 						id: 'y',
 						label: 'Y',
 						default: 0,
-						useVariables: true
+						useVariables: { local: true }
 					}
 				],
 				learn: (action) => {
@@ -4408,11 +4410,11 @@ module.exports = {
 						return undefined
 					}
 				},
-				callback: async (action) => {
+				callback: async (action, context) => {
 					let base = 'update_config.cgi';
 
-					let x = parseInt(await self.parseVariablesInString(action.options.x));
-					let y = parseInt(await self.parseVariablesInString(action.options.y));
+					let x = parseInt(await context.parseVariablesInString(action.options.x));
+					let y = parseInt(await context.parseVariablesInString(action.options.y));
 
 					//make sure it is a number and not nan
 					if (isNaN(x) || isNaN(y)) {
@@ -4434,7 +4436,7 @@ module.exports = {
 						id: 'value',
 						label: 'Value (1-5)',
 						default: 1,
-						useVariables: true
+						useVariables: { local: true }
 					}
 				],
 				learn: (action) => {
@@ -4450,10 +4452,10 @@ module.exports = {
 						return undefined
 					}
 				},
-				callback: async (action) => {
+				callback: async (action, context) => {
 					let base = 'update_config.cgi';
 
-					let value = parseInt(await self.parseVariablesInString(action.options.value));
+					let value = parseInt(await context.parseVariablesInString(action.options.value));
 
 					//make sure it is a number and not nan, and 1-5
 					if (isNaN(value) || value < 1 || value > 5) {

@@ -127,8 +127,6 @@ module.exports = {
 		}
 	},
 
-	//Preset numbers arrive from text inputs that may contain variables, so they
-	//can be anything at all by the time they get here
 	//Step one place through an action's dropdown, starting from the value the
 	//camera last reported rather than from a cached cursor position.
 	//
@@ -201,8 +199,6 @@ module.exports = {
 		return best;
 	},
 
-	//Variables arrive as strings, so a checkbox driven by one has to accept
-	//whatever a user is likely to put in a custom variable
 	//Look up any parameter from the last info.cgi response by name. The poll
 	//stores every line it received, so anything the camera reports can be read
 	//back without the module needing a dedicated field for it.
@@ -226,6 +222,8 @@ module.exports = {
 		return undefined;
 	},
 
+	//Variables arrive as strings, so a checkbox driven by one has to accept
+	//whatever a user is likely to put in a custom variable
 	parseBoolean: function (value) {
 		if (typeof value === 'boolean') {
 			return value;
@@ -280,6 +278,8 @@ module.exports = {
 		self.checkFeedbacks();
 	},
 
+	//Preset numbers arrive from text inputs that may contain variables, so they
+	//can be anything at all by the time they get here
 	clampPreset: function (value, fallback) {
 		let preset = parseInt(value);
 
