@@ -1,4 +1,5 @@
 const { MODELS, SERIES_SPECS } = require('./models.js')
+const c = require('./choices.js')
 
 module.exports = {
 	//Resolve the configured or camera-reported model name to its SERIES_SPECS
@@ -233,6 +234,50 @@ module.exports = {
 		const text = String(value).trim().toLowerCase();
 
 		return text === 'true' || text === '1' || text === 'yes' || text === 'on' || text === 'enabled';
+	},
+
+	//Bring the save option toggles back from config. They live in config rather
+	//than in data alone so a toggle set before doors survives a Companion
+	//restart -- the config field is hidden, it is only ever written from here.
+	loadSavePresetOptions: function () {
+		let self = this;
+
+		let stored = self.config.savePresetOptions;
+
+		if (typeof stored !== 'object' || stored === null) {
+			return;
+		}
+
+		for (const option of c.SAVE_PRESET_OPTIONS) {
+			if (stored[option.key] !== undefined) {
+				self.data.savePresetOptions[option.key] = self.parseBoolean(stored[option.key]);
+			}
+		}
+	},
+
+	//Single write path for the toggles: set one (or every) option, persist,
+	//then push the change out to the variables and feedbacks.
+	setSavePresetOption: function (key, value) {
+		let self = this;
+
+		let keys = (key === 'all') ? c.SAVE_PRESET_OPTIONS.map((option) => option.key) : [key];
+
+		for (const name of keys) {
+			if (self.data.savePresetOptions[name] === undefined) {
+				self.log('info', `Unknown preset save option: ${name}`);
+				continue;
+			}
+
+			//'toggle' is resolved per option, so Toggle All flips each one
+			//individually rather than forcing them all to one state
+			self.data.savePresetOptions[name] = (value === 'toggle') ? !self.data.savePresetOptions[name] : self.parseBoolean(value);
+		}
+
+		self.config.savePresetOptions = { ...self.data.savePresetOptions };
+		self.saveConfig(self.config);
+
+		self.checkVariables();
+		self.checkFeedbacks();
 	},
 
 	clampPreset: function (value, fallback) {

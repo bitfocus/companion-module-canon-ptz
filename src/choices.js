@@ -780,6 +780,29 @@ module.exports = {
 		return p
 	},
 
+	// #####################################
+	// #### Preset Save Option Look Ups ####
+	// #####################################
+
+	//The six things a Save Preset can write. One list feeds the action options,
+	//the module toggles, the variables, the feedback and the presets, so a
+	//seventh option only has to be added here.
+	//  key   - suffix for the module state, variable and feedback
+	//  id    - the existing savePset option id, kept for backwards compatibility
+	//  cmd   - the parameter name the camera expects
+	SAVE_PRESET_OPTIONS: [
+		{ key: 'ptz',          id: 'save_ptz',          cmd: 'ptz',   label: 'Position (PTZ)',          short: 'PTZ' },
+		{ key: 'focus',        id: 'save_focus',        cmd: 'focus', label: 'Focus',                   short: 'Focus' },
+		{ key: 'exposure',     id: 'save_exposure',     cmd: 'exp',   label: 'Exposure',                short: 'Exp' },
+		{ key: 'whitebalance', id: 'save_whitebalance', cmd: 'wb',    label: 'White Balance',           short: 'WB' },
+		{ key: 'is',           id: 'save_is',           cmd: 'is',    label: 'Image Stabilization (IS)', short: 'IS' },
+		{ key: 'cp',           id: 'save_cp',           cmd: 'cp',    label: 'CP',                      short: 'CP' },
+	],
+
+	CHOICES_SAVE_PRESET_OPTIONS: function () {
+		return this.SAVE_PRESET_OPTIONS.map((option) => ({ id: option.key, label: option.label }))
+	},
+
 	// ###############################
 	// #### Preset Speed Look Ups ####
 	// ###############################

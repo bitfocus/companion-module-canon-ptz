@@ -92,6 +92,20 @@ module.exports = {
 			presetRecallMode: 'normal',
 			presetTimeValue: 2000,
 			presetSpeedValue: 1,
+
+			//Save Preset options. Module-owned toggles, so a Save Preset button can
+			//follow a set of switches without the user building custom variables
+			//first. Restored from config in loadSavePresetOptions() -- defaultData()
+			//runs again on every configUpdated(), which would otherwise reset these
+			//every time somebody opened the config page.
+			savePresetOptions: {
+				ptz: true,
+				focus: true,
+				exposure: true,
+				whitebalance: true,
+				is: true,
+				cp: true,
+			},
 	
 			trackingConfig: {},
 			trackingInformation: {},

@@ -2298,108 +2298,44 @@ module.exports = {
 						useVariables: true
 					},
 					{
-						type: 'checkbox',
-						label: 'Use variables for the save options below',
-						id: 'use_variables_save',
-						default: false,
-						tooltip: 'Drive each option from a variable so one set of switches can change what every camera saves.'
+						type: 'dropdown',
+						label: 'Where the save options come from',
+						id: 'save_source',
+						default: 'button',
+						choices: [
+							{ id: 'button', label: 'This button (checkboxes below)' },
+							{ id: 'module', label: 'Module toggles (shared by every Save button)' },
+							{ id: 'variables', label: 'Variables' },
+						],
+						tooltip: 'Module toggles are flipped by the "Preset - Set Save Option" action, so one set of switches changes what every Save button writes.'
 					},
 					{
-						type: 'checkbox',
-						label: 'Save Position (PTZ)',
-						id: 'save_ptz',
-						default: true,
-						isVisible: (options) => !options['use_variables_save'],
+						type: 'static-text',
+						id: 'save_module_info',
+						label: 'Module Toggles',
+						value: 'This button follows the module toggles. Flip them with the "Preset - Set Save Option" action, or with the buttons in the "Preset Save Options" preset category. Current state: $(canon-ptz:savePresetOptions)',
+						isVisible: (options) => options['save_source'] === 'module',
 					},
-					{
-						type: 'textinput',
-						label: 'Save Position (PTZ)',
-						id: 'save_ptz_v',
-						default: 'true',
-						tooltip: 'true/false, 1/0, yes/no, on/off.',
-						useVariables: true,
-						isVisible: (options) => !!options['use_variables_save'],
-					},
-					{
-						type: 'checkbox',
-						label: 'Save Focus',
-						id: 'save_focus',
-						default: true,
-						isVisible: (options) => !options['use_variables_save'],
-					},
-					{
-						type: 'textinput',
-						label: 'Save Focus',
-						id: 'save_focus_v',
-						default: 'true',
-						tooltip: 'true/false, 1/0, yes/no, on/off.',
-						useVariables: true,
-						isVisible: (options) => !!options['use_variables_save'],
-					},
-					{
-						type: 'checkbox',
-						label: 'Save Exposure',
-						id: 'save_exposure',
-						default: true,
-						isVisible: (options) => !options['use_variables_save'],
-					},
-					{
-						type: 'textinput',
-						label: 'Save Exposure',
-						id: 'save_exposure_v',
-						default: 'true',
-						tooltip: 'true/false, 1/0, yes/no, on/off.',
-						useVariables: true,
-						isVisible: (options) => !!options['use_variables_save'],
-					},
-					{
-						type: 'checkbox',
-						label: 'Save White Balance',
-						id: 'save_whitebalance',
-						default: true,
-						isVisible: (options) => !options['use_variables_save'],
-					},
-					{
-						type: 'textinput',
-						label: 'Save White Balance',
-						id: 'save_whitebalance_v',
-						default: 'true',
-						tooltip: 'true/false, 1/0, yes/no, on/off.',
-						useVariables: true,
-						isVisible: (options) => !!options['use_variables_save'],
-					},
-					{
-						type: 'checkbox',
-						label: 'Save Image Stabilization (IS)',
-						id: 'save_is',
-						default: true,
-						isVisible: (options) => !options['use_variables_save'],
-					},
-					{
-						type: 'textinput',
-						label: 'Save Image Stabilization (IS)',
-						id: 'save_is_v',
-						default: 'true',
-						tooltip: 'true/false, 1/0, yes/no, on/off.',
-						useVariables: true,
-						isVisible: (options) => !!options['use_variables_save'],
-					},
-					{
-						type: 'checkbox',
-						label: 'Save CP',
-						id: 'save_cp',
-						default: true,
-						isVisible: (options) => !options['use_variables_save'],
-					},
-					{
-						type: 'textinput',
-						label: 'Save CP',
-						id: 'save_cp_v',
-						default: 'true',
-						tooltip: 'true/false, 1/0, yes/no, on/off.',
-						useVariables: true,
-						isVisible: (options) => !!options['use_variables_save'],
-					},
+					//The checkbox and the variable input for each option are built from
+					//the same list, so the six stay in step with the command builder below
+					...c.SAVE_PRESET_OPTIONS.flatMap((option) => ([
+						{
+							type: 'checkbox',
+							label: 'Save ' + option.label,
+							id: option.id,
+							default: true,
+							isVisible: (options) => (options['save_source'] ?? 'button') === 'button',
+						},
+						{
+							type: 'textinput',
+							label: 'Save ' + option.label,
+							id: option.id + '_v',
+							default: 'true',
+							tooltip: 'true/false, 1/0, yes/no, on/off.',
+							useVariables: true,
+							isVisible: (options) => options['save_source'] === 'variables',
+						},
+					])),
 				],
 				callback: async (action) => {
 					let presetName = await self.parseVariablesInString(action.options.name);
@@ -2414,57 +2350,32 @@ module.exports = {
 						return;
 					}
 
-					//each option is either its checkbox or a variable that resolves to one
+					//each option comes from this button, from the module toggles, or from
+					//a variable that resolves to one. Buttons saved before save_source
+					//existed only carry the old use_variables_save checkbox.
+					let source = action.options.save_source ?? (action.options.use_variables_save ? 'variables' : 'button');
+
 					let saveOptions = {};
-					for (const key of ['save_ptz', 'save_focus', 'save_exposure', 'save_whitebalance', 'save_is', 'save_cp']) {
-						if (action.options.use_variables_save) {
-							saveOptions[key] = self.parseBoolean(await self.parseVariablesInString(action.options[key + '_v']));
+					for (const option of c.SAVE_PRESET_OPTIONS) {
+						if (source === 'variables') {
+							saveOptions[option.key] = self.parseBoolean(await self.parseVariablesInString(action.options[option.id + '_v']));
+						}
+						else if (source === 'module') {
+							saveOptions[option.key] = self.data.savePresetOptions[option.key] == true;
 						}
 						else {
-							saveOptions[key] = !!action.options[key];
+							saveOptions[option.key] = !!action.options[option.id];
 						}
 					}
 
 					cmd = 'p=' + presetNumber + '&name=' + presetName;
-					if ((saveOptions.save_ptz) && (saveOptions.save_focus) && (saveOptions.save_exposure) && (saveOptions.save_whitebalance) && (saveOptions.save_is) && (saveOptions.save_cp)) {
+
+					if (c.SAVE_PRESET_OPTIONS.every((option) => saveOptions[option.key])) {
 						cmd += '&all=enabled';
 					}
 					else {
-						if (saveOptions.save_ptz) {
-							cmd += '&ptz=enabled';
-						}
-						else {
-							cmd += '&ptz=disabled';
-						}
-						if (saveOptions.save_focus) {
-							cmd += '&focus=enabled';
-						}
-						else {
-							cmd += '&focus=disabled';
-						}
-						if (saveOptions.save_exposure) {
-							cmd += '&exp=enabled';
-						}
-						else {
-							cmd += '&exp=disabled';
-						}
-						if (saveOptions.save_whitebalance) {
-							cmd += '&wb=enabled';
-						}
-						else {
-							cmd += '&wb=disabled';
-						}
-						if (saveOptions.save_is) {
-							cmd += '&is=enabled';
-						}
-						else {
-							cmd += '&is=disabled';
-						}
-						if (saveOptions.save_cp) {
-							cmd += '&cp=enabled';
-						}
-						else {
-							cmd += '&cp=disabled';
+						for (const option of c.SAVE_PRESET_OPTIONS) {
+							cmd += '&' + option.cmd + '=' + (saveOptions[option.key] ? 'enabled' : 'disabled');
 						}
 					}
 
@@ -2474,6 +2385,37 @@ module.exports = {
 					self.checkFeedbacks();
 
 					self.sendPTZ(self.savePresetCommand, cmd);
+				}
+			}
+
+			actions.savePresetOption = {
+				name: 'Preset - Set Save Option',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Option',
+						id: 'option',
+						default: 'ptz',
+						choices: [
+							...c.CHOICES_SAVE_PRESET_OPTIONS(),
+							{ id: 'all', label: 'All Options' },
+						],
+					},
+					{
+						type: 'dropdown',
+						label: 'State',
+						id: 'state',
+						default: 'toggle',
+						choices: [
+							{ id: 'toggle', label: 'Toggle' },
+							{ id: 'true', label: 'On (save it)' },
+							{ id: 'false', label: 'Off (leave it alone)' },
+						],
+						tooltip: 'Toggle All flips each option on its own rather than forcing them all one way.'
+					},
+				],
+				callback: async (action) => {
+					self.setSavePresetOption(action.options.option, action.options.state);
 				}
 			}
 

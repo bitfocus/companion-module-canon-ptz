@@ -703,6 +703,50 @@ module.exports = {
 			}
 		}
 
+		if (SERIES.actions.presets == true) {
+			feedbacks.savePresetOption = {
+				type: 'boolean',
+				name: 'Preset - Save Option State',
+				description: 'Indicate whether a Save Preset option is currently ON or OFF',
+				defaultStyle: {
+					color: foregroundColor,
+					bgcolor: backgroundColorGreen,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Option',
+						id: 'option',
+						default: 'ptz',
+						choices: [
+							...c.CHOICES_SAVE_PRESET_OPTIONS(),
+							{ id: 'all', label: 'All Options' },
+						],
+					},
+					{
+						type: 'dropdown',
+						label: 'Indicate in X State',
+						id: 'state',
+						default: '1',
+						choices: [
+							{ id: '0', label: 'OFF' },
+							{ id: '1', label: 'ON' },
+						],
+					},
+				],
+				callback: function (feedback, bank) {
+					let opt = feedback.options
+
+					//"All Options" is only ON when every one of them is
+					let on = (opt.option === 'all')
+						? c.SAVE_PRESET_OPTIONS.every((option) => self.data.savePresetOptions[option.key] == true)
+						: self.data.savePresetOptions[opt.option] == true;
+
+					return (opt.state === '1') ? on : !on;
+				}
+			}
+		}
+
 		feedbacks.customTraceLoop = {
 			type: 'boolean',
 			name: 'Custom Trace is Running',
