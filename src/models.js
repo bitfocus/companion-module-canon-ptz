@@ -39,6 +39,7 @@ module.exports = {
 				focusSpeed: true, //focus speed value
 				focusValue: true, //focus length value
 				autoFocusMode: true, //focus mode auto/manual
+				focusDetect: true, //face detection AF mode
 				//pan/tilt
 				panTiltSpeedValue: true, //current pan/tilt speed value
 				//exposure
@@ -56,6 +57,8 @@ module.exports = {
 				zoomAccel: true, //soft zoom control setting
 				sceneMode: true, //scene shooting mode
 				pedestalValue: true, //pedestal value
+				sharpness: true, //sharpness level
+				noiseReduction: true, //noise reduction level
 				//white balance
 				whitebalanceMode: true, //white balance mode auto, manual, wb_a, wb_b, daylight, tungsten, kelvin
 				kelvinValue: true, //current kelvin value
@@ -102,6 +105,7 @@ module.exports = {
 				focusSpeed: true,
 				autoFocus: true,
 				oneshotAutoFocus: true,
+				focusDetect: { cmd: 'c.1.focus.detect=', dropdown: c.CHOICES_FOCUSDETECT_CRN }, //Face detection AF
 				exposureShootingMode: { cmd: 'c.1.shooting=', dropdown: c.CHOICES_EXPOSURESHOOTINGMODES_CRN() },
 				exposureMode: { cmd: 'c.1.exp=', dropdown: c.CHOICES_EXPOSUREMODES_CRN() },
 				scene: { cmd: 'c.1.scene=', dropdown: c.CHOICES_SCENE_CRN() }, //Supports Scene shooting mode
@@ -116,6 +120,8 @@ module.exports = {
 				ndfilter: { dropdown: c.CHOICES_NDFILTER_CRN500 }, // ND filter value is read-only on this model
 				ndMode: { cmd: 'c.1.nd.mode=', dropdown: c.CHOICES_NDMODE_CRN }, // ND filter mode is what can be set
 				pedestal: { cmd: 'c.1.blacklevel=', dropdown: c.CHOICES_PEDESTAL_CRN() },
+				sharpness: { cmd: 'c.1.ac=', dropdown: c.CHOICES_SHARPNESS() }, //Sharpness level, -10..50 on every XC model
+				noiseReduction: { cmd: 'c.1.nr=', dropdown: c.CHOICES_NOISEREDUCTION() }, //Noise reduction 0..12
 				whitebalanceMode: {cmd: 'c.1.wb=', dropdown: c.CHOICES_WBMODE_CRN() },
 				kelvin: {cmd: 'c.1.wb.kelvin=', dropdown: c.CHOICES_KELVIN_CRN() },
 				rGain: {cmd: 'c.1.wb.shift.rgain=', dropdown: c.CHOICES_RGAIN_CRN() },
@@ -149,6 +155,7 @@ module.exports = {
 				focusSpeed: true, //focus speed value
 				focusValue: true, //focus length value
 				autoFocusMode: true, //focus mode auto/manual
+				focusDetect: true, //face detection AF mode
 				//pan/tilt
 				panTiltSpeedValue: true, //current pan/tilt speed value
 				//exposure
@@ -163,6 +170,8 @@ module.exports = {
 				gainValue: true, //gain value
 				ndfilterValue: true, //neutral density value
 				pedestalValue: true, //pedestal value
+				sharpness: true, //sharpness level
+				noiseReduction: true, //noise reduction level
 				//white balance
 				whitebalanceMode: true, //white balance mode auto, manual, wb_a, wb_b, daylight, tungsten, kelvin
 				kelvinValue: true, //current kelvin value
@@ -208,6 +217,7 @@ module.exports = {
 				focusSpeed: true,
 				autoFocus: true,
 				oneshotAutoFocus: true,
+				focusDetect: { cmd: 'c.1.focus.detect=', dropdown: c.CHOICES_FOCUSDETECT_CRN }, //Face detection AF
 				exposureShootingMode: { cmd: 'c.1.shooting=', dropdown: c.CHOICES_EXPOSURESHOOTINGMODES_CRN() },
 				exposureMode: { cmd: 'c.1.exp=', dropdown: c.CHOICES_EXPOSUREMODES_CRN() },
 				aeGainLimit: true,
@@ -220,6 +230,8 @@ module.exports = {
 				gain: { cmd: 'c.1.me.gain=', dropdown: c.CHOICES_GAIN_CRN() },
 				ndfilter: { cmd: 'c.1.nd.filter=', dropdown: c.CHOICES_NDFILTER_CRN300 }, // Has ND Filter Support
 				pedestal: { cmd: 'c.1.blacklevel=', dropdown: c.CHOICES_PEDESTAL_CRN() },
+				sharpness: { cmd: 'c.1.ac=', dropdown: c.CHOICES_SHARPNESS() }, //Sharpness level, -10..50 on every XC model
+				noiseReduction: { cmd: 'c.1.nr=', dropdown: c.CHOICES_NOISEREDUCTION() }, //Noise reduction 0..12
 				whitebalanceMode: {cmd: 'c.1.wb=', dropdown: c.CHOICES_WBMODE_CRN() },
 				kelvin: {cmd: 'c.1.wb.kelvin=', dropdown: c.CHOICES_KELVIN_CRN() },
 				rGain: {cmd: 'c.1.wb.shift.rgain=', dropdown: c.CHOICES_RGAIN_CRN() },
@@ -252,6 +264,7 @@ module.exports = {
 				focusSpeed: true, //focus speed value
 				focusValue: true, //focus length value
 				autoFocusMode: true, //focus mode auto/manual
+				focusDetect: true, //face detection AF mode
 				//pan/tilt
 				panTiltSpeedValue: true, //current pan/tilt speed value
 				//exposure
@@ -272,6 +285,7 @@ module.exports = {
 				irisFine: true, //fine iris adjustment on/off
 				oneshotAutoFocusStatus: true, //one shot AF status and result
 				pedestalValue: true, //pedestal value
+				sharpness: true, //sharpness level
 				//white balance
 				whitebalanceMode: true, //white balance mode auto, manual, wb_a, wb_b, daylight, tungsten, kelvin
 				kelvinValue: true, //current kelvin value
@@ -319,6 +333,7 @@ module.exports = {
 				focusSpeed: true,
 				autoFocus: true,
 				oneshotAutoFocus: true,
+				focusDetect: { cmd: 'c.1.focus.detect=', dropdown: c.CHOICES_FOCUSDETECT_CRN }, //Face detection AF
 				spotAutoFocus: true, //Supports Spot (Touch) AF
 				exposureShootingMode: { cmd: 'c.1.shooting=', dropdown: c.CHOICES_EXPOSURESHOOTINGMODES_CRN400() }, // No scene mode
 				exposureMode: { cmd: 'c.1.exp=', dropdown: c.CHOICES_EXPOSUREMODES_CRN400() }, // No Av/Tv
@@ -336,6 +351,7 @@ module.exports = {
 				ndfilter: { dropdown: c.CHOICES_NDFILTER_CRN500 }, // ND filter value is read-only on this model
 				ndMode: { cmd: 'c.1.nd.mode=', dropdown: c.CHOICES_NDMODE_CRN }, // ND filter mode is what can be set
 				pedestal: { cmd: 'c.1.blacklevel=', dropdown: c.CHOICES_PEDESTAL_CRN() },
+				sharpness: { cmd: 'c.1.ac=', dropdown: c.CHOICES_SHARPNESS() }, //Sharpness level, -10..50 on every XC model
 				whitebalanceMode: {cmd: 'c.1.wb=', dropdown: c.CHOICES_WBMODE_CRN() },
 				kelvin: {cmd: 'c.1.wb.kelvin=', dropdown: c.CHOICES_KELVIN_CRN() },
 				rGain: {cmd: 'c.1.wb.shift.rgain=', dropdown: c.CHOICES_RGAIN_CRN() },
@@ -368,6 +384,7 @@ module.exports = {
 				focusSpeed: true, //focus speed value
 				focusValue: true, //focus length value
 				autoFocusMode: true, //focus mode auto/manual
+				focusDetect: true, //face detection AF mode
 				//pan/tilt
 				panTiltSpeedValue: true, //current pan/tilt speed value
 				//exposure
@@ -388,6 +405,7 @@ module.exports = {
 				irisFine: true, //fine iris adjustment on/off
 				oneshotAutoFocusStatus: true, //one shot AF status and result
 				pedestalValue: true, //pedestal value
+				sharpness: true, //sharpness level
 				//white balance
 				whitebalanceMode: true, //white balance mode auto, manual, wb_a, wb_b, daylight, tungsten, kelvin
 				kelvinValue: true, //current kelvin value
@@ -435,6 +453,7 @@ module.exports = {
 				focusSpeed: true,
 				autoFocus: true,
 				oneshotAutoFocus: true,
+				focusDetect: { cmd: 'c.1.focus.detect=', dropdown: c.CHOICES_FOCUSDETECT_CRN }, //Face detection AF
 				spotAutoFocus: true, //Supports Spot (Touch) AF
 				exposureShootingMode: { cmd: 'c.1.shooting=', dropdown: c.CHOICES_EXPOSURESHOOTINGMODES_CRN400() }, // No scene mode
 				exposureMode: { cmd: 'c.1.exp=', dropdown: c.CHOICES_EXPOSUREMODES_CRN400() }, // No Av/Tv
@@ -452,6 +471,7 @@ module.exports = {
 				ndfilter: { dropdown: c.CHOICES_NDFILTER_CRN500 }, // ND filter value is read-only on this model
 				ndMode: { cmd: 'c.1.nd.mode=', dropdown: c.CHOICES_NDMODE_CRN }, // ND filter mode is what can be set
 				pedestal: { cmd: 'c.1.blacklevel=', dropdown: c.CHOICES_PEDESTAL_CRN() },
+				sharpness: { cmd: 'c.1.ac=', dropdown: c.CHOICES_SHARPNESS() }, //Sharpness level, -10..50 on every XC model
 				whitebalanceMode: {cmd: 'c.1.wb=', dropdown: c.CHOICES_WBMODE_CRN() },
 				kelvin: {cmd: 'c.1.wb.kelvin=', dropdown: c.CHOICES_KELVIN_CRN() },
 				rGain: {cmd: 'c.1.wb.shift.rgain=', dropdown: c.CHOICES_RGAIN_CRN() },
@@ -485,6 +505,7 @@ module.exports = {
 				focusSpeed: true, //focus speed value
 				focusValue: true, //focus length value
 				autoFocusMode: true, //focus mode auto/manual
+				focusDetect: true, //face detection AF mode
 				//pan/tilt
 				panTiltSpeedValue: true, //current pan/tilt speed value
 				//exposure
@@ -499,6 +520,8 @@ module.exports = {
 				gainValue: true, //gain value
 				ndfilterValue: true, //neutral density value
 				pedestalValue: true, //pedestal value
+				sharpness: true, //sharpness level
+				noiseReduction: true, //noise reduction level
 				//white balance
 				whitebalanceMode: true, //white balance mode auto, manual, wb_a, wb_b, daylight, tungsten, kelvin
 				kelvinValue: true, //current kelvin value
@@ -547,6 +570,7 @@ module.exports = {
 				focusSpeed: true,
 				autoFocus: true,
 				oneshotAutoFocus: true,
+				focusDetect: { cmd: 'c.1.focus.detect=', dropdown: c.CHOICES_FOCUSDETECT_CRN }, //Face detection AF
 				exposureShootingMode: { cmd: 'c.1.shooting=', dropdown: c.CHOICES_EXPOSURESHOOTINGMODES_CRN() },
 				exposureMode: { cmd: 'c.1.exp=', dropdown: c.CHOICES_EXPOSUREMODES_CRN() },
 				aeGainLimit: true,
@@ -559,6 +583,8 @@ module.exports = {
 				gain: { cmd: 'c.1.me.gain=', dropdown: c.CHOICES_GAIN_CRN() },
 				ndfilter: { cmd: 'c.1.nd.filter=', dropdown: c.CHOICES_NDFILTER_CRN500 }, // Has ND Filter Support
 				pedestal: { cmd: 'c.1.blacklevel=', dropdown: c.CHOICES_PEDESTAL_CRN() },
+				sharpness: { cmd: 'c.1.ac=', dropdown: c.CHOICES_SHARPNESS() }, //Sharpness level, -10..50 on every XC model
+				noiseReduction: { cmd: 'c.1.nr=', dropdown: c.CHOICES_NOISEREDUCTION() }, //Noise reduction 0..12
 				whitebalanceMode: {cmd: 'c.1.wb=', dropdown: c.CHOICES_WBMODE_CRN() },
 				kelvin: {cmd: 'c.1.wb.kelvin=', dropdown: c.CHOICES_KELVIN_CRN() },
 				rGain: {cmd: 'c.1.wb.shift.rgain=', dropdown: c.CHOICES_RGAIN_CRN() },
@@ -593,6 +619,7 @@ module.exports = {
 				focusSpeed: true, //focus speed value
 				focusValue: true, //focus length value
 				autoFocusMode: true, //focus mode auto/manual
+				focusDetect: true, //face detection AF mode
 				//pan/tilt
 				panTiltSpeedValue: true, //current pan/tilt speed value
 				//exposure
@@ -607,6 +634,7 @@ module.exports = {
 				gainValue: true, //gain value
 				ndfilterValue: true, //neutral density value
 				pedestalValue: true, //pedestal value
+				sharpness: true, //sharpness level
 				//white balance
 				whitebalanceMode: true, //white balance mode auto, manual, wb_a, wb_b, daylight, tungsten, kelvin
 				kelvinValue: true, //current kelvin value
@@ -652,6 +680,7 @@ module.exports = {
 				focusSpeed: true,
 				autoFocus: true,
 				oneshotAutoFocus: true,
+				focusDetect: { cmd: 'c.1.focus.detect=', dropdown: c.CHOICES_FOCUSDETECT_CRN }, //Face detection AF
 				exposureShootingMode: { cmd: 'c.1.shooting=', dropdown: c.CHOICES_EXPOSURESHOOTINGMODES_CRN() },
 				exposureMode: { cmd: 'c.1.exp=', dropdown: c.CHOICES_EXPOSUREMODES_CRN() },
 				aeGainLimit: true,
@@ -664,6 +693,7 @@ module.exports = {
 				gain: { cmd: 'c.1.me.gain=', dropdown: c.CHOICES_GAIN_CRN() },
 				ndfilter: { cmd: 'c.1.nd.filter=', dropdown: c.CHOICES_NDFILTER_CRN500 }, // Has ND Filter Support
 				pedestal: { cmd: 'c.1.blacklevel=', dropdown: c.CHOICES_PEDESTAL_CRN() },
+				sharpness: { cmd: 'c.1.ac=', dropdown: c.CHOICES_SHARPNESS() }, //Sharpness level, -10..50 on every XC model
 				whitebalanceMode: {cmd: 'c.1.wb=', dropdown: c.CHOICES_WBMODE_CRN() },
 				kelvin: {cmd: 'c.1.wb.kelvin=', dropdown: c.CHOICES_KELVIN_CRN() },
 				rGain: {cmd: 'c.1.wb.shift.rgain=', dropdown: c.CHOICES_RGAIN_CRN() },
@@ -695,6 +725,7 @@ module.exports = {
 				focusSpeed: true, //focus speed value
 				focusValue: true, //focus length value
 				autoFocusMode: true, //focus mode auto/manual
+				focusDetect: true, //face detection AF mode
 				//exposure
 				exposureShootingMode: true, //exposure shooting mode (auto, manual, scene)
 				exposureMode: true, //exposure mode auto, av, tv, manual
@@ -707,6 +738,8 @@ module.exports = {
 				gainValue: true, //gain value
 				ndfilterValue: true, //neutral density value
 				pedestalValue: true, //pedestal value
+				sharpness: true, //sharpness level
+				noiseReduction: true, //noise reduction level
 				//white balance
 				whitebalanceMode: true, //white balance mode auto, manual, wb_a, wb_b, daylight, tungsten, kelvin
 				kelvinValue: true, //current kelvin value
@@ -753,6 +786,7 @@ module.exports = {
 				focusSpeed: true, // Internal Focus Options
 				autoFocus: true, // Has Auto Focus Support
 				oneshotAutoFocus: true, // Has One Shot Auto Focus Support
+				focusDetect: { cmd: 'c.1.focus.detect=', dropdown: c.CHOICES_FOCUSDETECT_CRN }, //Face detection AF
 				exposureShootingMode: { cmd: 'c.1.shooting=', dropdown: c.CHOICES_EXPOSURESHOOTINGMODES_OTHER() },
 				exposureMode: { cmd: 'c.1.exp=', dropdown: c.CHOICES_EXPOSUREMODES_OTHER() },
 				aeGainLimit: true,
@@ -765,6 +799,8 @@ module.exports = {
 				gain: { cmd: 'c.1.me.gain=', dropdown: c.CHOICES_GAIN_OTHER() }, // Has Gain Support
 				ndfilter: { cmd: 'c.1.nd.filter=', dropdown: c.CHOICES_NDFILTER_OTHER }, // Has ND Filter Support
 				pedestal: { cmd: 'c.1.blacklevel=', dropdown: c.CHOICES_PEDESTAL_OTHER() }, // Has Pedestal Support
+				sharpness: { cmd: 'c.1.ac=', dropdown: c.CHOICES_SHARPNESS() }, //Sharpness level, -10..50 on every XC model
+				noiseReduction: { cmd: 'c.1.nr=', dropdown: c.CHOICES_NOISEREDUCTION() }, //Noise reduction 0..12
 				whitebalanceMode: {cmd: 'c.1.wb=', dropdown: c.CHOICES_WBMODE_OTHER() },
 				kelvin: {cmd: 'c.1.wb.kelvin=', dropdown: c.CHOICES_KELVIN_OTHER() },
 				rGain: {cmd: 'c.1.wb.shift.rgain=', dropdown: c.CHOICES_RGAIN_OTHER() },
@@ -793,6 +829,7 @@ module.exports = {
 				focusSpeed: true, //focus speed value
 				focusValue: true, //focus length value
 				autoFocusMode: true, //focus mode auto/manual
+				focusDetect: true, //face detection AF mode
 				//exposure
 				exposureShootingMode: true, //exposure shooting mode (auto, manual, scene)
 				exposureMode: true, //exposure mode auto, av, tv, manual
@@ -805,6 +842,7 @@ module.exports = {
 				gainValue: true, //gain value
 				ndfilterValue: true, //neutral density value
 				pedestalValue: true, //pedestal value
+				sharpness: true, //sharpness level
 				//white balance
 				whitebalanceMode: true, //white balance mode auto, manual, wb_a, wb_b, daylight, tungsten, kelvin
 				kelvinValue: true, //current kelvin value
@@ -851,6 +889,7 @@ module.exports = {
 				focusSpeed: true, // Internal Focus Options
 				autoFocus: true, // Has Auto Focus Support
 				oneshotAutoFocus: true, // Has One Shot Auto Focus Support
+				focusDetect: { cmd: 'c.1.focus.detect=', dropdown: c.CHOICES_FOCUSDETECT_CRN }, //Face detection AF
 				exposureShootingMode: { cmd: 'c.1.shooting=', dropdown: c.CHOICES_EXPOSURESHOOTINGMODES_OTHER() },
 				exposureMode: { cmd: 'c.1.exp=', dropdown: c.CHOICES_EXPOSUREMODES_OTHER() },
 				aeGainLimit: true,
@@ -863,6 +902,7 @@ module.exports = {
 				gain: { cmd: 'c.1.me.gain=', dropdown: c.CHOICES_GAIN_OTHER() }, // Has Gain Support
 				ndfilter: { cmd: 'c.1.nd.filter=', dropdown: c.CHOICES_NDFILTER_OTHER }, // Has ND Filter Support
 				pedestal: { cmd: 'c.1.blacklevel=', dropdown: c.CHOICES_PEDESTAL_OTHER() }, // Has Pedestal Support
+				sharpness: { cmd: 'c.1.ac=', dropdown: c.CHOICES_SHARPNESS() }, //Sharpness level, -10..50 on every XC model
 				whitebalanceMode: {cmd: 'c.1.wb=', dropdown: c.CHOICES_WBMODE_OTHER() },
 				kelvin: {cmd: 'c.1.wb.kelvin=', dropdown: c.CHOICES_KELVIN_OTHER() },
 				rGain: {cmd: 'c.1.wb.shift.rgain=', dropdown: c.CHOICES_RGAIN_OTHER() },
@@ -892,6 +932,7 @@ module.exports = {
 				focusSpeed: true, //focus speed value
 				focusValue: true, //focus length value
 				autoFocusMode: true, //focus mode auto/manual
+				focusDetect: true, //face detection AF mode
 				//exposure
 				exposureShootingMode: true, //exposure shooting mode (auto, manual, scene)
 				exposureMode: true, //exposure mode auto, av, tv, manual
@@ -904,6 +945,7 @@ module.exports = {
 				gainValue: true, //gain value
 				ndfilterValue: true, //neutral density value
 				pedestalValue: true, //pedestal value
+				sharpness: true, //sharpness level
 				//white balance
 				whitebalanceMode: true, //white balance mode auto, manual, wb_a, wb_b, daylight, tungsten, kelvin
 				kelvinValue: true, //current kelvin value
@@ -950,6 +992,7 @@ module.exports = {
 				focusSpeed: true, // Internal Focus Options
 				autoFocus: true, // Has Auto Focus Support
 				oneshotAutoFocus: true, // Has One Shot Auto Focus Support
+				focusDetect: { cmd: 'c.1.focus.detect=', dropdown: c.CHOICES_FOCUSDETECT_CINEMA }, //Face/animal detection AF
 				exposureShootingMode: { cmd: 'c.1.shooting=', dropdown: c.CHOICES_EXPOSURESHOOTINGMODES_CINEMA() }, // Manual only
 				exposureMode: { cmd: 'c.1.exp=', dropdown: c.CHOICES_EXPOSUREMODES_CINEMA() }, // Manual only
 				aeGainLimit: true,
@@ -962,6 +1005,7 @@ module.exports = {
 				gain: { cmd: 'c.1.me.gain=', dropdown: c.CHOICES_GAIN_CINEMA() }, // Reaches 54.0 dB with extended gain
 				ndfilter: { cmd: 'c.1.nd.filter=', dropdown: c.CHOICES_NDFILTER_CINEMA }, // Settable, with the extended range
 				pedestal: { cmd: 'c.1.blacklevel=', dropdown: c.CHOICES_PEDESTAL_OTHER() }, // Has Pedestal Support
+				sharpness: { cmd: 'c.1.ac=', dropdown: c.CHOICES_SHARPNESS() }, //Sharpness level, -10..50 on every XC model
 				whitebalanceMode: {cmd: 'c.1.wb=', dropdown: c.CHOICES_WBMODE_OTHER() },
 				kelvin: {cmd: 'c.1.wb.kelvin=', dropdown: c.CHOICES_KELVIN_OTHER() },
 				rGain: {cmd: 'c.1.wb.shift.rgain=', dropdown: c.CHOICES_RGAIN_OTHER() },
@@ -991,6 +1035,7 @@ module.exports = {
 				focusSpeed: true, //focus speed value
 				focusValue: true, //focus length value
 				autoFocusMode: true, //focus mode auto/manual
+				focusDetect: true, //face detection AF mode
 				//exposure
 				exposureShootingMode: true, //exposure shooting mode (auto, manual, scene)
 				exposureMode: true, //exposure mode auto, av, tv, manual
@@ -1003,6 +1048,7 @@ module.exports = {
 				gainValue: true, //gain value
 				ndfilterValue: true, //neutral density value
 				pedestalValue: true, //pedestal value
+				sharpness: true, //sharpness level
 				//white balance
 				whitebalanceMode: true, //white balance mode auto, manual, wb_a, wb_b, daylight, tungsten, kelvin
 				kelvinValue: true, //current kelvin value
@@ -1049,6 +1095,7 @@ module.exports = {
 				focusSpeed: true, // Internal Focus Options
 				autoFocus: true, // Has Auto Focus Support
 				oneshotAutoFocus: true, // Has One Shot Auto Focus Support
+				focusDetect: { cmd: 'c.1.focus.detect=', dropdown: c.CHOICES_FOCUSDETECT_CRN }, //Face detection AF
 				exposureShootingMode: { cmd: 'c.1.shooting=', dropdown: c.CHOICES_EXPOSURESHOOTINGMODES_OTHER() },
 				exposureMode: { cmd: 'c.1.exp=', dropdown: c.CHOICES_EXPOSUREMODES_OTHER() },
 				aeGainLimit: true,
@@ -1061,6 +1108,7 @@ module.exports = {
 				gain: { cmd: 'c.1.me.gain=', dropdown: c.CHOICES_GAIN_XF605 }, // Has Gain Support
 				ndfilter: { cmd: 'c.1.nd.filter=', dropdown: c.CHOICES_NDFILTER_OTHER }, // Has ND Filter Support
 				pedestal: { cmd: 'c.1.blacklevel=', dropdown: c.CHOICES_PEDESTAL_OTHER() }, // Has Pedestal Support
+				sharpness: { cmd: 'c.1.ac=', dropdown: c.CHOICES_SHARPNESS() }, //Sharpness level, -10..50 on every XC model
 				whitebalanceMode: {cmd: 'c.1.wb=', dropdown: c.CHOICES_WBMODE_OTHER() },
 				kelvin: {cmd: 'c.1.wb.kelvin=', dropdown: c.CHOICES_KELVIN_OTHER() },
 				rGain: {cmd: 'c.1.wb.shift.rgain=', dropdown: c.CHOICES_RGAIN_OTHER() },
@@ -1089,6 +1137,7 @@ module.exports = {
 				focusSpeed: true, //focus speed value
 				focusValue: true, //focus length value
 				autoFocusMode: true, //focus mode auto/manual
+				focusDetect: true, //face detection AF mode
 				//exposure
 				exposureShootingMode: true, //exposure shooting mode (auto, manual, scene)
 				exposureMode: true, //exposure mode auto, av, tv, manual
@@ -1101,6 +1150,7 @@ module.exports = {
 				gainValue: true, //gain value
 				ndfilterValue: true, //neutral density value
 				pedestalValue: true, //pedestal value
+				sharpness: true, //sharpness level
 				//white balance
 				whitebalanceMode: true, //white balance mode auto, manual, wb_a, wb_b, daylight, tungsten, kelvin
 				kelvinValue: true, //current kelvin value
@@ -1147,6 +1197,7 @@ module.exports = {
 				focusSpeed: true, // Internal Focus Options
 				autoFocus: true, // Has Auto Focus Support
 				oneshotAutoFocus: true, // Has One Shot Auto Focus Support
+				focusDetect: { cmd: 'c.1.focus.detect=', dropdown: c.CHOICES_FOCUSDETECT_CRN }, //Face detection AF
 				exposureShootingMode: { cmd: 'c.1.shooting=', dropdown: c.CHOICES_EXPOSURESHOOTINGMODES_OTHER() },
 				exposureMode: { cmd: 'c.1.exp=', dropdown: c.CHOICES_EXPOSUREMODES_OTHER() },
 				aeGainLimit: true,
@@ -1159,6 +1210,7 @@ module.exports = {
 				gain: { cmd: 'c.1.me.gain=', dropdown: c.CHOICES_GAIN_OTHER() }, // Has Gain Support
 				ndfilter: { cmd: 'c.1.nd.filter=', dropdown: c.CHOICES_NDFILTER_OTHER }, // Has ND Filter Support
 				pedestal: { cmd: 'c.1.blacklevel=', dropdown: c.CHOICES_PEDESTAL_OTHER() }, // Has Pedestal Support
+				sharpness: { cmd: 'c.1.ac=', dropdown: c.CHOICES_SHARPNESS() }, //Sharpness level, -10..50 on every XC model
 				whitebalanceMode: {cmd: 'c.1.wb=', dropdown: c.CHOICES_WBMODE_OTHER() },
 				kelvin: {cmd: 'c.1.wb.kelvin=', dropdown: c.CHOICES_KELVIN_OTHER() },
 				rGain: {cmd: 'c.1.wb.shift.rgain=', dropdown: c.CHOICES_RGAIN_OTHER() },

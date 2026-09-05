@@ -64,6 +64,7 @@ The actions are separated into the following categories:
 - One Shot Auto Focus (OSAF)
 - Spot (Touch) Auto Focus — CR-N350/CR-N400
 - Soft Zoom Control — CR-N100/CR-N350/CR-N400
+- Face Detection AF (Off / Face Only / Face Catch)
 
 **Exposure**
 
@@ -90,6 +91,11 @@ The actions are separated into the following categories:
 - Pedestal Up
 - Pedestal Down
 - Set Pedestal (Black Level)
+
+**Picture**
+
+- Set Sharpness, Sharpness Up, Sharpness Down (-10 to 50)
+- Set Noise Reduction (0-12) — CR-N100/CR-N300/CR-N500/CR-X300 only
 
 **White Balance**
 

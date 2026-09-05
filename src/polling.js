@@ -360,6 +360,15 @@ module.exports = {
 				case 'c.1.focus.oneshot.result':
 					self.data.oneshotAutoFocusResult = str[1];
 					break;
+				case 'c.1.ac':
+					self.data.sharpness = str[1];
+					break;
+				case 'c.1.nr':
+					self.data.noiseReduction = str[1];
+					break;
+				case 'c.1.focus.detect':
+					self.data.focusDetect = str[1];
+					break;
 				case 'c.1.blacklevel':
 					self.data.pedestalValue = str[1];
 					break;

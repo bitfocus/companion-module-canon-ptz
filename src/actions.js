@@ -1800,6 +1800,102 @@ module.exports = {
 			}
 		}
 
+		//Sharpness, noise reduction and face detection AF: documented for these
+		//models but never exposed. All three are plain enumerated/ranged
+		//parameters, so they follow the same shape as the other set actions.
+		if (s.sharpness && s.sharpness.cmd) {
+			actions.sharpnessSet = {
+				name: 'Picture - Set Sharpness',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Sharpness Level',
+						id: 'val',
+						default: '0',
+						choices: s.sharpness.dropdown
+					}
+				],
+				callback: async (action) => {
+					cmd = s.sharpness.cmd + action.options.val;
+					self.sendPTZ(self.ptzCommand, cmd);
+					self.data.sharpness = action.options.val;
+					self.getCameraInformation_Delayed();
+				}
+			}
+
+			actions.sharpnessU = {
+				name: 'Picture - Sharpness Up',
+				options: [],
+				callback: async (action) => {
+					let choice = self.stepChoice(s.sharpness.dropdown, self.data.sharpness, 'up');
+					if (choice === undefined) {
+						return;
+					}
+					cmd = s.sharpness.cmd + choice.id;
+					self.sendPTZ(self.ptzCommand, cmd);
+					self.data.sharpness = choice.id;
+					self.getCameraInformation_Delayed();
+				}
+			}
+
+			actions.sharpnessD = {
+				name: 'Picture - Sharpness Down',
+				options: [],
+				callback: async (action) => {
+					let choice = self.stepChoice(s.sharpness.dropdown, self.data.sharpness, 'down');
+					if (choice === undefined) {
+						return;
+					}
+					cmd = s.sharpness.cmd + choice.id;
+					self.sendPTZ(self.ptzCommand, cmd);
+					self.data.sharpness = choice.id;
+					self.getCameraInformation_Delayed();
+				}
+			}
+		}
+
+		if (s.noiseReduction && s.noiseReduction.cmd) {
+			actions.noiseReductionSet = {
+				name: 'Picture - Set Noise Reduction',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Noise Reduction Level',
+						id: 'val',
+						default: '0',
+						choices: s.noiseReduction.dropdown
+					}
+				],
+				callback: async (action) => {
+					cmd = s.noiseReduction.cmd + action.options.val;
+					self.sendPTZ(self.ptzCommand, cmd);
+					self.data.noiseReduction = action.options.val;
+					self.getCameraInformation_Delayed();
+				}
+			}
+		}
+
+		if (s.focusDetect && s.focusDetect.cmd) {
+			actions.focusDetect = {
+				name: 'Lens - Focus - Face Detection AF',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Face Detection AF',
+						id: 'val',
+						default: s.focusDetect.dropdown[0].id,
+						choices: s.focusDetect.dropdown
+					}
+				],
+				callback: async (action) => {
+					cmd = s.focusDetect.cmd + action.options.val;
+					self.sendPTZ(self.ptzCommand, cmd);
+					self.data.focusDetect = action.options.val;
+					self.getCameraInformation_Delayed();
+				}
+			}
+		}
+
 		if (s.pedestal.cmd) {
 			if (s.pedestal.dropdown === undefined) {
 				s.pedestal.dropdown = c.CHOICES_PEDESTAL_OTHER();

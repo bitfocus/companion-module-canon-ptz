@@ -731,6 +731,44 @@ module.exports = {
 	],
 
 	// ###############################
+	// ####   Picture / Focus     ####
+	// ###############################
+
+	//Sharpness level, common to every XC model. c.<c>.ac.min / c.<c>.ac.max
+	CHOICES_SHARPNESS: function () {
+		var p = [];
+		for (var i = -10; i <= 50; i++) {
+			p.push({ id: i.toString(), label: String(i) });
+		}
+		return p
+	},
+
+	//Noise reduction, CR-N500/N300/N100/X300 only. c.<c>.nr.min / c.<c>.nr.max
+	CHOICES_NOISEREDUCTION: function () {
+		var p = [];
+		for (var i = 0; i <= 12; i++) {
+			p.push({ id: i.toString(), label: String(i) });
+		}
+		return p
+	},
+
+	//Face detection AF. c.<c>.focus.detect.list
+	CHOICES_FOCUSDETECT_CRN: [
+		{ id: 'off',       label: 'Off' },
+		{ id: 'faceonly',  label: 'Face Only' },
+		{ id: 'facecatch', label: 'Face Catch (tracks when no face)' }
+	],
+
+	//The C400/C80/C50 use a different set, including animal detection
+	CHOICES_FOCUSDETECT_CINEMA: [
+		{ id: 'off',        label: 'Off' },
+		{ id: 'ppl_only',   label: 'People Only' },
+		{ id: 'ppl_catch',  label: 'People Catch' },
+		{ id: 'anml_only',  label: 'Animals Only' },
+		{ id: 'anml_catch', label: 'Animals Catch' }
+	],
+
+	// ###############################
 	// ####       Presets         ####
 	// ###############################
 

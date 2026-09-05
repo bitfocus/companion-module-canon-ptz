@@ -149,6 +149,15 @@ module.exports = {
 			variables.push({ variableId: 'oneshotAutoFocusStatus', name: 'One Shot AF Status' })
 			variables.push({ variableId: 'oneshotAutoFocusResult', name: 'One Shot AF Result' })
 		}
+		if (SERIES.variables.sharpness == true) {
+			variables.push({ variableId: 'sharpness', name: 'Sharpness Level' })
+		}
+		if (SERIES.variables.noiseReduction == true) {
+			variables.push({ variableId: 'noiseReduction', name: 'Noise Reduction Level' })
+		}
+		if (SERIES.variables.focusDetect == true) {
+			variables.push({ variableId: 'focusDetect', name: 'Face Detection AF' })
+		}
 		if (SERIES.variables.pedestalValue == true) {
 			variables.push({ variableId: 'pedestalValue', name: 'Pedestal Value' })
 		}
@@ -487,6 +496,18 @@ module.exports = {
 			if (SERIES.variables.oneshotAutoFocusStatus == true) {
 				variableValues.oneshotAutoFocusStatus = self.data.oneshotAutoFocusStatus;
 				variableValues.oneshotAutoFocusResult = self.data.oneshotAutoFocusResult;
+			}
+
+			if (SERIES.variables.sharpness == true) {
+				variableValues.sharpness = self.data.sharpness;
+			}
+
+			if (SERIES.variables.noiseReduction == true) {
+				variableValues.noiseReduction = self.data.noiseReduction;
+			}
+
+			if (SERIES.variables.focusDetect == true) {
+				variableValues.focusDetect = self.labelFor(SERIES.actions.focusDetect, self.data.focusDetect);
 			}
 
 			if (SERIES.variables.pedestalValue == true) {
