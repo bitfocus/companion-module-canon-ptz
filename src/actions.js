@@ -2038,12 +2038,11 @@ module.exports = {
 				name: 'White Balance - Kelvin Value Up',
 				options: [],
 				callback: async (action) => {
-					if (self.kelvinIndex >= s.kelvin.dropdown.length) {
-						self.kelvinIndex = s.kelvin.dropdown.length
-					} else if (self.kelvinIndex < s.kelvin.dropdown.length) {
-						self.kelvinIndex++
+					let choice = self.stepChoice(s.kelvin.dropdown, self.data.kelvinValue, 'up');
+					if (choice === undefined) {
+						return;
 					}
-					self.kelvinValue = s.kelvin.dropdown[self.kelvinIndex].id
+					self.kelvinValue = choice.id;
 					self.data.kelvinValue = self.kelvinValue;
 					cmd = s.kelvin.cmd + self.kelvinValue
 					self.sendPTZ(self.ptzCommand, cmd)
@@ -2055,12 +2054,11 @@ module.exports = {
 				name: 'White Balance - Kelvin Value Down',
 				options: [],
 				callback: async (action) => {
-					if (self.kelvinIndex <= 0) {
-						self.kelvinIndex = 0
-					} else if (self.kelvinIndex > 0) {
-						self.kelvinIndex--
+					let choice = self.stepChoice(s.kelvin.dropdown, self.data.kelvinValue, 'down');
+					if (choice === undefined) {
+						return;
 					}
-					self.kelvinValue = s.kelvin.dropdown[self.kelvinIndex].id
+					self.kelvinValue = choice.id;
 					self.data.kelvinValue = self.kelvinValue;
 					cmd = s.kelvin.cmd + self.kelvinValue
 					self.sendPTZ(self.ptzCommand, cmd)
@@ -2098,12 +2096,11 @@ module.exports = {
 				name: 'White Balance - Red Gain Up',
 				options: [],
 				callback: async (action) => {
-					if (self.rGainIndex >= s.rGain.dropdown.length) {
-						self.rGainIndex = s.rGain.dropdown.length
-					} else if (self.rGainIndex < s.rGain.dropdown.length) {
-						self.rGainIndex++
+					let choice = self.stepChoice(s.rGain.dropdown, self.data.rGainValue, 'up');
+					if (choice === undefined) {
+						return;
 					}
-					self.rGainValue = s.rGain.dropdown[self.rGainIndex].id
+					self.rGainValue = choice.id
 					self.data.rGainValue = self.rGainValue;
 					cmd = s.rGain.cmd + self.rGainValue
 					self.sendPTZ(self.ptzCommand, cmd)
@@ -2115,12 +2112,11 @@ module.exports = {
 				name: 'White Balance - Red Gain Down',
 				options: [],
 				callback: async (action) => {
-					if (self.rGainIndex <= 0) {
-						self.rGainIndex = 0
-					} else if (self.rGainIndex > 0) {
-						self.rGainIndex--
+					let choice = self.stepChoice(s.rGain.dropdown, self.data.rGainValue, 'down');
+					if (choice === undefined) {
+						return;
 					}
-					self.rGainValue = s.rGain.dropdown[self.rGainIndex].id
+					self.rGainValue = choice.id
 					self.data.rGainValue = self.rGainValue;
 					cmd = s.rGain.cmd + self.rGainValue
 					self.sendPTZ(self.ptzCommand, cmd)
@@ -2158,12 +2154,11 @@ module.exports = {
 				name: 'White Balance - Blue Gain Up',
 				options: [],
 				callback: async (action) => {
-					if (self.bGainIndex >= s.bGain.dropdown.length) {
-						self.bGainIndex = s.bGain.dropdown.length
-					} else if (self.bGainIndex < s.bGain.dropdown.length) {
-						self.bGainIndex++
+					let choice = self.stepChoice(s.bGain.dropdown, self.data.bGainValue, 'up');
+					if (choice === undefined) {
+						return;
 					}
-					self.bGainValue = s.bGain.dropdown[self.bGainIndex].id
+					self.bGainValue = choice.id
 					self.data.bGainValue = self.bGainValue;
 					cmd = s.bGain.cmd + self.bGainValue;
 					self.sendPTZ(self.ptzCommand, cmd)
@@ -2175,12 +2170,11 @@ module.exports = {
 				name: 'White Balance - Blue Gain Down',
 				options: [],
 				callback: async (action) => {
-					if (self.bGainIndex <= 0) {
-						self.bGainIndex = 0
-					} else if (self.bGainIndex > 0) {
-						self.bGainIndex--
+					let choice = self.stepChoice(s.bGain.dropdown, self.data.bGainValue, 'down');
+					if (choice === undefined) {
+						return;
 					}
-					self.bGainValue = s.bGain.dropdown[self.bGainIndex].id
+					self.bGainValue = choice.id
 					self.data.bGainValue = self.bGainValue;
 					cmd = s.bGain.cmd + self.bGainValue;
 					self.sendPTZ(self.ptzCommand, cmd)
