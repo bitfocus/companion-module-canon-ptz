@@ -104,6 +104,23 @@ for (const model of models) {
 		`, variables ${(d.variables || []).length}` +
 		`, presets ${Object.keys(d.presets || {}).length}`
 
+	//A preset naming an actionId that was never defined stays silent until
+	//Companion loads it -- initPresets and initActions each build from their
+	//own literal strings, so nothing else notices two of them drifting apart.
+	//This is the shape 'fSpeeToggle'/'ndfilterSet' shipped in.
+	const definedActions = new Set(Object.keys(d.actions || {}))
+	for (const [presetId, preset] of Object.entries(d.presets || {})) {
+		for (const step of preset.steps || []) {
+			for (const action of [...(step.down || []), ...(step.up || [])]) {
+				if (!definedActions.has(action.actionId)) {
+					fail(model, 'preset consistency', new Error(
+						`preset '${presetId}' references actionId '${action.actionId}', which is not defined`
+					))
+				}
+			}
+		}
+	}
+
 	const bad = failures.filter((f) => f.model === model).length
 	console.log(`  ${bad ? 'FAIL' : ' ok '}  ${model.padEnd(16)} ${counts}`)
 }

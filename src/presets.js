@@ -1270,7 +1270,7 @@ module.exports = {
 					{
 						down: [
 							{
-								actionId: 'fSpeeToggle',
+								actionId: 'fSpeedToggle',
 								options: {}
 							}
 						],
@@ -2050,7 +2050,7 @@ module.exports = {
 						{
 							down: [
 								{
-									actionId: 'ndfilterSet',
+									actionId: 'filterSet',
 									options: {
 										val: s.ndfilter.dropdown[x].id,
 									}
