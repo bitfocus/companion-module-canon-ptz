@@ -829,5 +829,26 @@ module.exports = {
 		}
 
 		return p
-	}
+	},
+
+	// ###############################
+	// ####  Auto Tracking Add-On  ####
+	// ###############################
+
+	//track_info.cgi tracking_info.track_status (Auto Tracking spec 3.2.10, Table 3-23)
+	CHOICES_TRACKING_STATUS: [
+		{ id: '0', label: 'Tracking Off' },
+		{ id: '1', label: 'Waiting for Target Selection (Auto Select Off)' },
+		{ id: '2', label: 'Waiting for Target Selection (Auto Select On)' },
+		{ id: '3', label: 'Tracking' },
+		{ id: '4', label: 'Target Lost' },
+		{ id: '5', label: 'Angle Fixed' }
+	],
+
+	//track_info.cgi detection_info.detection_disable_cause
+	CHOICES_TRACKING_DETECTION_DISABLE_CAUSE: [
+		{ id: '0', label: 'None' },
+		{ id: '1', label: 'Detection Disabled' },
+		{ id: '2', label: 'Internal Error' }
+	]
 }

@@ -822,6 +822,37 @@ module.exports = {
 				},
 			}
 
+			feedbacks.tracking_status = {
+				type: 'boolean',
+				name: 'Auto Tracking - Tracking Status is X',
+				description: 'Indicate if the Auto Tracking Status (track_info) is X',
+				defaultStyle: {
+					color: foregroundColor,
+					bgcolor: backgroundColorOrange,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Indicate in X State',
+						id: 'option',
+						default: '3',
+						choices: c.CHOICES_TRACKING_STATUS,
+					},
+				],
+				callback: function (feedback, bank) {
+					let opt = feedback.options;
+
+					let trackingInfo = self.data.trackingInformation && self.data.trackingInformation.tracking_info;
+					if (trackingInfo && trackingInfo.track_status !== undefined) {
+						if (trackingInfo.track_status == opt.option) {
+							return true
+						}
+					}
+
+					return false
+				},
+			}
+
 			feedbacks.tracking_autoZoom = {
 				type: 'boolean',
 				name: 'Auto Tracking - Auto Zoom is in X State',
