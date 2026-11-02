@@ -857,7 +857,7 @@ module.exports = {
 
 			feedbacks.tracking_fixTilt = {
 				type: 'boolean',
-				name: 'Auto Tracking - Fix Tilt is in X State',
+				name: 'Auto Tracking - Fix Tilt is in X State (Legacy)',
 				description: 'Indicate if Fix Tilt is in X State',
 				defaultStyle: {
 					color: foregroundColor,
@@ -890,7 +890,7 @@ module.exports = {
 
 			feedbacks.tracking_maintainPosition = {
 				type: 'boolean',
-				name: 'Auto Tracking - Maintain Position is in X State',
+				name: 'Auto Tracking - Maintain Position is in X State (Legacy)',
 				description: 'Indicate if Maintain Position is in X State',
 				defaultStyle: {
 					color: foregroundColor,
@@ -923,7 +923,7 @@ module.exports = {
 
 			feedbacks.tracking_restartTracking = {
 				type: 'boolean',
-				name: 'Auto Tracking - Restart Tracking is in X State',
+				name: 'Auto Tracking - Restart Tracking is in X State (Legacy)',
 				description: 'Indicate if Restart Tracking is in X State',
 				defaultStyle: {
 					color: foregroundColor,
@@ -1022,7 +1022,7 @@ module.exports = {
 
 			feedbacks.tracking_visibilityLimit = {
 				type: 'boolean',
-				name: 'Auto Tracking - Tracking Range (Visibility Limit) is in X State',
+				name: 'Auto Tracking - Tracking Range (Visibility Limit) is in X State (Legacy)',
 				description: 'Indicate if Tracking Range (Visibility Limit) is in X State',
 				defaultStyle: {
 					color: foregroundColor,
