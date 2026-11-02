@@ -20,13 +20,15 @@ function parseChallenge(header) {
 }
 
 class API {
-	constructor(config) {
+	//basePath defaults to the XC endpoint; the tracking add-on passes its own
+	//app_ctrl path so its requests get the same authentication
+	constructor(config, basePath = '/-wvhttp-01-/') {
 		let self = this;
 
 		const apiHost = config.host
 		const apiPort = config.httpPort
 
-		self.baseUrl = `http://${apiHost}:${apiPort}/-wvhttp-01-/`
+		self.baseUrl = `http://${apiHost}:${apiPort}${basePath}`
 
 		self.username = config.username || ''
 		self.password = config.password || ''

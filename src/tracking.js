@@ -1,7 +1,7 @@
 
 const { InstanceStatus } = require('@companion-module/base')
 
-const axios = require('axios');
+const API = require('./api')
 
 module.exports = {
 	initTrackingPolling() {
@@ -36,22 +36,27 @@ module.exports = {
 			self.config.trackingAddonUrl = '/cgi-addon/Auto_Tracking_RA-AT001/app_ctrl/';
 		}
 
-		let trackingBaseUrl = `http://${self.config.host}:${self.config.httpPort}${self.config.trackingAddonUrl}`;
+		//Reuse one connection so its auth challenge carries over between polls,
+		//rebuilding it only when the settings it was made from change
+		let trackingApiKey = [self.config.host, self.config.httpPort, self.config.trackingAddonUrl, self.config.username, self.config.password].join('|');
 
-		let requestUrl = `${trackingBaseUrl}${cmd}`;
-
-		try {
-			const response = await axios.get(requestUrl)
-			return {
-				status: 'ok',
-				response: response
-			}
-		} catch (err) {
-			//console.log(err)
-			return {
-				status: 'failed',
-			}
+		if (self.trackingApi === undefined || self.trackingApiKey !== trackingApiKey) {
+			self.trackingApi = new API(self.config, self.config.trackingAddonUrl);
+			self.trackingApiKey = trackingApiKey;
 		}
+
+		return await self.trackingApi.sendRequest(cmd);
+	},
+
+	trackingUnauthorized() {
+		let self = this;
+
+		if (!self.errorTrackingCount) {
+			self.log('error', 'The camera rejected the login for the Auto Tracking Add-On. Check the username and password in the connection config, or enable guest access on the camera.');
+			self.updateStatus(InstanceStatus.AuthenticationFailure)
+		}
+
+		self.errorTrackingCount++;
 	},
 
 	async getCameraTrackingConfig() {
@@ -78,6 +83,9 @@ module.exports = {
 					}
 					//self.updateStatus(InstanceStatus.Error)
 				}
+			}
+			else if (result && result.unauthorized === true) {
+				self.trackingUnauthorized()
 			}
 			else {
 				if (!self.errorTrackingCount) {
@@ -135,6 +143,9 @@ module.exports = {
 					//self.updateStatus(InstanceStatus.Error)
 				}
 			}
+			else if (result && result.unauthorized === true) {
+				self.trackingUnauthorized()
+			}
 			else {
 				if (!self.errorTrackingCount) {
 					if (self.config.verbose) {
@@ -186,6 +197,9 @@ module.exports = {
 					}
 					//self.updateStatus(InstanceStatus.Error)
 				}
+			}
+			else if (result && result.unauthorized === true) {
+				self.trackingUnauthorized()
 			}
 			else {
 				if (!self.errorTrackingCount) {
