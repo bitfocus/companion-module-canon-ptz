@@ -3,6 +3,51 @@ const { InstanceStatus } = require('@companion-module/base')
 
 const axios = require('axios');
 
+//get_config.cgi needs at least one key, and one unknown key fails the whole request
+//with HTTP 400 / E4_120. These are the settings the module reads that are in the
+//documented setting list (Auto Tracking Protocol Specifications v1.02, Table 3-4).
+const TRACKING_CONFIG_KEYS = [
+	'trackingEnable',
+	'zoomControlEnable',
+	'targetSizeLevel',
+	'autoZoomEnable',
+	'targetSelection',
+	'sensitivity',
+	'targetPosition',
+	'trackingDisableAreaEnable',
+];
+
+//Settings the module reads that are not in the app 1.4.0 list. They are asked for
+//separately so that an app that rejects them can't take the documented keys down too.
+const TRACKING_CONFIG_LEGACY_KEYS = [
+	'tiltFixed',
+	'recoveryControl',
+	'recoveryControlTime',
+	'trackingRestartEnable',
+	'trackingStartTime',
+	'visibilityLimitEnable',
+	'visibilityLimitUpper',
+	'visibilityLimitLeft',
+	'visibilityLimitRight',
+	'visibilityLimitLower',
+];
+
+//Returns the setting values from a get_config.cgi response, or undefined if the app
+//didn't report success
+function parseTrackingConfig(result) {
+	if (!result || !result.response || !result.response.data || typeof result.response.data !== 'object') {
+		return undefined;
+	}
+
+	let { status_code, description, ...settings } = result.response.data;
+
+	if (!String(status_code).startsWith('G0_')) {
+		return undefined;
+	}
+
+	return settings;
+}
+
 module.exports = {
 	initTrackingPolling() {
 		let self = this;
@@ -57,16 +102,30 @@ module.exports = {
 	async getCameraTrackingConfig() {
 		let self = this;
 
-		let cmd = 'get_config.cgi';
-		let result = await self.sendTrackingRequest(cmd);
+		let cmd = `get_config.cgi?keys=${TRACKING_CONFIG_KEYS.join(',')}`;
+		let legacyCmd = `get_config.cgi?keys=${TRACKING_CONFIG_LEGACY_KEYS.join(',')}`;
+		let [result, legacyResult] = await Promise.all([
+			self.sendTrackingRequest(cmd),
+			self.sendTrackingRequest(legacyCmd),
+		]);
 
 		//do something with data
 		try {
 			if (result && result.response && result.response.data) {
-				let data = result.response.data;
-
 				try {
-					self.data.trackingConfig = data; //just store it all for now
+					let config = parseTrackingConfig(result);
+
+					if (config === undefined) {
+						if (self.config.verbose) {
+							self.log('error', `Error Getting Tracking Config Data: ${result.response.data.status_code} ${result.response.data.description}`);
+						}
+						return;
+					}
+
+					//The legacy keys are optional: if the app rejects them, keep whatever was there before
+					let legacyConfig = parseTrackingConfig(legacyResult) || {};
+
+					self.data.trackingConfig = Object.assign({}, self.data.trackingConfig, legacyConfig, config);
 					self.updateStatus(InstanceStatus.Ok)
 
 					self.checkVariables()
