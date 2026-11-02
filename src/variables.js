@@ -249,7 +249,12 @@ module.exports = {
 			variables.push({ variableId: 'tracking_current_z', name: 'Auto Tracking - Current Z' })
 
 			//status of subject detection and target lock
+			variables.push({ variableId: 'tracking_status', name: 'Auto Tracking - Tracking Status' })
+			variables.push({ variableId: 'tracking_status_raw', name: 'Auto Tracking - Tracking Status (Raw Value)' })
 			variables.push({ variableId: 'tracking_target_lock', name: 'Auto Tracking - Target Lock' })
+			variables.push({ variableId: 'tracking_multi_target', name: 'Auto Tracking - Multi-Person Tracking Operating' })
+			variables.push({ variableId: 'tracking_detection', name: 'Auto Tracking - Camera Detection Enabled/Disabled' })
+			variables.push({ variableId: 'tracking_detection_disable_cause', name: 'Auto Tracking - Detection Disable Reason' })
 			variables.push({ variableId: 'tracking_targets_detected', name: 'Auto Tracking - Targets Detected' })
 			variables.push({ variableId: 'tracking_target_x', name: 'Auto Tracking - Target X' })
 			variables.push({ variableId: 'tracking_target_y', name: 'Auto Tracking - Target Y' })
@@ -683,17 +688,35 @@ module.exports = {
 
 				if (self.data.trackingInformation) {
 					//current camera position
-					if (self.data.trackingInformation.camera_ptz_info !== undefined) {
+					if (self.data.trackingInformation.camera_ptz_info) {
 						let currentPosition = self.data.trackingInformation.camera_ptz_info;
-						variableValues.tracking_current_x = currentPosition.pan_pos.slice(0, -1);
-						variableValues.tracking_current_y = currentPosition.tilt_pos.slice(0, -1);
-						variableValues.tracking_current_z = currentPosition.zoom_pos.slice(0, -1);
+						if (currentPosition.pan_pos !== undefined) {
+							variableValues.tracking_current_x = String(currentPosition.pan_pos).slice(0, -1);
+						}
+						if (currentPosition.tilt_pos !== undefined) {
+							variableValues.tracking_current_y = String(currentPosition.tilt_pos).slice(0, -1);
+						}
+						if (currentPosition.zoom_pos !== undefined) {
+							variableValues.tracking_current_z = String(currentPosition.zoom_pos).slice(0, -1);
+						}
 					}
 
 					/* Target Detection and Lock */
 					if (self.data.trackingInformation.tracking_info) {
 						let trackingInfo = self.data.trackingInformation.tracking_info;
-						variableValues.tracking_target_lock = trackingInfo.track_result == '0' ? 'On' : 'Off'
+						//track_status is the documented field (3 = Tracking); track_result only
+						//appears in the spec's response example, so it is just a fallback
+						if (trackingInfo.track_status !== undefined) {
+							variableValues.tracking_status = self.labelFor({ dropdown: c.CHOICES_TRACKING_STATUS }, trackingInfo.track_status);
+							variableValues.tracking_status_raw = trackingInfo.track_status;
+							variableValues.tracking_target_lock = trackingInfo.track_status == '3' ? 'On' : 'Off'
+						}
+						else if (trackingInfo.track_result !== undefined) {
+							variableValues.tracking_target_lock = trackingInfo.track_result == '0' ? 'On' : 'Off'
+						}
+						if (trackingInfo.control_info && trackingInfo.control_info.composition_assist && trackingInfo.control_info.composition_assist.assisting_multi_target !== undefined) {
+							variableValues.tracking_multi_target = trackingInfo.control_info.composition_assist.assisting_multi_target == '1' ? 'On' : 'Off';
+						}
 						if (trackingInfo.target_info !== undefined) {
 							if (trackingInfo.target_info.pos) {
 								variableValues.tracking_target_x = trackingInfo.target_info.pos.x;
@@ -706,7 +729,14 @@ module.exports = {
 					}
 					/* Number of targets detected */
 					if (self.data.trackingInformation.detection_info) {
-						variableValues.tracking_targets_detected = self.data.trackingInformation.detection_info.detection_num;
+						let detectionInfo = self.data.trackingInformation.detection_info;
+						variableValues.tracking_targets_detected = detectionInfo.detection_num;
+						if (detectionInfo.detection_enable !== undefined) {
+							variableValues.tracking_detection = detectionInfo.detection_enable == '1' ? 'Enabled' : 'Disabled';
+						}
+						if (detectionInfo.detection_disable_cause !== undefined) {
+							variableValues.tracking_detection_disable_cause = self.labelFor({ dropdown: c.CHOICES_TRACKING_DETECTION_DISABLE_CAUSE }, detectionInfo.detection_disable_cause);
+						}
 					}
 				}
 
