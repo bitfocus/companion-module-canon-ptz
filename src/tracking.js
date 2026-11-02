@@ -109,10 +109,10 @@ module.exports = {
 
 		let cmd = `get_config.cgi?keys=${TRACKING_CONFIG_KEYS.join(',')}`;
 		let legacyCmd = `get_config.cgi?keys=${TRACKING_CONFIG_LEGACY_KEYS.join(',')}`;
-		let [result, legacyResult] = await Promise.all([
-			self.sendTrackingRequest(cmd),
-			self.sendTrackingRequest(legacyCmd),
-		]);
+		//One after the other: both share a Digest nonce count, and the camera may
+		//reject a request whose count arrives out of order
+		let result = await self.sendTrackingRequest(cmd);
+		let legacyResult = await self.sendTrackingRequest(legacyCmd);
 
 		//do something with data
 		try {
