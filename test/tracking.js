@@ -1,7 +1,7 @@
 //Tests for the get_config.cgi poll in tracking.getCameraTrackingConfig.
 //
 //The Auto Tracking app needs at least one keys= value on get_config.cgi and fails
-//the whole request if any key is unknown, so the documented keys and the legacy
+//the whole request if any key is unknown, so the documented keys and the extra
 //ones go out as separate requests. This drives the real function with the HTTP
 //layer stubbed out.
 //
@@ -50,7 +50,7 @@ function keysOf(cmd) {
 	return match ? match[1].split(',') : []
 }
 
-const LEGACY = ['tiltFixed', 'recoveryControl', 'visibilityLimitLower']
+const EXTRA = ['tiltFixed', 'recoveryControl', 'visibilityLimitLower']
 
 async function run() {
 	//Both requests succeed: values from both end up in trackingConfig
@@ -67,13 +67,13 @@ async function run() {
 		check('sends two requests', self.requests.length === 2)
 		check('every request has keys=', self.requests.every((cmd) => keysOf(cmd).length > 0))
 		const documented = self.requests.find((cmd) => keysOf(cmd).includes('trackingEnable'))
-		check('documented request has no legacy keys', documented && !LEGACY.some((k) => keysOf(documented).includes(k)))
+		check('documented request has no extra keys', documented && !EXTRA.some((k) => keysOf(documented).includes(k)))
 		check('merges documented keys', self.data.trackingConfig.trackingEnable === '1')
-		check('merges legacy keys', self.data.trackingConfig.tiltFixed === '1')
+		check('merges extra keys', self.data.trackingConfig.tiltFixed === '1')
 		check('drops status_code', self.data.trackingConfig.status_code === undefined)
 	}
 
-	//Legacy request rejected with HTTP 400: documented keys still stored, polling continues
+	//Extra request rejected with HTTP 400: documented keys still stored, polling continues
 	{
 		const self = makeInstance((cmd) => {
 			if (keysOf(cmd).includes('tiltFixed')) {
@@ -85,9 +85,9 @@ async function run() {
 		self.data.trackingConfig = { tiltFixed: '1' }
 		await self.getCameraTrackingConfig()
 
-		check('legacy failure keeps documented keys', self.data.trackingConfig.trackingEnable === '0')
-		check('legacy failure keeps previous legacy values', self.data.trackingConfig.tiltFixed === '1')
-		check('legacy failure does not stop polling', self.pollStopped === false)
+		check('extra failure keeps documented keys', self.data.trackingConfig.trackingEnable === '0')
+		check('extra failure keeps previous extra values', self.data.trackingConfig.tiltFixed === '1')
+		check('extra failure does not stop polling', self.pollStopped === false)
 	}
 
 	//Documented request answered with an error status_code: nothing stored
@@ -97,6 +97,32 @@ async function run() {
 
 		check('error status_code stores nothing', Object.keys(self.data.trackingConfig).length === 0)
 		check('error status_code does not set status', self.statuses.length === 0)
+	}
+
+	//App not started (HTTP 409): the log carries the app's own error, not "No response"
+	{
+		const self = makeInstance(() => ({
+			status: 'failed',
+			errorResponse: { status: 409, data: { status_code: 'E4_003', description: 'The application must be started.' } },
+		}))
+		self.config.verbose = true
+		self.logs = []
+		self.log = (level, msg) => self.logs.push(msg)
+		await self.getCameraTrackingConfig()
+
+		check('app error is logged', self.logs.some((msg) => msg.includes('E4_003 The application must be started. (HTTP 409)')))
+		check('app error does not say no response', !self.logs.some((msg) => msg.includes('No response')))
+	}
+
+	//No reply at all: still the generic message
+	{
+		const self = makeInstance(() => ({ status: 'failed' }))
+		self.config.verbose = true
+		self.logs = []
+		self.log = (level, msg) => self.logs.push(msg)
+		await self.getCameraTrackingConfig()
+
+		check('no reply logs no response', self.logs.some((msg) => msg.includes('No response received from server')))
 	}
 
 	if (failures.length > 0) {

@@ -3457,7 +3457,7 @@ module.exports = {
 			}
 
 			actions.tracking_fixTilt_on = {
-				name: 'Auto Tracking - Fix Tilt - Turn On (Legacy)',
+				name: 'Auto Tracking - Fix Tilt - Turn On',
 				options: [],
 				callback: async (action) => {
 					let base = 'update_config.cgi'
@@ -3467,7 +3467,7 @@ module.exports = {
 			}
 
 			actions.tracking_fixTilt_off = {
-				name: 'Auto Tracking - Fix Tilt - Turn Off (Legacy)',
+				name: 'Auto Tracking - Fix Tilt - Turn Off',
 				options: [],
 				callback: async (action) => {
 					let base = 'update_config.cgi'
@@ -3477,7 +3477,7 @@ module.exports = {
 			}
 
 			actions.tracking_fixTilt_toggle = {
-				name: 'Auto Tracking - Fix Tilt - Toggle On/Off (Legacy)',
+				name: 'Auto Tracking - Fix Tilt - Toggle On/Off',
 				options: [],
 				callback: async (action) => {
 					let base = 'update_config.cgi'
@@ -3495,7 +3495,7 @@ module.exports = {
 			}
 
 			actions.tracking_maintainPositionSetting = {
-				name: 'Auto Tracking - Recovery Control (Legacy)',
+				name: 'Auto Tracking - Recovery Control',
 				options: [
 					{
 						type: 'dropdown',
@@ -3536,7 +3536,7 @@ module.exports = {
 			}
 
 			actions.tracking_recoveryControlTime_increase = {
-				name: 'Auto Tracking - Increase Recovery Control Time (Legacy)',
+				name: 'Auto Tracking - Increase Recovery Control Time',
 				options: [],
 				callback: async (action) => {
 					let base = 'update_config.cgi'
@@ -3558,7 +3558,7 @@ module.exports = {
 			}
 
 			actions.tracking_recoveryControlTime_decrease = {
-				name: 'Auto Tracking - Decrease Recovery Control Time (Legacy)',
+				name: 'Auto Tracking - Decrease Recovery Control Time',
 				options: [],
 				callback: async (action) => {
 					let base = 'update_config.cgi'
@@ -3580,7 +3580,7 @@ module.exports = {
 			}
 
 			actions.tracking_recoveryControl_toggle = {
-				name: 'Auto Tracking - Recovery Control - Toggle On/Off (Legacy)',
+				name: 'Auto Tracking - Recovery Control - Toggle On/Off',
 				options: [],
 				callback: async (action) => {
 					let base = 'update_config.cgi'
@@ -3598,7 +3598,7 @@ module.exports = {
 			}
 
 			actions.tracking_restarttracking_on = {
-				name: 'Auto Tracking - Restart Tracking After Manual Operation - On (Legacy)',
+				name: 'Auto Tracking - Restart Tracking After Manual Operation - On',
 				options: [],
 				callback: async (action) => {
 					let base = 'update_config.cgi'
@@ -3608,7 +3608,7 @@ module.exports = {
 			}
 
 			actions.tracking_restarttracking_off = {
-				name: 'Auto Tracking - Restart Tracking After Manual Operation - Off (Legacy)',
+				name: 'Auto Tracking - Restart Tracking After Manual Operation - Off',
 				options: [],
 				callback: async (action) => {
 					let base = 'update_config.cgi'
@@ -3618,7 +3618,7 @@ module.exports = {
 			}
 
 			actions.tracking_restartTracking_toggle = {
-				name: 'Auto Tracking - Restart Tracking After Manual Operation - Toggle On/Off (Legacy)',
+				name: 'Auto Tracking - Restart Tracking After Manual Operation - Toggle On/Off',
 				options: [],
 				callback: async (action) => {
 					let base = 'update_config.cgi'
@@ -3636,7 +3636,7 @@ module.exports = {
 			}
 
 			actions.tracking_setTrackingStartTime = {
-				name: 'Auto Tracking - Set Tracking Start Time (Legacy)',
+				name: 'Auto Tracking - Set Tracking Start Time',
 				options: [
 					{
 						type: 'textinput',
@@ -3675,7 +3675,7 @@ module.exports = {
 			}
 
 			actions.tracking_trackingStartTime_increase = {
-				name: 'Auto Tracking - Increase Tracking Start Time (Legacy)',
+				name: 'Auto Tracking - Increase Tracking Start Time',
 				options: [],
 				callback: async (action) => {
 					let base = 'update_config.cgi'
@@ -3697,7 +3697,7 @@ module.exports = {
 			}
 
 			actions.tracking_trackingStartTime_decrease = {
-				name: 'Auto Tracking - Decrease Tracking Start Time (Legacy)',
+				name: 'Auto Tracking - Decrease Tracking Start Time',
 				options: [],
 				callback: async (action) => {
 					let base = 'update_config.cgi'
@@ -3719,7 +3719,7 @@ module.exports = {
 			}
 
 			actions.tracking_trackingRange_on = {
-				name: 'Auto Tracking - Tracking Range (Visibility Limit) - On (Legacy)',
+				name: 'Auto Tracking - Tracking Range (Visibility Limit) - On',
 				options: [],
 				callback: async (action) => {
 					let base = 'update_config.cgi'
@@ -3729,7 +3729,7 @@ module.exports = {
 			}
 
 			actions.tracking_trackingRange_off = {
-				name: 'Auto Tracking - Tracking Range (Visibility Limit) - Off (Legacy)',
+				name: 'Auto Tracking - Tracking Range (Visibility Limit) - Off',
 				options: [],
 				callback: async (action) => {
 					let base = 'update_config.cgi'
@@ -3739,7 +3739,7 @@ module.exports = {
 			}
 
 			actions.tracking_trackingRange_toggle = {
-				name: 'Auto Tracking - Tracking Range (Visibility Limit) - Toggle On/Off (Legacy)',
+				name: 'Auto Tracking - Tracking Range (Visibility Limit) - Toggle On/Off',
 				options: [],
 				callback: async (action) => {
 					let base = 'update_config.cgi'
@@ -3757,7 +3757,7 @@ module.exports = {
 			}
 
 			actions.tracking_trackingRange = {
-				name: 'Auto Tracking - Specify Tracking Range (Visibility Limit) (Legacy)',
+				name: 'Auto Tracking - Specify Tracking Range (Visibility Limit)',
 				options: [
 					{
 						type: 'textinput',
@@ -3907,7 +3907,7 @@ module.exports = {
 			}
 
 			actions.tracking_visibilityLimit_upper = {
-				name: 'Auto Tracking - Specify Tracking Range (Visibility Limit) Upper (Legacy)',
+				name: 'Auto Tracking - Specify Tracking Range (Visibility Limit) Upper',
 				options: [
 					{
 						type: 'textinput',
@@ -3966,7 +3966,7 @@ module.exports = {
 			}
 
 			actions.tracking_visibilityLimit_left = {
-				name: 'Auto Tracking - Specify Tracking Range (Visibility Limit) Left (Legacy)',
+				name: 'Auto Tracking - Specify Tracking Range (Visibility Limit) Left',
 				options: [
 					{
 						type: 'textinput',
@@ -4025,7 +4025,7 @@ module.exports = {
 			}
 
 			actions.tracking_visibilityLimit_right = {
-				name: 'Auto Tracking - Specify Tracking Range (Visibility Limit) Right (Legacy)',
+				name: 'Auto Tracking - Specify Tracking Range (Visibility Limit) Right',
 				options: [
 					{
 						type: 'textinput',
@@ -4084,7 +4084,7 @@ module.exports = {
 			}
 
 			actions.tracking_visibilityLimit_lower = {
-				name: 'Auto Tracking - Specify Tracking Range (Visibility Limit) Lower (Legacy)',
+				name: 'Auto Tracking - Specify Tracking Range (Visibility Limit) Lower',
 				options: [
 					{
 						type: 'textinput',
@@ -4143,7 +4143,7 @@ module.exports = {
 			}
 
 			actions.tracking_visibilityLimit_upper_view = {
-				name: 'Auto Tracking - View Tracking Range (Visibility Limit) Upper (Legacy)',
+				name: 'Auto Tracking - View Tracking Range (Visibility Limit) Upper',
 				options: [],
 				callback: async (action) => {
 					let base = 'control.cgi'
@@ -4163,7 +4163,7 @@ module.exports = {
 			}
 
 			actions.tracking_visibilityLimit_left_view = {
-				name: 'Auto Tracking - View Tracking Range (Visibility Limit) Left (Legacy)',
+				name: 'Auto Tracking - View Tracking Range (Visibility Limit) Left',
 				options: [],
 				callback: async (action) => {
 					let base = 'control.cgi'
@@ -4183,7 +4183,7 @@ module.exports = {
 			}
 
 			actions.tracking_visibilityLimit_right_view = {
-				name: 'Auto Tracking - View Tracking Range (Visibility Limit) Right (Legacy)',
+				name: 'Auto Tracking - View Tracking Range (Visibility Limit) Right',
 				options: [],
 				callback: async (action) => {
 					let base = 'control.cgi'
@@ -4203,7 +4203,7 @@ module.exports = {
 			}
 
 			actions.tracking_visibilityLimit_lower_view = {
-				name: 'Auto Tracking - View Tracking Range (Visibility Limit) Lower (Legacy)',
+				name: 'Auto Tracking - View Tracking Range (Visibility Limit) Lower',
 				options: [],
 				callback: async (action) => {
 					let base = 'control.cgi'
@@ -4223,7 +4223,7 @@ module.exports = {
 			}
 
 			actions.tracking_setinitialtracking_current = {
-				name: 'Auto Tracking - Set Initial Tracking Position to Current Camera Position (Legacy)',
+				name: 'Auto Tracking - Set Initial Tracking Position to Current Camera Position',
 				options: [],
 				callback: async (action) => {
 					let base = 'update_config.cgi';
@@ -4237,7 +4237,7 @@ module.exports = {
 			}
 
 			actions.tracking_setinitialtracking_set = {
-				name: 'Auto Tracking - Set Initial Tracking Position to X, Y, Z (Legacy)',
+				name: 'Auto Tracking - Set Initial Tracking Position to X, Y, Z',
 				options: [
 					{
 						type: 'textinput',

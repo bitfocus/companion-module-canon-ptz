@@ -17,9 +17,10 @@ const TRACKING_CONFIG_KEYS = [
 	'trackingDisableAreaEnable',
 ];
 
-//Settings the module reads that are not in the app 1.4.0 list. They are asked for
-//separately so that an app that rejects them can't take the documented keys down too.
-const TRACKING_CONFIG_LEGACY_KEYS = [
+//Settings the module reads that Table 3-4 leaves out. The app supports them (they
+//appear in get_capability and validate_config), but they are asked for separately so
+//that an app version that rejects one can't take the documented keys down too.
+const TRACKING_CONFIG_EXTRA_KEYS = [
 	'tiltFixed',
 	'recoveryControl',
 	'recoveryControlTime',
@@ -47,6 +48,21 @@ function parseTrackingConfig(result) {
 
 	return settings;
 }
+
+//What to log for a failed tracking request: the app's own status_code and description
+//when it answered with one (e.g. E4_003 when the app isn't started), else the fallback
+function trackingErrorText(result, fallback) {
+	let errorResponse = result && result.errorResponse;
+	let data = errorResponse && errorResponse.data;
+
+	if (data && typeof data === 'object' && data.status_code) {
+		return `${data.status_code} ${data.description} (HTTP ${errorResponse.status})`;
+	}
+
+	return fallback;
+}
+
+const NO_RESPONSE = 'No response received from server. Is the Camera Online? Are you running the Auto Tracking Add-On?';
 
 module.exports = {
 	initTrackingPolling() {
@@ -108,11 +124,11 @@ module.exports = {
 		let self = this;
 
 		let cmd = `get_config.cgi?keys=${TRACKING_CONFIG_KEYS.join(',')}`;
-		let legacyCmd = `get_config.cgi?keys=${TRACKING_CONFIG_LEGACY_KEYS.join(',')}`;
+		let extraCmd = `get_config.cgi?keys=${TRACKING_CONFIG_EXTRA_KEYS.join(',')}`;
 		//One after the other: both share a Digest nonce count, and the camera may
 		//reject a request whose count arrives out of order
 		let result = await self.sendTrackingRequest(cmd);
-		let legacyResult = await self.sendTrackingRequest(legacyCmd);
+		let extraResult = await self.sendTrackingRequest(extraCmd);
 
 		//do something with data
 		try {
@@ -127,10 +143,10 @@ module.exports = {
 						return;
 					}
 
-					//The legacy keys are optional: if the app rejects them, keep whatever was there before
-					let legacyConfig = parseTrackingConfig(legacyResult) || {};
+					//The extra keys are optional: if the app rejects them, keep whatever was there before
+					let extraConfig = parseTrackingConfig(extraResult) || {};
 
-					self.data.trackingConfig = Object.assign({}, self.data.trackingConfig, legacyConfig, config);
+					self.data.trackingConfig = Object.assign({}, self.data.trackingConfig, extraConfig, config);
 					self.updateStatus(InstanceStatus.Ok)
 
 					self.checkVariables()
@@ -149,7 +165,7 @@ module.exports = {
 			else {
 				if (!self.errorTrackingCount) {
 					if (self.config.verbose) {
-						self.log('error', `Error Getting Tracking Config Data: No response received from server. Is the Camera Online? Are you running the Auto Tracking Add-On?`);
+						self.log('error', `Error Getting Tracking Config Data: ${trackingErrorText(result, NO_RESPONSE)}`);
 						clearInterval(self.pollTrackingTimer);
 					}
 					//self.updateStatus(InstanceStatus.ConnectionFailure)
@@ -208,7 +224,7 @@ module.exports = {
 			else {
 				if (!self.errorTrackingCount) {
 					if (self.config.verbose) {
-						self.log('error', `Error Getting Tracking Information Data: No response received from server. Is the Camera Online? Are you running the Auto Tracking Add-On?`);
+						self.log('error', `Error Getting Tracking Information Data: ${trackingErrorText(result, NO_RESPONSE)}`);
 						clearInterval(self.pollTrackingTimer);
 					}
 					//self.updateStatus(InstanceStatus.ConnectionFailure)
@@ -263,7 +279,7 @@ module.exports = {
 			else {
 				if (!self.errorTrackingCount) {
 					if (self.config.verbose) {
-						self.log('error', `Error Sending Tracking Command: No response received from server. Is the Camera Online? Are you running the Auto Tracking Add-On?`);
+						self.log('error', `Error Sending Tracking Command: ${trackingErrorText(result, NO_RESPONSE)}`);
 					}
 					//self.updateStatus(InstanceStatus.ConnectionFailure)
 				}

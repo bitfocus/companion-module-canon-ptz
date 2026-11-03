@@ -225,7 +225,3 @@ A list of all the available Feedbacks in this module sorted into the following c
 **Custom**
 
 - Parameter Matches Value — compare any parameter the camera reports in `info.cgi` against a value, for things the module has no dedicated feedback for (for example `k.output2.crop`)
-
-## Auto Tracking (RA-AT001) legacy settings
-
-Actions, feedbacks and variables marked **(Legacy)** use settings that Canon's Auto Tracking app 1.4.0 protocol specification does not list as settable: Fix Tilt, Recovery Control / Maintain Position, Restart Tracking After Manual Operation, Tracking Start Time, Tracking Range (Visibility Limit) and Set Initial Tracking Position. They were written against earlier versions of the app and are kept so existing buttons keep working, but they may have no effect on app 1.4.0, and their feedbacks and variables stay off or empty when the app doesn't report the setting. On 1.4.0, change the initial tracking position and tracking range in the Auto Tracking app's own settings screen.

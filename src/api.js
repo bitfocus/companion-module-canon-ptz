@@ -154,8 +154,11 @@ class API {
 			}
 		} catch (err) {
 			//console.log(err)
+			//When the camera did answer (just not with a 2xx), keep its reply so callers
+			//can report what it said. Not under `response`, which callers treat as success.
 			return {
 				status: 'failed',
+				errorResponse: err.response,
 			}
 		}
 	}
