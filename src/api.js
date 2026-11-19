@@ -20,13 +20,15 @@ function parseChallenge(header) {
 }
 
 class API {
-	constructor(config) {
+	//basePath defaults to the XC endpoint; the tracking add-on passes its own
+	//app_ctrl path so its requests get the same authentication
+	constructor(config, basePath = '/-wvhttp-01-/') {
 		let self = this;
 
 		const apiHost = config.host
 		const apiPort = config.httpPort
 
-		self.baseUrl = `http://${apiHost}:${apiPort}/-wvhttp-01-/`
+		self.baseUrl = `http://${apiHost}:${apiPort}${basePath}`
 
 		self.username = config.username || ''
 		self.password = config.password || ''
@@ -152,8 +154,11 @@ class API {
 			}
 		} catch (err) {
 			//console.log(err)
+			//When the camera did answer (just not with a 2xx), keep its reply so callers
+			//can report what it said. Not under `response`, which callers treat as success.
 			return {
 				status: 'failed',
+				errorResponse: err.response,
 			}
 		}
 	}

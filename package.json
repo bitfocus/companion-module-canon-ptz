@@ -1,9 +1,9 @@
 {
 	"name": "canon-ptz",
-	"version": "2.9.1",
+	"version": "2.10.0",
 	"main": "src/index.js",
 	"scripts": {
-		"test": "node test/smoke.js && node test/trace.js"
+		"test": "node test/smoke.js && node test/trace.js && node test/tracking.js"
 	},
 	"license": "MIT",
 	"repository": {
