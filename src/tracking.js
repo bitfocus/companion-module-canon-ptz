@@ -263,8 +263,12 @@ module.exports = {
 				let data = result.response.data;
 
 				try {
-					let str_raw = String(data)
-					//don't particularly care about the response here I guess
+					//A restricted change still comes back as HTTP 200, but as G0_101: the setting
+					//was left unchanged or rounded to another value. Not verbose-only, otherwise
+					//the button looks like it worked.
+					if (typeof data === 'object' && data.status_code && data.status_code !== 'G0_100') {
+						self.log('warn', `Auto Tracking app limited ${cmd} (left unchanged or rounded): ${data.status_code} ${data.description}`);
+					}
 				}
 				catch(error) {
 					if (self.config.verbose) {

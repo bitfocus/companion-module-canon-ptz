@@ -125,6 +125,26 @@ async function run() {
 		check('no reply logs no response', self.logs.some((msg) => msg.includes('No response received from server')))
 	}
 
+	//update_config limited by the app (HTTP 200, G0_101): warns even without verbose
+	{
+		const self = makeInstance(() => ok({ status_code: 'G0_101', description: 'Parameter range is limited' }))
+		self.logs = []
+		self.log = (level, msg) => self.logs.push(`${level} ${msg}`)
+		await tracking.sendTrackingCommand.call(self, 'update_config.cgi', 'sensitivity=10')
+
+		check('limited change warns', self.logs.some((msg) => msg.startsWith('warn') && msg.includes('sensitivity=10') && msg.includes('G0_101 Parameter range is limited')))
+	}
+
+	//update_config applied (G0_100): nothing logged
+	{
+		const self = makeInstance(() => ok({ status_code: 'G0_100', description: 'Success' }))
+		self.logs = []
+		self.log = (level, msg) => self.logs.push(`${level} ${msg}`)
+		await tracking.sendTrackingCommand.call(self, 'update_config.cgi', 'sensitivity=9')
+
+		check('applied change logs nothing', self.logs.length === 0)
+	}
+
 	if (failures.length > 0) {
 		console.error(`get_config: ${failures.length} check(s) failed:`)
 		for (const f of failures) {
