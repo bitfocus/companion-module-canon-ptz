@@ -11,10 +11,10 @@
 		"url": "git+https://github.com/bitfocus/companion-module-canon-ptz.git"
 	},
 	"dependencies": {
-		"@companion-module/base": "~1.11.0",
+		"@companion-module/base": "~1.15.0",
 		"axios": "^1.20.0"
 	},
 	"devDependencies": {
-		"@companion-module/tools": "^2.8.0"
+		"@companion-module/tools": "^2.9.0"
 	}
 }
