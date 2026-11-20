@@ -38,6 +38,7 @@ class canonptzInstance extends InstanceBase {
 
 		this.ptzCommand = 'control.cgi?'
 		this.powerCommand = 'standby.cgi?'
+		this.modeCommand = 'mode.cgi?'
 		this.savePresetCommand = 'preset/set?'
 		this.traceCommand = 'trace/'
 		this.maintainCommand = 'maintain?'

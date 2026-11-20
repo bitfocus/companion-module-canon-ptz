@@ -10,6 +10,8 @@ Model capabilities follow the feature tables in Canon's XC Protocol Specificatio
 - The CR-N350 and CR-N400 have no Scene shooting mode and no Av/Tv exposure modes, and their gain tops out at 30.0 dB.
 - The CR-N350 and CR-N400 add Advanced Zoom, Spot (Touch) AF, gain increment, and iris increment/fine controls.
 - The CR-N100 adds Scene mode selection.
+- Internal recording (start/stop, recording and card status) is on the CR-N700, CR-N400, EOS C80 and XF-605. The CR-N700 and CR-N400 can also be switched between camera mode and media (playback) mode.
+- Crop output selection and crop area position/size are on the CR-N700, CR-N400 and CR-N350.
 - The EOS C80 is supported as its own model. Cinema EOS bodies have no digital zoom mode — only the digital teleconverter — so **Digital Zoom On/Off** is not offered; use **Digital Magnification** instead. Their gain reaches 54.0 dB and exposure is manual-only.
 
 It also supports the following Canon XF series cameras:
@@ -129,6 +131,22 @@ The actions are separated into the following categories:
 - Set Preset Playback Time
 - Set Preset Playback Speed
 
+**Recording** (CR-N700, CR-N400, EOS C80, XF-605)
+
+- Recording - Start
+- Recording - Stop
+- Recording - Toggle Start/Stop
+- System - Switch Camera/Media Mode (CR-N700, CR-N400)
+
+Playback itself (play, pause, fast forward, rewind) cannot be controlled from Companion. Canon's XC protocol only reports the playback state, and in media mode the camera refuses every command except switching back to camera mode. Media mode also stops video output and streaming, and pan/tilt, lens and image controls are refused until the camera is back in camera mode. FTP transfer of recorded clips is not supported by this module.
+
+**Crop** (CR-N700, CR-N400, CR-N350)
+
+- Crop - Set Output Source: show the full picture (Overview) or a crop area on an output. Outputs are labelled from the camera's output list, for example *Output 3 (IP)* for the IP stream. The camera only offers some crop areas on some outputs, depending on its output settings; the dropdowns and presets follow what it reports.
+- Crop - Set Position/Size: set center X, center Y and width of a crop area. Values are Canon's abstract units: X and Y run 0-9999, width up to 10000 (the full picture). Leave a field blank to keep its value. All three accept variables.
+- Crop - Adjust Position/Size: nudge X, Y or width by an amount. Width shrinking zooms in.
+- Height follows width and cannot be set. Crop 2 has a fixed width on these cameras, and Crop 3 is the vertical crop.
+
 **Traces**
 
 - Prepare
@@ -194,6 +212,19 @@ A list of all the available Variables in this module sorted into the following c
 - Save Preset Option ON/OFF, one per option (`savePresetOption_ptz`, `_focus`, `_exposure`, `_whitebalance`, `_is`, `_cp`)
 - Save Preset Options summary, e.g. `PTZ, Exp, WB` (`savePresetOptions`)
 
+**Recording**
+
+- Recording Status, Mode and Format (`recordStatus`, `recordMode`, `recordFormat`)
+- Card A Status, Remaining Time in minutes, Video Format (`media1Status`, `media1RemainingTime`, `media1VideoInfo`). Remaining time is blank while the card cannot be recorded to.
+- Card B Status and Remaining Time on the EOS C80 and XF-605 (`media2Status`, `media2RemainingTime`)
+- Operating Mode and Media Mode Screen (`operatingMode`, `mediaMode`)
+- Playback Status, Timecode, Clip Start/End Timecode, Current/Total Frames (`playbackStatus`, `playbackTimecode`, ...)
+
+**Crop**
+
+- Source per output (`crop_output1_source`, ...)
+- Center X, Center Y, Width, Height and Resolution per crop area (`crop1_x`, `crop1_y`, `crop1_width`, `crop1_height`, `crop1_size`, ...)
+
 ## Feedbacks
 
 A list of all the available Feedbacks in this module sorted into the following categories.
@@ -221,6 +252,17 @@ A list of all the available Feedbacks in this module sorted into the following c
 - Preset Last Used
 - Preset Recall Mode
 - Preset Save Option State — whether one option (or All) is currently set to be saved
+
+**Recording**
+
+- Recording Status
+- Card Status (recordable / not recordable)
+- Operating Mode (camera / media / standby)
+- Playback Status
+
+**Crop**
+
+- Output Source — whether an output is showing a given crop area
 
 **Custom**
 

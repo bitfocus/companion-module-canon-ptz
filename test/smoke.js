@@ -32,6 +32,7 @@ function makeInstance(model) {
 
 		ptzCommand: 'control.cgi?',
 		powerCommand: 'standby.cgi?',
+		modeCommand: 'mode.cgi?',
 		savePresetCommand: 'preset/set?',
 		traceCommand: 'trace/',
 		maintainCommand: 'maintain?',

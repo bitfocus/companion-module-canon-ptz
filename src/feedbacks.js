@@ -1151,6 +1151,144 @@ module.exports = {
 			}
 		}
 
+		if (SERIES.feedbacks.recording == true) {
+			feedbacks.recording = {
+				type: 'boolean',
+				name: 'Recording - Status',
+				description: 'Indicate if the camera is recording',
+				defaultStyle: {
+					color: foregroundColor,
+					bgcolor: backgroundColorRed,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Indicate in X State',
+						id: 'option',
+						default: 'rec',
+						choices: c.CHOICES_RECORD_STATUS,
+					},
+				],
+				callback: function (feedback) {
+					return self.data.recordStatus === feedback.options.option
+				},
+			}
+
+			let cards = [{ id: '1', label: 'Card A' }]
+			if (SERIES.variables.recordingCardB == true) {
+				cards.push({ id: '2', label: 'Card B' })
+			}
+
+			feedbacks.recordingMedia = {
+				type: 'boolean',
+				name: 'Recording - Card Status',
+				description: 'Indicate if a card can be recorded to',
+				defaultStyle: {
+					color: foregroundColor,
+					bgcolor: backgroundColorOrange,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Card',
+						id: 'card',
+						default: '1',
+						choices: cards,
+					},
+					{
+						type: 'dropdown',
+						label: 'Indicate in X State',
+						id: 'option',
+						default: 'unrecordable',
+						choices: c.CHOICES_MEDIA_STATUS,
+					},
+				],
+				callback: function (feedback) {
+					return self.data[`media${feedback.options.card}Status`] === feedback.options.option
+				},
+			}
+		}
+
+		if (SERIES.feedbacks.mediaMode == true) {
+			feedbacks.mediaMode = {
+				type: 'boolean',
+				name: 'System - Operating Mode',
+				description: 'Indicate if the camera is in camera mode, media (playback) mode or standby',
+				defaultStyle: {
+					color: foregroundColor,
+					bgcolor: backgroundColorOrange,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Indicate in X State',
+						id: 'option',
+						default: 'media',
+						choices: c.CHOICES_OPERATING_MODE,
+					},
+				],
+				callback: function (feedback) {
+					return self.data.operatingMode === feedback.options.option
+				},
+			}
+
+			feedbacks.playbackStatus = {
+				type: 'boolean',
+				name: 'Playback - Status',
+				description: 'Indicate the playback state while the camera is in media mode',
+				defaultStyle: {
+					color: foregroundColor,
+					bgcolor: backgroundColorGreen,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Indicate in X State',
+						id: 'option',
+						default: 'playback',
+						choices: c.CHOICES_PLAYBACK_STATUS,
+					},
+				],
+				callback: function (feedback) {
+					return self.data.operatingMode === 'media' && self.data.playbackStatus === feedback.options.option
+				},
+			}
+		}
+
+		if (SERIES.feedbacks.crop == true) {
+			const cropOutputs = self.cropOutputChoices()
+
+			feedbacks.cropOutputSource = {
+				type: 'boolean',
+				name: 'Crop - Output Source',
+				description: 'Indicate if an output is showing a given crop area',
+				defaultStyle: {
+					color: foregroundColor,
+					bgcolor: backgroundColorRed,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Output',
+						id: 'output',
+						default: cropOutputs[cropOutputs.length - 1].id,
+						choices: cropOutputs,
+					},
+					{
+						type: 'dropdown',
+						label: 'Source',
+						id: 'source',
+						default: 'crop1',
+						choices: self.cropSourceChoices(),
+					},
+				],
+				callback: function (feedback) {
+					const output = self.data.cropOutputs[feedback.options.output]
+					return output !== undefined && output.source === feedback.options.source
+				},
+			}
+		}
+
 		self.setFeedbackDefinitions(feedbacks);
 	}
 }
