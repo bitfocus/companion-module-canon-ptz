@@ -199,6 +199,80 @@ module.exports = {
 		return best;
 	},
 
+	//Crop dropdowns. Built from what the camera reports, with the spec's values
+	//as the fallback so the actions still load before the first poll.
+	cropOutputChoices: function () {
+		let self = this;
+
+		let outputs = Object.keys(self.data.cropOutputs).sort()
+
+		if (outputs.length === 0) {
+			outputs = ['output1', 'output2', 'output3']
+		}
+
+		return outputs.map((output) => {
+			const number = output.replace('output', '')
+			const kind = self.data.cropOutputNames[output]
+			return { id: output, label: kind ? `Output ${number} (${kind.toUpperCase()})` : `Output ${number}` }
+		})
+	},
+
+	cropAreaChoices: function () {
+		let self = this;
+
+		let count = self.data.cropCount
+
+		for (const area of Object.keys(self.data.cropAreas)) {
+			count = Math.max(count, parseInt(area))
+		}
+
+		if (!count) {
+			count = 3
+		}
+
+		let choices = []
+		for (let i = 1; i <= count; i++) {
+			choices.push({ id: String(i), label: i === 3 ? 'Crop 3 (Vertical)' : `Crop ${i}` })
+		}
+
+		return choices
+	},
+
+	cropSourceChoices: function () {
+		let self = this;
+
+		let sources = []
+
+		for (const output of Object.values(self.data.cropOutputs)) {
+			for (const source of output.list) {
+				if (!sources.includes(source)) {
+					sources.push(source)
+				}
+			}
+		}
+
+		if (sources.length === 0) {
+			sources = ['overview', 'crop1', 'crop2', 'crop3']
+		}
+
+		return sources.sort().map((source) => ({ id: source, label: c.cropSourceLabel(source) }))
+	},
+
+	//Keep a crop frame value inside the range the camera last reported for
+	//that area. Width on crop 2 is fixed (min == max), so this also stops a
+	//nudge from sending a value the camera would only reject.
+	clampCropValue: function (area, field, value) {
+		let self = this;
+
+		const fallback = { x: [0, 9999], y: [0, 9999], width: [0, 10000] }[field]
+		const bounds = self.data.cropAreas[area] || {}
+
+		let min = Number.isInteger(bounds[field + 'Min']) ? bounds[field + 'Min'] : fallback[0]
+		let max = Number.isInteger(bounds[field + 'Max']) ? bounds[field + 'Max'] : fallback[1]
+
+		return Math.min(max, Math.max(min, Math.round(value)))
+	},
+
 	//Look up any parameter from the last info.cgi response by name. The poll
 	//stores every line it received, so anything the camera reports can be read
 	//back without the module needing a dedicated field for it.

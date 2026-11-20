@@ -181,6 +181,46 @@ module.exports = {
 			variables.push({ variableId: 'colorBars', name: 'Color Bars ON/OFF' })
 		}
 
+		//Recording
+		if (SERIES.variables.recording == true) {
+			variables.push({ variableId: 'recordStatus', name: 'Recording - Status' })
+			variables.push({ variableId: 'recordMode', name: 'Recording - Mode' })
+			variables.push({ variableId: 'recordFormat', name: 'Recording - Format (Card A)' })
+			variables.push({ variableId: 'media1Status', name: 'Recording - Card A Status' })
+			variables.push({ variableId: 'media1RemainingTime', name: 'Recording - Card A Remaining Time (Minutes)' })
+			variables.push({ variableId: 'media1VideoInfo', name: 'Recording - Card A Video Format' })
+		}
+		if (SERIES.variables.recordingCardB == true) {
+			variables.push({ variableId: 'media2Status', name: 'Recording - Card B Status' })
+			variables.push({ variableId: 'media2RemainingTime', name: 'Recording - Card B Remaining Time (Minutes)' })
+		}
+
+		//Operating mode / playback
+		if (SERIES.variables.mediaMode == true) {
+			variables.push({ variableId: 'operatingMode', name: 'Operating Mode (Camera/Media/Standby)' })
+			variables.push({ variableId: 'mediaMode', name: 'Media Mode Screen' })
+			variables.push({ variableId: 'playbackStatus', name: 'Playback - Status' })
+			variables.push({ variableId: 'playbackTimecode', name: 'Playback - Timecode' })
+			variables.push({ variableId: 'playbackTimecodeStart', name: 'Playback - Clip Start Timecode' })
+			variables.push({ variableId: 'playbackTimecodeEnd', name: 'Playback - Clip End Timecode' })
+			variables.push({ variableId: 'playbackFrame', name: 'Playback - Current Frame' })
+			variables.push({ variableId: 'playbackFrameTotal', name: 'Playback - Total Frames' })
+		}
+
+		//Crop
+		if (SERIES.variables.crop == true) {
+			for (const output of self.cropOutputChoices()) {
+				variables.push({ variableId: `crop_${output.id}_source`, name: `Crop - ${output.label} Source` })
+			}
+			for (const area of self.cropAreaChoices()) {
+				variables.push({ variableId: `crop${area.id}_x`, name: `Crop - ${area.label} Center X` })
+				variables.push({ variableId: `crop${area.id}_y`, name: `Crop - ${area.label} Center Y` })
+				variables.push({ variableId: `crop${area.id}_width`, name: `Crop - ${area.label} Width` })
+				variables.push({ variableId: `crop${area.id}_height`, name: `Crop - ${area.label} Height` })
+				variables.push({ variableId: `crop${area.id}_size`, name: `Crop - ${area.label} Resolution` })
+			}
+		}
+
 		//Recall Preset
 		if (SERIES.variables.presetNames == true) {
 			for (let i = 1; i <= 100; i++) {
@@ -580,6 +620,47 @@ module.exports = {
 			}
 
 			variableValues.colorBars = self.data.colorBars;
+
+			//Recording
+			if (SERIES.variables.recording == true) {
+				variableValues.recordStatus = self.labelFor({ dropdown: c.CHOICES_RECORD_STATUS }, self.data.recordStatus);
+				variableValues.recordMode = self.data.recordMode;
+				variableValues.recordFormat = self.data.recordFormat;
+				variableValues.media1Status = self.labelFor({ dropdown: c.CHOICES_MEDIA_STATUS }, self.data.media1Status);
+				//only meaningful while the card is recordable (spec B.4)
+				variableValues.media1RemainingTime = self.data.media1Status === 'recordable' ? self.data.media1RemainingTime : '';
+				variableValues.media1VideoInfo = self.data.media1VideoInfo;
+			}
+			if (SERIES.variables.recordingCardB == true) {
+				variableValues.media2Status = self.labelFor({ dropdown: c.CHOICES_MEDIA_STATUS }, self.data.media2Status);
+				variableValues.media2RemainingTime = self.data.media2Status === 'recordable' ? self.data.media2RemainingTime : '';
+			}
+
+			//Operating mode / playback
+			if (SERIES.variables.mediaMode == true) {
+				variableValues.operatingMode = self.labelFor({ dropdown: c.CHOICES_OPERATING_MODE }, self.data.operatingMode);
+				variableValues.mediaMode = self.labelFor({ dropdown: c.CHOICES_MEDIA_MODE }, self.data.mediaMode);
+				variableValues.playbackStatus = self.labelFor({ dropdown: c.CHOICES_PLAYBACK_STATUS }, self.data.playbackStatus);
+				variableValues.playbackTimecode = self.data.playbackTimecode;
+				variableValues.playbackTimecodeStart = self.data.playbackTimecodeStart;
+				variableValues.playbackTimecodeEnd = self.data.playbackTimecodeEnd;
+				variableValues.playbackFrame = self.data.playbackFrame;
+				variableValues.playbackFrameTotal = self.data.playbackFrameTotal;
+			}
+
+			//Crop
+			if (SERIES.variables.crop == true) {
+				for (const [output, state] of Object.entries(self.data.cropOutputs)) {
+					variableValues[`crop_${output}_source`] = c.cropSourceLabel(state.source);
+				}
+				for (const [area, frame] of Object.entries(self.data.cropAreas)) {
+					variableValues[`crop${area}_x`] = frame.x;
+					variableValues[`crop${area}_y`] = frame.y;
+					variableValues[`crop${area}_width`] = frame.width;
+					variableValues[`crop${area}_height`] = frame.height;
+					variableValues[`crop${area}_size`] = frame.size;
+				}
+			}
 
 			//Recall Preset
 			if (SERIES.variables.presetNames == true) {

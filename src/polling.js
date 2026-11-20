@@ -68,8 +68,6 @@ module.exports = {
 					str_raw = str_raw.split('\n') // Split Data in order to remove data before and after command
 
 					for (var i in str_raw) {
-						str = str_raw[i].trim() // remove new line, carriage return and so on.
-						str = str.split('=') // Split Commands and data
 						if ((str_raw[i].indexOf('p.') === -1) && (str_raw[i].indexOf('t.') === -1)) {
 
 							if (self.config.verbose == true) {
@@ -77,9 +75,10 @@ module.exports = {
 							}
 						}
 						// Store Data
-						str[0] = str[0].replace(':','');
-						self.storeData(str)
+						self.storeData(self.parseLine(str_raw[i]))
 					}
+
+					self.updateCropShape()
 
 					self.updateStatus(InstanceStatus.Ok)
 
@@ -124,6 +123,102 @@ module.exports = {
 			if (self.config.continuePolling !== true) {
 				self.stopPolling()
 			}
+		}
+	},
+
+	//Split one response line into [name, value]. The camera writes "name:=value"
+	//for a value that changed and "name==value" for one that did not (§3.2.3.1.2),
+	//and only the first "=" separates the two -- a preset name may contain more.
+	//Splitting on every "=" used to turn "name==value" into an empty value.
+	parseLine(line) {
+		line = String(line).trim()
+
+		const index = line.indexOf('=')
+
+		if (index === -1) {
+			return [line]
+		}
+
+		let name = line.slice(0, index)
+		let value = line.slice(index + 1)
+
+		if (name.endsWith(':')) {
+			name = name.slice(0, -1)
+		}
+		else if (value.startsWith('=')) {
+			value = value.slice(1)
+		}
+
+		return [name, value]
+	},
+
+	//Crop parameters are arrays whose size and choices vary by model and by
+	//the camera's current output settings, so they are stored by the names the
+	//camera reports rather than one case per parameter
+	storeCropData(name, value) {
+		let self = this;
+
+		let match = name.match(/^k\.(output\d+)\.crop(\.list)?$/)
+
+		if (match) {
+			const output = self.data.cropOutputs[match[1]] || { source: '', list: [] }
+
+			if (match[2]) {
+				output.list = value.split(',').filter((entry) => entry !== '')
+			}
+			else {
+				output.source = value
+			}
+
+			self.data.cropOutputs[match[1]] = output
+			return true
+		}
+
+		match = name.match(/^k\.(\d+)\.crop\.(size|frame\.(x|y|width|height)(?:\.(min|max))?)$/)
+
+		if (match) {
+			const area = self.data.cropAreas[match[1]] || {}
+
+			if (match[2] === 'size') {
+				area.size = value
+			}
+			else {
+				//x, xMin, xMax, width, widthMin...
+				const key = match[3] + (match[4] ? match[4].charAt(0).toUpperCase() + match[4].slice(1) : '')
+				area[key] = parseInt(value)
+			}
+
+			self.data.cropAreas[match[1]] = area
+			return true
+		}
+
+		return false
+	},
+
+	//The crop actions, feedbacks and variables are built from whatever outputs
+	//and areas the camera reports, so rebuild them when that changes -- not on
+	//every poll, since the frame values themselves move all the time
+	updateCropShape() {
+		let self = this;
+
+		const outputs = Object.keys(self.data.cropOutputs).sort()
+
+		if (outputs.length === 0 && self.data.cropCount === 0) {
+			return
+		}
+
+		const shape = JSON.stringify([
+			self.data.cropCount,
+			outputs.map((output) => [output, self.data.cropOutputs[output].list.join(',')]),
+			self.data.cropOutputNames,
+		])
+
+		if (shape !== self.data.cropShapeString) {
+			self.data.cropShapeString = shape
+			self.initActions()
+			self.initFeedbacks()
+			self.initVariables()
+			self.initPresets()
 		}
 	},
 
@@ -417,7 +512,76 @@ module.exports = {
 				case 'p.count':
 					self.data.presetCount = parseInt(str[1]) || 100;
 					break;
+				//Recording
+				case 'f.rec.status':
+					self.data.recordStatus = str[1];
+					break;
+				case 'f.rec.mode':
+					self.data.recordMode = str[1];
+					break;
+				case 'f.rec.format.media1':
+					self.data.recordFormat = str[1];
+					break;
+				case 'f.rec.media1.status':
+					self.data.media1Status = str[1];
+					break;
+				case 'f.rec.media1.remainingtime':
+					self.data.media1RemainingTime = str[1];
+					break;
+				case 'f.rec.media1.videoinfo':
+					self.data.media1VideoInfo = str[1];
+					break;
+				case 'f.rec.media2.status':
+					self.data.media2Status = str[1];
+					break;
+				case 'f.rec.media2.remainingtime':
+					self.data.media2RemainingTime = str[1];
+					break;
+				//Operating mode / playback
+				case 'f.mode.status':
+					self.data.operatingMode = str[1];
+					break;
+				case 'f.mediamode':
+					self.data.mediaMode = str[1];
+					break;
+				case 'f.playback.status':
+					self.data.playbackStatus = str[1];
+					break;
+				case 'f.playback.timecode':
+					self.data.playbackTimecode = str[1];
+					break;
+				case 'f.playback.timecode.start':
+					self.data.playbackTimecodeStart = str[1];
+					break;
+				case 'f.playback.timecode.end':
+					self.data.playbackTimecodeEnd = str[1];
+					break;
+				case 'f.playback.frame':
+					self.data.playbackFrame = str[1];
+					break;
+				case 'f.playback.frame.total':
+					self.data.playbackFrameTotal = str[1];
+					break;
+				//Crop
+				case 'f.output.list': {
+					//e.g. output1:12g-sdi,output2:hdmi_3g-sdi,output3:ip
+					const names = {};
+					for (const entry of String(str[1]).split(',')) {
+						const [output, kind] = entry.split(':');
+						if (output && kind) {
+							names[output] = kind;
+						}
+					}
+					self.data.cropOutputNames = names;
+					break;
+				}
+				case 'k.count':
+					self.data.cropCount = parseInt(str[1]) || 0;
+					break;
 				default:
+					if (str[0].startsWith('k.') && str[1] !== undefined) {
+						self.storeCropData(str[0], str[1]);
+					}
 					break;
 			}
 			if ((str[0].indexOf('p.') !== -1) && (str[0].indexOf('.name.utf8') !== -1)) {

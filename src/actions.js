@@ -442,6 +442,208 @@ module.exports = {
 			}
 		}
 
+		// ###########################
+		// #### Recording Actions ####
+		// ###########################
+
+		//f.rec on control.cgi. The camera's own answer comes back through
+		//f.rec.status on the next poll; the state is set here first so a
+		//toggle pressed twice in quick succession does not send "on" twice.
+		if (s.recording == true) {
+			const setRecording = (on) => {
+				self.sendPTZ(self.ptzCommand, 'f.rec=' + (on ? 'on' : 'off'))
+				self.data.recordStatus = on ? 'rec' : 'idle';
+				self.checkVariables();
+				self.checkFeedbacks();
+				self.getCameraInformation_Delayed();
+			}
+
+			actions.recordStart = {
+				name: 'Recording - Start',
+				options: [],
+				callback: async () => setRecording(true),
+			}
+
+			actions.recordStop = {
+				name: 'Recording - Stop',
+				options: [],
+				callback: async () => setRecording(false),
+			}
+
+			actions.recordToggle = {
+				name: 'Recording - Toggle Start/Stop',
+				options: [],
+				callback: async () => setRecording(self.data.recordStatus !== 'rec'),
+			}
+		}
+
+		//mode.cgi. Playback itself is read-only over XC -- in media mode the
+		//camera only accepts open/close/session/info/mode.cgi -- so switching
+		//modes is the one part of playback Companion can drive.
+		if (s.mediaMode == true) {
+			actions.operatingMode = {
+				name: 'System - Switch Camera/Media Mode',
+				description: 'Media mode stops video output and streaming and is where recorded clips are played back. Pan/tilt, lens and image controls are refused until the camera is switched back to camera mode.',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Mode',
+						id: 'mode',
+						default: 'camera',
+						choices: [
+							{ id: 'camera', label: 'Camera Mode' },
+							{ id: 'media', label: 'Media Mode (Playback)' },
+						],
+					},
+				],
+				callback: async (action) => {
+					self.sendPTZ(self.modeCommand, 'cmd=' + action.options.mode)
+					self.getCameraInformation_Delayed();
+				}
+			}
+		}
+
+		// ######################
+		// #### Crop Actions ####
+		// ######################
+
+		if (s.crop == true) {
+			const cropOutputs = self.cropOutputChoices()
+			const cropAreas = self.cropAreaChoices()
+			const cropSources = self.cropSourceChoices()
+
+			actions.cropOutputSource = {
+				name: 'Crop - Set Output Source',
+				description: 'Choose whether an output shows the full picture or one of the crop areas. The camera only offers some crop areas on some outputs, depending on its output settings.',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Output',
+						id: 'output',
+						default: cropOutputs[cropOutputs.length - 1].id,
+						choices: cropOutputs,
+					},
+					{
+						type: 'dropdown',
+						label: 'Source',
+						id: 'source',
+						default: 'overview',
+						choices: cropSources,
+					},
+				],
+				callback: async (action) => {
+					const { output, source } = action.options;
+					const known = self.data.cropOutputs[output];
+
+					if (known && known.list.length > 0 && !known.list.includes(source)) {
+						self.log('warn', `${c.cropSourceLabel(source)} is not available on ${output} with the camera's current output settings (available: ${known.list.join(', ')}).`);
+						return;
+					}
+
+					self.sendPTZ(self.ptzCommand, `k.${output}.crop=${source}`)
+					self.getCameraInformation_Delayed();
+				}
+			}
+
+			actions.cropSetFrame = {
+				name: 'Crop - Set Position/Size',
+				description: 'Values are the camera\'s abstract units: center X and Y run 0-9999, width up to 10000 (the full picture). Leave a field blank to keep its current value. Height follows width.',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Crop Area',
+						id: 'area',
+						default: cropAreas[0].id,
+						choices: cropAreas,
+					},
+					...c.CHOICES_CROP_FIELD.map((field) => ({
+						type: 'textinput',
+						label: field.label,
+						id: field.id,
+						default: '',
+						useVariables: { local: true },
+					})),
+				],
+				callback: async (action, context) => {
+					const area = action.options.area;
+					let params = [];
+
+					for (const field of c.CHOICES_CROP_FIELD) {
+						const raw = String(await context.parseVariablesInString(action.options[field.id] ?? '')).trim();
+
+						if (raw === '') {
+							continue;
+						}
+
+						const value = Number(raw);
+
+						if (!Number.isFinite(value)) {
+							self.log('warn', `Crop ${area} ${field.label}: '${raw}' is not a number.`);
+							return;
+						}
+
+						const clamped = self.clampCropValue(area, field.id, value);
+						params.push(`k.${area}.crop.frame.${field.id}=${clamped}`);
+					}
+
+					if (params.length > 0) {
+						self.sendPTZ(self.ptzCommand, params.join('&'))
+						self.getCameraInformation_Delayed();
+					}
+				}
+			}
+
+			actions.cropAdjust = {
+				name: 'Crop - Adjust Position/Size',
+				description: 'Move or resize a crop area relative to where it is now. Positive moves right/down or makes it wider (zooms out); negative moves left/up or makes it narrower (zooms in).',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Crop Area',
+						id: 'area',
+						default: cropAreas[0].id,
+						choices: cropAreas,
+					},
+					{
+						type: 'dropdown',
+						label: 'Adjust',
+						id: 'field',
+						default: 'x',
+						choices: c.CHOICES_CROP_FIELD,
+					},
+					{
+						type: 'number',
+						label: 'Amount',
+						id: 'amount',
+						default: 250,
+						min: -10000,
+						max: 10000,
+					},
+				],
+				callback: async (action) => {
+					const { area, field } = action.options;
+					const current = (self.data.cropAreas[area] || {})[field];
+
+					if (!Number.isInteger(current)) {
+						self.log('warn', `The camera has not reported crop ${area} yet, so there is nothing to adjust from.`);
+						return;
+					}
+
+					const value = self.clampCropValue(area, field, current + Number(action.options.amount));
+
+					if (value === current) {
+						return;
+					}
+
+					//step from here on the next press rather than waiting for the poll
+					self.data.cropAreas[area][field] = value;
+					self.sendPTZ(self.ptzCommand, `k.${area}.crop.frame.${field}=${value}`)
+					self.checkVariables();
+					self.getCameraInformation_Delayed();
+				}
+			}
+		}
+
 		// ##########################
 		// #### Pan/Tilt Actions ####
 		// ##########################

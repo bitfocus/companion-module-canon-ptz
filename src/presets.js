@@ -2978,6 +2978,107 @@ module.exports = {
 			}
 		}
 
+		// ###########################################
+		// #### Recording / Media Mode / Crop Presets ####
+		// ###########################################
+
+		//One-step button with an optional feedback, which is all these need
+		const button = (category, name, text, actions, feedback, size = '14') => ({
+			category,
+			type: 'button',
+			name,
+			style: {
+				text,
+				size,
+				color: foregroundColor,
+				bgcolor: combineRgb(0, 0, 0),
+			},
+			steps: [
+				{
+					down: actions.map(([actionId, options]) => ({ actionId, options: options || {} })),
+					up: [],
+				},
+			],
+			feedbacks: feedback ? [feedback] : [],
+		})
+
+		if (s.recording == true) {
+			const recording = {
+				feedbackId: 'recording',
+				options: { option: 'rec' },
+				style: { color: foregroundColor, bgcolor: backgroundColorRed },
+			}
+
+			presets.recordToggle = button('Recording', 'Record Start/Stop', 'REC\\n$(canon-ptz:recordStatus)', [['recordToggle']], recording)
+			presets.recordStart = button('Recording', 'Record Start', 'REC\\nSTART', [['recordStart']], recording)
+			presets.recordStop = button('Recording', 'Record Stop', 'REC\\nSTOP', [['recordStop']])
+			presets.recordRemaining = button('Recording', 'Card A Remaining Time', 'Card A\\n$(canon-ptz:media1RemainingTime) min', [], {
+				feedbackId: 'recordingMedia',
+				options: { card: '1', option: 'unrecordable' },
+				style: { color: foregroundColor, bgcolor: backgroundColorOrange },
+			})
+		}
+
+		if (s.mediaMode == true) {
+			presets.modeMedia = button('Recording', 'Switch to Media Mode', 'MEDIA\\nMODE', [['operatingMode', { mode: 'media' }]], {
+				feedbackId: 'mediaMode',
+				options: { option: 'media' },
+				style: { color: foregroundColor, bgcolor: backgroundColorOrange },
+			})
+			presets.modeCamera = button('Recording', 'Switch to Camera Mode', 'CAMERA\\nMODE', [['operatingMode', { mode: 'camera' }]], {
+				feedbackId: 'mediaMode',
+				options: { option: 'camera' },
+				style: { color: foregroundColor, bgcolor: backgroundColorGreen },
+			})
+			presets.playbackStatus = button('Recording', 'Playback Status', '$(canon-ptz:playbackStatus)\\n$(canon-ptz:playbackTimecode)', [], {
+				feedbackId: 'playbackStatus',
+				options: { option: 'playback' },
+				style: { color: foregroundColor, bgcolor: backgroundColorGreen },
+			})
+		}
+
+		if (s.crop == true) {
+			for (const output of self.cropOutputChoices()) {
+				const known = self.data.cropOutputs[output.id]
+				const sources = known && known.list.length > 0 ? known.list : self.cropSourceChoices().map((source) => source.id)
+
+				for (const source of sources) {
+					presets[`crop_${output.id}_${source}`] = button(
+						'Crop',
+						`${output.label} - ${c.cropSourceLabel(source)}`,
+						`${output.label.replace(/ \(/, '\\n(')}\\n${c.cropSourceLabel(source)}`,
+						[['cropOutputSource', { output: output.id, source }]],
+						{
+							feedbackId: 'cropOutputSource',
+							options: { output: output.id, source },
+							style: { color: foregroundColor, bgcolor: backgroundColorRed },
+						},
+						'auto',
+					)
+				}
+			}
+
+			const nudges = [
+				['x', -250, 'LEFT'],
+				['x', 250, 'RIGHT'],
+				['y', -250, 'UP'],
+				['y', 250, 'DOWN'],
+				['width', -250, 'ZOOM\\nIN'],
+				['width', 250, 'ZOOM\\nOUT'],
+			]
+
+			for (const area of self.cropAreaChoices()) {
+				for (const [field, amount, label] of nudges) {
+					presets[`crop${area.id}_${field}_${amount}`] = button(
+						'Crop',
+						`${area.label} - ${label.replace('\\n', ' ')}`,
+						`${area.label}\\n${label}`,
+						[['cropAdjust', { area: area.id, field, amount }]],
+					)
+				}
+			}
+		}
+
 		self.setPresetDefinitions(presets);
 	}
 }

@@ -85,7 +85,35 @@ module.exports = {
 		
 			//Other
 			colorBars: '',
-	
+
+			//Recording (f.rec.*). Card B only exists on the camcorder bodies.
+			recordStatus: '', //idle | rec
+			recordMode: '',
+			recordFormat: '',
+			media1Status: '', //recordable | unrecordable
+			media1RemainingTime: '', //minutes, only meaningful while recordable
+			media1VideoInfo: '',
+			media2Status: '',
+			media2RemainingTime: '',
+
+			//Operating mode and playback (CR-N700/CR-N400 media mode)
+			operatingMode: '', //f.mode.status: camera, media, standby, switching_*
+			mediaMode: '', //f.mediamode: idle, index, playback, transfer, delete, refine
+			playbackStatus: '',
+			playbackTimecode: '',
+			playbackTimecodeStart: '',
+			playbackTimecodeEnd: '',
+			playbackFrame: '',
+			playbackFrameTotal: '',
+
+			//Crop. Keyed by the camera's own names so nothing has to be
+			//hard-coded per model: outputs by "output1".., areas by 1..k.count
+			cropCount: 0,
+			cropOutputNames: {}, //output1 -> '12g-sdi', from f.output.list
+			cropOutputs: {}, //output1 -> { source, list: [] }
+			cropAreas: {}, //1 -> { size, x, xMin, xMax, y, yMin, yMax, width, widthMin, widthMax, height }
+			cropShapeString: '', //what the crop dropdowns were last built from
+
 			//Recall Preset
 			presetCount: 100,
 			presetLastUsed: 1,

@@ -296,7 +296,8 @@ module.exports = {
 				presetLastUsed: true, //preset last recalled
 				presetRecallMode: true, //preset recall mode normal, time, speed
 				presetTimeValue: true, //preset time value
-				presetSpeedValue: true //preset speed value
+				presetSpeedValue: true, //preset speed value
+				crop: true, //crop output selection and crop area position/size
 			},
 			feedbacks: {
 				powerState: true, //power is on or off
@@ -313,7 +314,8 @@ module.exports = {
 				autoGainMode: true, //gain mode is auto or manual
 				whitebalanceMode: true, //white balance mode
 				presetLastUsed: true, //preset last recalled
-				presetRecallMode: true //preset recall mode is normal, time, or speed
+				presetRecallMode: true, //preset recall mode is normal, time, or speed
+				crop: true, //crop output selection and crop area position/size
 			},
 			actions: {
 				powerState: true,
@@ -361,7 +363,8 @@ module.exports = {
 				timePset: true, //set preset drive recall time
 				speedPset: true, //set preset drive recall speed
 				traces: true, //prepare, start, stop traces
-				custom: true //allow user to send custom commands
+				custom: true, //allow user to send custom commands
+				crop: true, //crop output selection and crop area position/size
 			}
 		},
 				{
@@ -416,7 +419,10 @@ module.exports = {
 				presetLastUsed: true, //preset last recalled
 				presetRecallMode: true, //preset recall mode normal, time, speed
 				presetTimeValue: true, //preset time value
-				presetSpeedValue: true //preset speed value
+				presetSpeedValue: true, //preset speed value
+				recording: true, //internal recording start/stop and card status
+				mediaMode: true, //camera/media mode switch and playback status
+				crop: true, //crop output selection and crop area position/size
 			},
 			feedbacks: {
 				powerState: true, //power is on or off
@@ -433,7 +439,10 @@ module.exports = {
 				autoGainMode: true, //gain mode is auto or manual
 				whitebalanceMode: true, //white balance mode
 				presetLastUsed: true, //preset last recalled
-				presetRecallMode: true //preset recall mode is normal, time, or speed
+				presetRecallMode: true, //preset recall mode is normal, time, or speed
+				recording: true, //internal recording start/stop and card status
+				mediaMode: true, //camera/media mode switch and playback status
+				crop: true, //crop output selection and crop area position/size
 			},
 			actions: {
 				powerState: true,
@@ -481,7 +490,10 @@ module.exports = {
 				timePset: true, //set preset drive recall time
 				speedPset: true, //set preset drive recall speed
 				traces: true, //prepare, start, stop traces
-				custom: true //allow user to send custom commands
+				custom: true, //allow user to send custom commands
+				recording: true, //internal recording start/stop and card status
+				mediaMode: true, //camera/media mode switch and playback status
+				crop: true, //crop output selection and crop area position/size
 			}
 		},
 		{
@@ -645,7 +657,10 @@ module.exports = {
 				presetLastUsed: true, //preset last recalled
 				presetRecallMode: true, //preset recall mode normal, time, speed
 				presetTimeValue: true, //preset time value
-				presetSpeedValue: true //preset speed value
+				presetSpeedValue: true, //preset speed value
+				recording: true, //internal recording start/stop and card status
+				mediaMode: true, //camera/media mode switch and playback status
+				crop: true, //crop output selection and crop area position/size
 			},
 			feedbacks: {
 				powerState: true, //power is on or off
@@ -662,7 +677,10 @@ module.exports = {
 				autoGainMode: true, //gain mode is auto or manual
 				whitebalanceMode: true, //white balance mode
 				presetLastUsed: true, //preset last recalled
-				presetRecallMode: true //preset recall mode is normal, time, or speed
+				presetRecallMode: true, //preset recall mode is normal, time, or speed
+				recording: true, //internal recording start/stop and card status
+				mediaMode: true, //camera/media mode switch and playback status
+				crop: true, //crop output selection and crop area position/size
 			},
 			actions: {
 				powerState: true,
@@ -703,7 +721,10 @@ module.exports = {
 				timePset: true, //set preset drive recall time
 				speedPset: true, //set preset drive recall speed
 				traces: true, //prepare, start, stop traces
-				custom: true //allow user to send custom commands
+				custom: true, //allow user to send custom commands
+				recording: true, //internal recording start/stop and card status
+				mediaMode: true, //camera/media mode switch and playback status
+				crop: true, //crop output selection and crop area position/size
 			}
 		},
 		{
@@ -956,7 +977,9 @@ module.exports = {
 				presetLastUsed: true, //preset last recalled
 				presetRecallMode: true, //preset recall mode normal, time, speed
 				presetTimeValue: true, //preset time value
-				presetSpeedValue: true //preset speed value
+				presetSpeedValue: true, //preset speed value
+				recording: true, //internal recording start/stop and card status
+				recordingCardB: true, //second card slot
 			},
 			feedbacks: {
 				powerState: true, //power is on or off
@@ -973,7 +996,8 @@ module.exports = {
 				autoGainMode: true, //gain mode is auto or manual
 				whitebalanceMode: true, //white balance mode
 				presetLastUsed: true, //preset last recalled
-				presetRecallMode: true //preset recall mode is normal, time, or speed
+				presetRecallMode: true, //preset recall mode is normal, time, or speed
+				recording: true, //internal recording start/stop and card status
 			},
 			actions: {
 				powerState: true, // Has Power Control
@@ -1015,7 +1039,8 @@ module.exports = {
 				speedPset: true, // Has Preset Recall Speed Control
 				timePset: true, // Has Preset Recall Time Control
 				traces: true, //prepare, start, stop traces
-				custom: true //allow user to send custom commands
+				custom: true, //allow user to send custom commands
+				recording: true, //internal recording start/stop and card status
 			}
 		},
 		{
@@ -1059,7 +1084,9 @@ module.exports = {
 				presetLastUsed: true, //preset last recalled
 				presetRecallMode: true, //preset recall mode normal, time, speed
 				presetTimeValue: true, //preset time value
-				presetSpeedValue: true //preset speed value
+				presetSpeedValue: true, //preset speed value
+				recording: true, //internal recording start/stop and card status
+				recordingCardB: true, //second card slot
 			},
 			feedbacks: {
 				powerState: true, //power is on or off
@@ -1076,7 +1103,8 @@ module.exports = {
 				autoGainMode: true, //gain mode is auto or manual
 				whitebalanceMode: true, //white balance mode
 				presetLastUsed: true, //preset last recalled
-				presetRecallMode: true //preset recall mode is normal, time, or speed
+				presetRecallMode: true, //preset recall mode is normal, time, or speed
+				recording: true, //internal recording start/stop and card status
 			},
 			actions: {
 				powerState: true, // Has Power Control
@@ -1118,7 +1146,8 @@ module.exports = {
 				speedPset: true, // Has Preset Recall Speed Control
 				timePset: true, // Has Preset Recall Time Control
 				traces: true, //prepare, start, stop traces
-				custom: true //allow user to send custom commands
+				custom: true, //allow user to send custom commands
+				recording: true, //internal recording start/stop and card status
 			}
 		},
 		{

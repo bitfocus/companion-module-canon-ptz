@@ -850,5 +850,67 @@ module.exports = {
 		{ id: '0', label: 'None' },
 		{ id: '1', label: 'Detection Disabled' },
 		{ id: '2', label: 'Internal Error' }
+	],
+
+	// ##################################
+	// ####  Recording / Media / Crop ####
+	// ##################################
+
+	//f.rec.status
+	CHOICES_RECORD_STATUS: [
+		{ id: 'idle', label: 'Stopped' },
+		{ id: 'rec', label: 'Recording' }
+	],
+
+	//f.rec.media<n>.status
+	CHOICES_MEDIA_STATUS: [
+		{ id: 'recordable', label: 'Recordable' },
+		{ id: 'unrecordable', label: 'Not Recordable' }
+	],
+
+	//f.mode.status
+	CHOICES_OPERATING_MODE: [
+		{ id: 'camera', label: 'Camera' },
+		{ id: 'media', label: 'Media' },
+		{ id: 'standby', label: 'Standby' },
+		{ id: 'switching_camera', label: 'Switching to Camera' },
+		{ id: 'switching_media', label: 'Switching to Media' },
+		{ id: 'switching_standby', label: 'Switching to Standby' }
+	],
+
+	//f.mediamode
+	CHOICES_MEDIA_MODE: [
+		{ id: 'idle', label: 'Idle' },
+		{ id: 'index', label: 'Index' },
+		{ id: 'playback', label: 'Playback' },
+		{ id: 'transfer', label: 'Transfer' },
+		{ id: 'delete', label: 'Delete' },
+		{ id: 'refine', label: 'Refine' }
+	],
+
+	//f.playback.status
+	CHOICES_PLAYBACK_STATUS: [
+		{ id: 'playback', label: 'Playing' },
+		{ id: 'pause', label: 'Paused' },
+		{ id: 'frame_advance', label: 'Frame Advance' },
+		{ id: 'frame_reverse', label: 'Frame Reverse' },
+		{ id: 'fast_forward_x5', label: 'Fast Forward x5' },
+		{ id: 'fast_forward_x15', label: 'Fast Forward x15' },
+		{ id: 'fast_forward_x60', label: 'Fast Forward x60' },
+		{ id: 'rewind_x5', label: 'Rewind x5' },
+		{ id: 'rewind_x15', label: 'Rewind x15' },
+		{ id: 'rewind_x60', label: 'Rewind x60' }
+	],
+
+	//k.<output>.crop values
+	cropSourceLabel: function (source) {
+		const labels = { overview: 'Overview', crop1: 'Crop 1', crop2: 'Crop 2', crop3: 'Crop 3 (Vertical)' }
+		return labels[source] || source
+	},
+
+	CHOICES_CROP_FIELD: [
+		{ id: 'x', label: 'Center X' },
+		{ id: 'y', label: 'Center Y' },
+		{ id: 'width', label: 'Width' }
 	]
 }
